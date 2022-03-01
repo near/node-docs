@@ -9,9 +9,9 @@ const katex = require('rehype-katex');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'NEAR Protocol Specification',
-  tagline: 'NEAR Protocol Specification',
-  url: 'https://nomicon.io',
+  title: 'NEAR Nodes',
+  tagline: 'NEAR Node Documentation',
+  url: 'https://near-nodes.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -60,7 +60,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'Nomicon',
+        title: 'Nodes',
         logo: {
           alt: 'NEAR Logo',
           src: 'img/near_logo.svg',
@@ -69,8 +69,13 @@ const config = {
         items: [
           {
             to: '/',
-            label: 'Specification',
+            label: 'Nodes',
             position: 'left'
+          },
+          {
+            href: 'https://nomicon.io/',
+            label: 'Specification',
+            position: 'left',
           },
           {
             href: 'https://docs.near.org/',
@@ -83,7 +88,7 @@ const config = {
             position: 'left',
           },
           {
-            href: 'https://github.com/near/NEPs',
+            href: 'https://github.com/near/node-docs',
             label: 'GitHub',
             position: 'right',
           },
@@ -96,8 +101,12 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Specification',
+                label: 'Nodes',
                 to: '/',
+              },
+              {
+                label: 'Specification',
+                to: 'https://nomicon.io',
               },
               {
                 label: 'Dev Docs',
@@ -135,7 +144,7 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/near/NEPs',
+                href: 'https://github.com/near/node-docs',
               },
             ],
           },
