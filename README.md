@@ -11,7 +11,7 @@
 ## NEAR Protocol - scalable and usable blockchain
 
 [![Discord](https://img.shields.io/discord/490367152054992913.svg)](http://near.chat)
-[![CI](https://github.com/near/wiki/actions/workflows/build.yml/badge.svg)](https://github.com/near/wiki/actions/workflows/build.yml)
+[![CI](https://github.com/near/node-docs/actions/workflows/build.yml/badge.svg)](https://github.com/near/node-docs/actions/workflows/build.yml)
 
 * ⚖️ NEAR Protocol is a new smart-contract platform that delivers scalability and usability.
 * 🛠 Through sharding, it will linearly scale with the number of validation nodes on the network.

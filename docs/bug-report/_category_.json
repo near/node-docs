@@ -1,0 +1,10 @@
+{
+  "label": "Bug Report",
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "slug": "bug-report",
+    "title": "Bug Report"
+  }
+}

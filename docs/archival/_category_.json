@@ -1,0 +1,10 @@
+{
+  "label": "Archival Nodes",
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "slug": "archival",
+    "title": "Archival Nodes"
+  }
+}

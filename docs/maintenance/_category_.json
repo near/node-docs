@@ -1,0 +1,10 @@
+{
+  "label": "Maintenance",
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "slug": "maintenance",
+    "title": "Maintenance"
+  }
+}

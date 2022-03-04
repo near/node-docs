@@ -1,0 +1,10 @@
+{
+  "label": "RPC Nodes",
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "slug": "rpc",
+    "title": "RPC Nodes"
+  }
+}
