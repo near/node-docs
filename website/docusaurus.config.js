@@ -60,7 +60,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'Nodes',
+        title: 'Node Docs',
         logo: {
           alt: 'NEAR Logo',
           src: 'img/near_logo.svg',
@@ -74,7 +74,7 @@ const config = {
           },
           {
             href: 'https://nomicon.io/',
-            label: 'Specification',
+            label: 'Protocol Specs',
             position: 'left',
           },
           {
