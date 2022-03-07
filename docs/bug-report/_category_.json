@@ -1,10 +1,11 @@
 {
+  "position": 6,
   "label": "Bug Report",
   "collapsible": true,
   "collapsed": true,
   "link": {
     "type": "generated-index",
     "slug": "bug-report",
-    "title": "Bug Report"
+    "title": "Feature Request and Bug Report"
   }
 }

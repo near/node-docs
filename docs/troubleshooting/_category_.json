@@ -1,0 +1,11 @@
+{
+  "position": 5,
+  "label": "Troubleshooting",
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "slug": "troubleshooting",
+    "title": "Troubleshooting Common Errors"
+  }
+}

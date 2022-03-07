@@ -1,10 +1,11 @@
 {
+  "position": 7,
   "label": "Maintenance",
   "collapsible": true,
   "collapsed": true,
   "link": {
     "type": "generated-index",
     "slug": "maintenance",
-    "title": "Maintenance"
+    "title": "Maintenance and Network Upgrade"
   }
 }
