@@ -2,6 +2,7 @@
 id: what-is-a-node
 title: What is a Node
 sidebar_label: What is a Node
+sidebar_position: 1
 description: What is a NEAR Node and Why Run a Node
 ---
 

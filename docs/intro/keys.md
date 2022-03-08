@@ -2,6 +2,7 @@
 id: keys
 title: Key Management
 sidebar_label: Key Management
+sidebar_position: 4
 description: NEAR Node Key Management
 ---
 

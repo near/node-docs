@@ -2,6 +2,7 @@
 id: node-types
 title: Node Types
 sidebar_label: Node Types
+sidebar_position: 2
 description: Types of NEAR Nodes
 ---
 

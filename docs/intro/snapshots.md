@@ -2,6 +2,7 @@
 id: node-data-snapshots
 title: Node Data Snapshots
 sidebar_label: Node Data Snapshots
+sidebar_position: 3
 description: Node Data Snapshots
 ---
 
