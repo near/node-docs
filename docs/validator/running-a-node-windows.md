@@ -2,6 +2,7 @@
 id: running-a-node-windows
 title: Run a Node on Windows
 sidebar_label: Run a Node (Windows)
+sidebar_position: 4
 description: How to run a NEAR node using `nearup` on Windows
 ---
 

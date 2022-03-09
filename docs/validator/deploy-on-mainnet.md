@@ -2,6 +2,7 @@
 id: deploy-on-mainnet
 title: Deploy Mainnet Staking Pool
 sidebar_label: Deploy Mainnet Staking Pool
+sidebar_position: 5
 ---
 
 Deploying a node on `mainnet` is similar to deploying one on `testnet`

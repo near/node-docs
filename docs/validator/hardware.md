@@ -2,6 +2,7 @@
 id: hardware
 title: Hardware Requirements for Validator Node
 sidebar_label: Hardware Requirements
+sidebar_position: 1
 description: NEAR Validator Node Hardware Requirements
 ---
 

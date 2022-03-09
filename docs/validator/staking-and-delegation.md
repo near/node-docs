@@ -2,6 +2,7 @@
 id: staking-and-delegation
 title: Staking and Delegation
 sidebar_label: Staking and Delegation
+sidebar_position: 6
 ---
 
 #  Staking on NEAR

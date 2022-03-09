@@ -2,6 +2,7 @@
 id: compile-and-run-a-node
 title: Run a Validator Node (without nearup)
 sidebar_label: Run a Node (without nearup)
+sidebar_position: 2
 description: Compile and Run a NEAR Node without Container in localnet, testnet, and mainnet
 ---
 
