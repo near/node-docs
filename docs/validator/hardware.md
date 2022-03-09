@@ -31,7 +31,7 @@ lscpu | grep -P '(?=.*avx )(?=.*sse4.2 )(?=.*cx16 )(?=.*popcnt )' > /dev/null \
 | Hardware       |  Minimal Specifications                                                     |
 | -------------- | ---------------------------------------------------------------             |
 | CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores                |
-| CPU Features   | CMPXCHG16B, POPCNT, SSE4.2, AVX                                             |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX                                     |
 | RAM            | 8GB DDR4                                                                    |
 | Storage        | 500GB SSD (NVMe SSD is recommended. HDD will be enough for localnet only)   |
 
@@ -49,8 +49,8 @@ Estimated monthly costs depending on operating system:
 
 | Cloud Provider | Machine Size    | Linux                  |
 | -------------- | --------------- | ---------------------- |
-| AWS            | c5.2xlarge      | $250 CPU + $80 storage |
-| GCP            | c2-standard-8   | $220 CPU + $80 storage |
+| AWS            | m5.2xlarge      | $330 CPU + $80 storage |
+| GCP            | n2-standard-8   | $280 CPU + $80 storage |
 | Azure          | Standard_F8s_v2 | $180 CPU + $40 storage |
 
 <blockquote class="info">
