@@ -12,15 +12,16 @@ description: NEAR Validator Bootcamp
 
 ***What’s the current protocol upgrade that will increase the number of validators on Mainnet?***
 
-The next upgrade for mainnet validators will introduce Chunk-Only Producers. To find out more, please head to https://near.org/decentralize/ and register to become a Chunk-Only Producer.
+The next upgrade to increase the number of mainnet validators will introduce Chunk-Only Producers, and is currently slated for Q3 2022. To find out more about how to become a Chunk-Only Producer, please head to https://near.org/decentralize/ and register.
 
 ***How do I join NEAR as a validator on the Mainnet? What steps do I need to take?***
 
-1. Find out more about how to become a validator at https://near.org/validators/
+1. Find out more about how to become a validator, head to https://near.org/validators/
 2. Join the [Open Shards Alliance Server](https://discord.com/invite/t9Kgbvf) to find out more on how to run nodes and participate on the guildnet.
 
 ***What are the future plans for NEAR Protocol?***
-Please learn about the protocol roadmap here https://near.org/blog/near-launches-simple-nightshade-the-first-step-towards-a-sharded-blockchain/.
+
+Learn about the protocol roadmap here https://near.org/blog/near-launches-simple-nightshade-the-first-step-towards-a-sharded-blockchain/.
 
 ---
 
@@ -230,7 +231,9 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 You will see the following:
+
 ![img](/images/rust.png)
+
 Press 1 and press enter.
 
 #### Source the environment
@@ -324,7 +327,7 @@ The node is now running you can see log outputs in your console. Your node shoul
 
 #### Using NearUp
 
-You can set up a node using neard on mainnet. On Guildnet and Testnet, you have the option to use NearUp to set the node. However, NearUp is not recommended or supported for MainNet. We recommend that you use neard consistently on Guildnet, Testnet, and Mainnet.
+You can set up a node using neard on Mainnet and Testnet. On Guildnet, you have the option to use NearUp to set the node. However, NearUp is not recommended or supported for Mainnet or Testnet. We recommend that you use neard consistently on Guildnet, Testnet, and Mainnet.
 
 However, if you choose to use NearUp, NearUp will download the necessary binaries and files to get up and running. You just need to provide the network to run and the staking pool id.
 
@@ -340,12 +343,12 @@ pip3 install --user --upgrade nearup
 ```
 
 
-#### Step 4 – Create a wallet
+####  Create a wallet
 - MainNet: https://wallet.near.org/
 - TestNet: https://wallet.testnet.near.org/
 - GuildNet: https://wallet.openshards.io/
 
-#### Step 5 – Authorize Wallet Locally
+#### Authorize Wallet Locally
 A full access key needs to be installed locally to be able transactions via NEAR-CLI.
 
 
@@ -364,16 +367,19 @@ near login
 
 1 – Copy the link in your browser
 
-/docs/assets/wallet-welcome.png
+
 ![img](/images/1.png)
 
 2 – Grant Access to Near CLI
+
 ![img](/images/3.png)
 
 3 – After Grant, you will see a page like this, go back to console
+
 ![img](/images/4.png)
 
 4 – Enter your wallet and press Enter
+
 ![img](/images/5.png)
 
 
@@ -445,7 +451,7 @@ On the first run, NEARUp will ask you to enter a staking-pool id, provide the st
 > **Note: This is the Chicken and the Egg.\
 > You have not created the staking pool, but need to provide the name.**
 
-#### Step 7 – Check the validator_key.json
+####  Check the validator_key.json
 * Run the following command:
 
 For Guildnet
@@ -630,27 +636,22 @@ cd ~/.near
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/genesis.json
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json
 ```
-* Download the latest snapshot:
-```
-cd ~/.near/
-wget -c https://near-protocol-public.s3-accelerate.amazonaws.com/backups/mainnet/rpc/data.tar -O - | tar -xf -
-```
+* Download the latest snapshot from [the snapshot page](/intro/node-data-snapshots).
+
 * Initialize NEAR:
 ```
 target/release/neard init --chain-id="mainnet" --account-id=<staking pool id>
 ```
-##### Create Validator_key.json
+##### Create `validator_key.json`
 * Generate the Key file:
 ```
-near generate-key <pool id>
+near generate-key <pool_id>
 ```
-* Copy the file generated to Mainnet folder:\
-Make sure to replace YOUR_WALLET by your accountId
+* Copy the file generated to Mainnet folder.Make sure to replace YOUR_WALLET by your accountId
 ```
 cp ~/.near-credentials/YOUR_WALLET.json ~/.near/mainnet/validator_key.json
 ```
-* Edit “account_id” => xx.poolv1.near\
-Where xx is your PoolName
+* Edit “account_id” => xx.poolv1.near, where xx is your PoolName
 * Change “private_key” to “secret_key”
 > Note: The account_id must match the staking pool contract name or you will not be able to sign blocks.
 > File content must be something like :
@@ -660,20 +661,16 @@ Where xx is your PoolName
 >   "secret_key": "ed25519:****"
 > }
 ```
-near generate-key <your accountId>
-```
-```
+near generate-key <your_accountId>
 vi ~/.near/{your_accountId}.json
 ```
-```
-rename "private_key" to "secret_key"
-```
+Rename "private_key" to "secret_key", then move the file to ~/.near.
+
 ```
 mv the file to ~/.near
 ```
-```
-Update "account_id" = staking_pool_id
-```
+Update "account_id" to be the staking_pool_id
+
 > Note: The account_id must match the staking pool contract name or you will not be able to sign blocks.
 
 * Start the Node
@@ -750,20 +747,21 @@ journalctl -n 100 -f -u neard | ccze -A
 In order to become a validator and enter the validator set, a minimum set of success criteria must be met.
 
 * The node must be fully synced
-* The validator_key.json must be in place
-* The contract must be initialized with the public_key in validtor_key.json
+* The `validator_key.json` must be in place
+* The contract must be initialized with the public_key in `validator_key.json`
 * The account_id must be set to the staking pool contract id
-* There must be enough delegations to meet the minimum seat price
+* There must be enough delegations to meet the minimum seat price. See the seat price [here](https://explorer.testnet.near.org/nodes/validators).
 * A proposal must be submitted by pinging the contract
 * Once a proposal is accepted a validator must wait 2-3 epoch to enter the validator set
 * Once in the validator set the validator must produce great than 90% of assigned blocks
 
-Check running status of validator node. If “V/” is showing up, your pool is selected in the current validators list.
+Check running status of validator node. If “Validator” is showing up, your pool is selected in the current validators list.
 
-### Submitting Pool Information (MainNet Only)
-Adding pool information helps delegators and also helps with outreach for upgrades and other important announcements: https://github.com/zavodil/near-pool-details The available Fields to add are: https://github.com/zavodil/near-pool-details/blob/master/FIELDS.md.
+### Submitting Pool Information (Mainnet Only)
+Adding pool information helps delegators and also helps with outreach for upgrades and other important announcements: https://github.com/zavodil/near-pool-details.
+The available fields to add are: https://github.com/zavodil/near-pool-details/blob/master/FIELDS.md.
 
-The identifying information that we require the validators to provide are:
+The identifying information that we ask the validators:to provide are:
 - Name
 - Description
 - URL
@@ -780,15 +778,15 @@ near call name.near update_field '{"pool_id": "<pool_id>.poolv1.near", "name": "
 near call name.near update_field '{"pool_id": "<pool_id>.poolv1.near", "name": "twitter", "value": "<twitter>"}' --accountId=<account id>.near  --gas=200000000000000
 ```
 ```
-near view  name.near get_all_fields '{"from_index": 0, "limit": 3}'
+near view name.near get_all_fields '{"from_index": 0, "limit": 3}'
 ```
 ```
-near view  name.near get_fields_by_pool '{"pool_id": "<pool_id>.poolv1.near"}'
+near view name.near get_fields_by_pool '{"pool_id": "<pool_id>.poolv1.near"}'
 ```
 ---
 
 ## LESSON 4 - STAKING POOLS
-NEAR uses a staking pool factory with a whitelisted staking contract to ensure delegators’ funds are safe. In order to run a validator on NEAR a staking pool must be deployed to a NEAR account and integrated into a NEAR validator node. Delegators must use a UI or the command line to stake to the pool. A staking pool is a smart contract that is deployed to a NEAR account.
+NEAR uses a staking pool factory with a whitelisted staking contract to ensure delegators’ funds are safe. In order to run a validator on NEAR, a staking pool must be deployed to a NEAR account and integrated into a NEAR validator node. Delegators must use a UI or the command line to stake to the pool. A staking pool is a smart contract that is deployed to a NEAR account.
 
 ### Deploy a Staking Pool Contract
 #### Deploy a Staking Pool
@@ -814,19 +812,20 @@ From the example above, you need to replace:
 * **Pool ID**: Staking pool name, the factory automatically adds its name to this parameter, creating {pool_id}.{staking_pool_factory}
 Examples:   
 
-`nearkat.stake.guildnet` for guildnet
-`nearkat.pool.f863973.m0` for testnet
-`nearkat.poolv1.near` for mainnet
+- `nearkat.stake.guildnet` for guildnet
+- `nearkat.pool.f863973.m0` for testnet
+- `nearkat.poolv1.near` for mainnet
 
 * **Owner ID**: The NEAR account that will manage the staking pool. Usually your main NEAR account.
 * **Public Key**: The public key in your **validator_key.json** file.
-* **5**: The fee the pool will charge (in this case 5 over 100 is 5% of fees)
+* **5**: The fee the pool will charge (e.g. in this case 5 over 100 is 5% of fees).
 * **Account Id**: The NEAR account deploying the staking pool.
 
 > Be sure to have at least 35 NEAR available, it is the minimum required for storage
 
 
 You will see something like this:
+
 ![img](/images/pool.png)
 
 If there is a “True” at the End. Your pool is created.
@@ -834,7 +833,7 @@ If there is a “True” at the End. Your pool is created.
 **You have now configure your Staking pool.**
 
 For Guildnet & Testnet
-You can go to OSA Discord to ask for some token to be a validator
+You can go to OSA Discord to ask for some guildnet or testnet token to be a validator,
 https://discord.gg/GrBqK3ZJ2T
 
 #### Configure your staking pool contract
@@ -849,8 +848,7 @@ Replace:
 near call <pool name> new '{"owner_id": "<owner id>", "<public key>": "<public key>", "reward_fee_fraction": {"numerator": <reward fraction>, "denominator": 100}}' --accountId <accountId>
 ```
 #### Manage your staking pool contract
-> HINT: Copy/Paste everything after this line into a text editor and use search and replace
-> Once your pool is deployed, you can issue the commands below
+> HINT: Copy/Paste everything after this line into a text editor and use search and replace. Once your pool is deployed, you can issue the commands below:
 
 
 ##### Retrieve the owner ID of the staking pool
@@ -879,24 +877,19 @@ near call {pool_id}.{staking_pool_factory} update_staking_key '{"stake_public_ke
 
 In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
 
-Networks:
-* TestNet
-* Guildnet
-* MainNet
-
-Staking Pools Factories:
+Staking Pools Factories for each network:
 * **GuildNet**: stake.guildnet
 * **TestNet**: pool.f863973.m0
 * **MainNet**: poolv1.near
 
 ### Transactions
-#### Deposit and Stake NEAR.
+#### Deposit and Stake NEAR
 
 Command:
 ```
 near call <staking_pool_id> deposit_and_stake --amount <amount> --accountId <accountId> --gas=300000000000000
 ```
-#### Unstake
+#### Unstake NEAR
 Amount in yoctoNEAR.
 
 Run the following command to unstake:
@@ -979,13 +972,17 @@ journalctl -n 100 -f -u neard | ccze -A
 ```
 
 **Log file sample:**
+
+Validator | 1 validator
+
 ```
-INFO stats: #46199418 3 mSo7HtqLU8s5k8GGLRcKtD4kopUV681jNKvgX5bQeaz V/59 30/26/40 peers ⬇ 213.5kiB/s ⬆ 772.9kiB/s 1.00 bps 25.72 Tgas/s CPU: 177%, Mem: 8.6 GiB
+INFO stats: #85079829 H1GUabkB7TW2K2yhZqZ7G47gnpS7ESqicDMNyb9EE6tf Validator 73 validators 30 peers ⬇ 506.1kiB/s ⬆ 428.3kiB/s 1.20 bps 62.08 Tgas/s CPU: 23%, Mem: 7.4 GiB
 ```
 
-* **V** (Validator): A “V” will indicate you are an active validator
-* **30 Peers**: You need at least 3 peers to reach consensus and start validating
-* **#46199418**: Blocks – Look to ensure blocks are moving
+* **Validator**: A “Validator” will indicate you are an active validator
+* **73 validators**: Total 73 validators on the network
+* **30 peers**: You current have 30 peers. You need at least 3 peers to reach consensus and start validating
+* **#46199418**: block – Look to ensure blocks are moving
 
 ### RPC
 Any node within the network offers RPC services on port 3030 as long as the port is open in the nodes firewall. The NEAR-CLI uses RPC calls behind the scenes. Common uses for RPC are to check on validator stats, node version and to see delegator stake, although it can be used to interact with the blockchain, accounts and contracts overall.
@@ -1406,7 +1403,7 @@ Common Issues:
 
 
 ### Common Errors & Solutions
-###### Submitting a proposal before the validator is synced
+#### Submitting a proposal before the validator is synced
 A validator must be fully synced before submitting a proposal to enter the validator set. If you are not fully synced and you entered the validator set your log will be filled with errors.
 
 **Resolution**
@@ -1416,7 +1413,7 @@ Wait until 4 epochs until you have been kicked from the validator set. Delete th
 2. rm -Rf ~/.near/<NETWORK_ID>/data
 3. Start the node
 ```
-###### Starting the node when another instance is running
+#### Starting the node when another instance is running
 On occasion, a process will get disconnected from the shell or NEARUp. The common error seen when trying to start the node will be:
 ```
 Err value: Os { code: 98, kind: AddrInUse, message: "Address already in use" }',
@@ -1430,7 +1427,7 @@ Kill the hung pid
 ```
 kill -9 <PID>
 ```
-###### Running out of Disk space
+#### Running out of Disk space
 If you find no space left on device errors in the validator log files then you likely ran out of disk space.
 ```
 1. Stop the node
@@ -1438,12 +1435,12 @@ If you find no space left on device errors in the validator log files then you l
 3. Cleanup files or resize disk
 4. Fail back over.
 ```
-###### Not enough stake to obtain a validator seat
+#### Not enough stake to obtain a validator seat
 You can check that your validator proposal was accepted by checking
 ```
 near proposals
 ```
-###### Not producing blocks
+#### Not producing blocks
 Your validator is producing zero blocks in near validators current.
 
 This is due the staking pool contract and the validator_key.json have different public keys or the account_id in validator_key.json not being the staking pool contract id.
@@ -1471,7 +1468,7 @@ vi ~/.near/<network>/validator_key.json
 ```
 > Note: if it does now match the staking pool id upate it and restart your node.
 
-###### Not producing enough blocks or chunks
+#### Not producing enough blocks or chunks
 Missing blocks or chunks is the primary reason a validator is kicked from the validator pool. You can check the number of blocks expected/missed via NEAR-Cli and RPC.
 
 **NEAR-CLI**
@@ -1487,22 +1484,22 @@ curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params
 ```
 curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params": [null]}' -H 'Content-Type: application/json' https://rpc.openshards.io | jq -c ".result.prev_epoch_kickout[] | select(.account_id | contains ("<POOL_ID>"))" | jq .reason
 ```
-###### Not exporting the correct environment
+#### Not exporting the correct environment
 Be sure that you are using the correct environment each time you run NEAR-Cli
 
 ```
 export NEAR_ENV=<mainnet,testnet,guildnet>
 ```
-###### Incompatible CPU without AVX support
+#### Incompatible CPU without AVX support
 One cause of missed blocks and nodes falling out of sync is running on a CPU without AVX support. AVX support is required, but not always used depending on the complexity of the transaction.
 
-###### Not running on SSD drives
+#### Not running on SSD drives
 NEAR Requires a 1 second block time and HDD disks are just not fast enough. SDD drives are required and SSD NVME drives are recommended.
 
-###### Inconsistent Internet connection
+#### Inconsistent Internet connection
 NEAR requires a 1 second block time, so any latency from your internet provider can cause you to miss blocks.
 
-###### Inability to gain enough peers for consensus
+#### Inability to gain enough peers for consensus
 If you are unable to gain any peers a restart can help. In some rare cases the boot_nodes in config.json can be empty.
 
 Logs like that :
