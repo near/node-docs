@@ -82,3 +82,4 @@ This is the standard fork-branch-commit workflow for submitting pull requests to
 5. Observe those changes reflected in the local docs
 
 6. Submit a pull request with your changes
+---
