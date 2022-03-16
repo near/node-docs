@@ -53,6 +53,10 @@ const config = {
           changefreq: 'weekly',
           priority: 0.5,
         },
+        gtag: {
+          trackingID: 'G-9D4HYSTV6N',
+          anonymizeIP: true,
+        },
       }),
     ],
   ],
