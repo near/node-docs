@@ -15,7 +15,7 @@ You can install `nearup` by following the instructions at https://github.com/nea
 <blockquote class="info">
 <strong>Heads up</strong><br /><br />
 
-The README for `nearup` (linked above) may be **all you need to get a node up and running** in `testnet` and `localnet`. `nearup` is exclusively used to launch NEAR `testnet` and `localnet` nodes. `nearup` is not used to launch `mainnet` nodes.  See [Deploy Node on Mainnet](deploy-on-mainnet) for running a node on `mainnet`.
+The README for `nearup` (linked above) may be **all you need to get a node up and running** in `testnet` and `localnet`. `nearup` is exclusively used to launch NEAR `testnet` and `localnet` nodes. `nearup` is not used to launch `mainnet` nodes.  See [Deploy Node on Mainnet](deploy-on-mainnet.md) for running a node on `mainnet`.
 
 </blockquote>
 
@@ -170,7 +170,7 @@ Enter your account ID (leave empty if not going to be a validator):
 
 ## Running a Node on GCP {#running-a-node-on-gcp}
 
-Create a new instance, following the [Hardware requirements](hardware).
+Create a new instance, following the [Hardware requirements](hardware.md).
 
 Add firewall rules to allow traffic to 24567 port from all IPs (0.0.0.0/0)
 
