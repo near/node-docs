@@ -12,12 +12,12 @@ Before you start running a node, you must first sync with the network. This mean
 Here are the available snapshots directories based on node type and network. Please note that the snapshots are updated every 12 hours.
 
 
-| Node Type and Network| S3 URL                                                                                         |
-| -------------------- | ----------------------------------------------------------------------------------------       |
-| RPC testnet          | https://near-protocol-public.s3-accelerate.amazonaws.com/backups/testnet/rpc/          |
-| RPC mainnet          | https://near-protocol-public.s3-accelerate.amazonaws.com/backups/mainnet/rpc/          |
-| Archival testnet     | https://near-protocol-public.s3-accelerate.amazonaws.com/backups/testnet/archive/      |
-| Archival mainnet     | https://near-protocol-public.s3-accelerate.amazonaws.com/backups/mainnet/archive/      |
+| Node Type and Network| S3 Path                                                       |
+| -------------------- | ------------------------------------------------------------- |
+| RPC testnet          | s3://near-protocol-public/backups/testnet/rpc/latest          |
+| RPC mainnet          | s3://near-protocol-public/backups/mainnet/rpc/latest          |
+| Archival testnet     | s3://near-protocol-public/backups/testnet/archive/latest      |
+| Archival mainnet     | s3://near-protocol-public/backups/mainnet/archive/latest      |
 
 
 ----
