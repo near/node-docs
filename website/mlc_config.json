@@ -1,4 +1,9 @@
 {
+  "ignorePatterns": [
+    {
+      "pattern": "^https://near-node.zendesk.com"
+    }
+  ],
   "replacementPatterns": [
     {
       "pattern": "^/",
