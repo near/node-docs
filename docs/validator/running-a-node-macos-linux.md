@@ -15,7 +15,7 @@ You can install `nearup` by following the instructions at https://github.com/nea
 <blockquote class="info">
 <strong>Heads up</strong><br /><br />
 
-The README for `nearup` (linked above) may be **all you need to get a node up and running** in `testnet` and `localnet`. `nearup` is exclusively used to launch NEAR `testnet` and `localnet` nodes. `nearup` is not used to launch `mainnet` nodes.  See [Deploy Node on Mainnet](deploy-on-mainnet) for running a node on `mainnet`.
+The README for `nearup` (linked above) may be **all you need to get a node up and running** in `testnet` and `localnet`. `nearup` is exclusively used to launch NEAR `testnet` and `localnet` nodes. `nearup` is not used to launch `mainnet` nodes.  See [Deploy Node on Mainnet](deploy-on-mainnet.md) for running a node on `mainnet`.
 
 </blockquote>
 
@@ -49,7 +49,7 @@ docker run -v $HOME/.near:/root/.near -p 3030:3030 --name nearup nearprotocol/ne
 _(If you prefer to use `localnet` then just replace `testnet` with `localnet` in the command above)_
 
 
-You will then be prompted for an Account ID. You can leave this empty if you would just like to run a node. Validators should use the account ID of the account you want to stake with. See [staking](https://wiki.near.org/validator/validator-guides/running-a-validator) if you would like to become a validator.
+You will then be prompted for an Account ID. You can leave this empty if you would just like to run a node. Validators should use the account ID of the account you want to stake with. See [staking](https://wiki.near.org/validators/validator-guides/running-a-validator) if you would like to become a validator.
 
 ```text
 Enter your account ID (leave empty if not going to be a validator):
@@ -162,7 +162,7 @@ nearup run testnet --binary-path path/to/nearcore/target/release
 
 If you want to run `localnet` instead of `testnet`, then replace `testnet` with `localnet` in the command above.
 
-You will then be prompted for an Account ID. You can leave this empty if you would just like to run a node. Validators should use the account ID of the account you want to stake with. See [staking](https://wiki.near.org/validator/validator-guides/running-a-validator) if you would like to become a validator.
+You will then be prompted for an Account ID. You can leave this empty if you would just like to run a node. Validators should use the account ID of the account you want to stake with. See [staking](https://wiki.near.org/validators/validator-guides/running-a-validator) if you would like to become a validator.
 
 ```text
 Enter your account ID (leave empty if not going to be a validator):
@@ -170,7 +170,7 @@ Enter your account ID (leave empty if not going to be a validator):
 
 ## Running a Node on GCP {#running-a-node-on-gcp}
 
-Create a new instance, following the [Hardware requirements](hardware).
+Create a new instance, following the [Hardware requirements](hardware.md).
 
 Add firewall rules to allow traffic to 24567 port from all IPs (0.0.0.0/0)
 

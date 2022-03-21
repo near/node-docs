@@ -21,7 +21,7 @@ You can install `nearup` by following the instructions at https://github.com/nea
 <blockquote class="info">
 <strong>Heads up</strong><br /><br />
 
-The README for `nearup` (linked above) may be **all you need to get a node up and running** in `testnet` and `localnet`. `nearup` is exclusively used to launch NEAR `testnet` and `localnet` nodes. `nearup` is not used to launch `mainnet` nodes. See [Deploy Node on Mainnet](deploy-on-mainnet) for running a node on `mainnet`.
+The README for `nearup` (linked above) may be **all you need to get a node up and running** in `testnet` and `localnet`. `nearup` is exclusively used to launch NEAR `testnet` and `localnet` nodes. `nearup` is not used to launch `mainnet` nodes. See [Deploy Node on Mainnet](deploy-on-mainnet.md) for running a node on `mainnet`.
 
 </blockquote>
 
@@ -111,7 +111,7 @@ The README for `nearup` (linked above) may be **all you need to get a node up an
     nearup logs --follow
     ```
 
-You might be asked for a validator ID; if you do not want to validate, simply press enter. For validation, please refer to the [validation section](https://wiki.near.org/validator/validator-guides/running-a-validator).
+You might be asked for a validator ID; if you do not want to validate, simply press enter. For validation, please refer to the [validation section](https://wiki.near.org/validators/validator-guides/running-a-validator).
 
 >Got a question?
 <a href="https://stackoverflow.com/questions/tagged/nearprotocol">
