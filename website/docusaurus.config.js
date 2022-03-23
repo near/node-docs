@@ -54,7 +54,7 @@ const config = {
           priority: 0.5,
         },
         gtag: {
-          trackingID: 'G-9D4HYSTV6N',
+          trackingID: 'G-SCPT56S1DQ',
           anonymizeIP: true,
         },
       }),
