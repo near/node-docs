@@ -32,14 +32,14 @@ NEAR uses [Docusaurus](https://docusaurus.io) for documentation.  Please refer t
 
 For simple content changes you have 2 options
 
-- [Submit an issue](https://github.com/near/wiki/issues)
-- [Submit a pull request](https://github.com/near/wiki/pulls) *(we prefer PRs of course)*
+- [Submit an issue](https://github.com/near/node-docs/issues)
+- [Submit a pull request](https://github.com/near/node-docs/pulls) *(we prefer PRs of course)*
 
 ### The instant PR
 
 This is the fastest way to submit content changes directly from the page where you notice a mistake.
 
-1. Open any page in the docs on https://wiki.near.org
+1. Open any page in the docs on https://near-nodes.io
 2. Click the `[ Edit ]` button at the top right hand side of _every_ content page
 3. Make your edits to the document that opens in GitHub by clicking the ✎ (pencil) icon
 4. Submit a PR with your changes and comments for context
