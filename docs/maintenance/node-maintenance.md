@@ -2,19 +2,26 @@
 id: maintenance
 title: Node Update and Network Upgrade
 sidebar_label: Node Update and Network Upgrade
+sidebar_position: 2
 description: NEAR Node Update and Network Upgrade
 ---
 
 ## Updating a Node {#updating-a-node}
 
-As a decentralized network, every update to NEAR Protocol needs some coordination between end users, platforms, developers, and validators. [`nearup`](https://github.com/near/nearup) provides scripts to launch NEAR Protocol `testnet` and `betanet` nodes. Unless it is executed with the switch `--binary-path`, `nearup` will automatically update the local binaries if NEAR's boot nodes fork the network and change the genesis checksum.
+As a decentralized network, every update to NEAR Protocol needs some coordination between end users, platforms, developers, and validators.
 
-For security-critical applications and for validators, `nearup` can run a locally compiled binary of [`nearcore`](https://github.com/near/nearcore), but such updates have to be done manually. Since validators are responsible for creating new blocks, coordination in this process is necessary to avoid any network stall.
-
+NEAR merges nearcore updates from nearcore release on Github: https://github.com/near/nearcore/releases. For each nearcore release, there is a release in brief:
+```
+CODE_COLOR: CODE_YELLOW_MAINNET  // This field indicates the release tag (see below).
+RELEASE_VERSION: 1.23.0          // This field indicates nearcore version.
+PROTOCOL_UPGRADE: TRUE           // This indicates that is a protocol upgrade and therefore a required upgrade.
+DATABASE_UPGRADE: TRUE           // This field indicates that database migration is needed.
+SECURITY_UPGRADE: FALSE          // This field indicates this release does not contain a security upgrade.
+```
 
 ## Nearcore Planned Updates {#nearcore-planned-updates}
 
-NEAR merges node updates from [nearcore releases](https://github.com/near/nearcore/releases) following the schedule shown on the public [NEAR Community Google Calendar](https://calendar.google.com/calendar/u/0/embed?src=nearprotocol.com_ltk89omsjnc2ckgbtk6h9157i0@group.calendar.google.com).
+The nearcore release schedule is shown on the public [NEAR Community Google Calendar](https://calendar.google.com/calendar/u/0/embed?src=nearprotocol.com_ltk89omsjnc2ckgbtk6h9157i0@group.calendar.google.com).
 
 Typically, `testnet` and `mainnet` releases are five weeks apart to allow nearcore to be tested thoroughly on `testnet` before promotion to `mainnet`. From time to time, due to changes in engineering calendar and the nature of the release, release dates may change. Please refer to the [NEAR Community Google Calendar](https://calendar.google.com/calendar/u/0/embed?src=nearprotocol.com_ltk89omsjnc2ckgbtk6h9157i0@group.calendar.google.com) for the most updated release dates.
 - `testnet` Wednesday at 15:00 UTC. The release tag is mapped with `x.y.z-rc.1`
