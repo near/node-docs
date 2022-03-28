@@ -6,20 +6,21 @@ sidebar_position: 2
 description: NEAR Node Update and Network Upgrade
 ---
 
-## Updating a Node {#updating-a-node}
+## Nearcore Releases {#updating-a-node}
 
 As a decentralized network, every update to NEAR Protocol needs some coordination between end users, platforms, developers, and validators.
 
 NEAR merges nearcore updates from nearcore release on Github: https://github.com/near/nearcore/releases. For each nearcore release, there is a release in brief:
 ```
 CODE_COLOR: CODE_YELLOW_MAINNET  // This field indicates the release tag (see below).
-RELEASE_VERSION: 1.23.0          // This field indicates nearcore version.
+RELEASE_VERSION: 1.23.0          // This field indicates the nearcore version.
 PROTOCOL_UPGRADE: TRUE           // This indicates that is a protocol upgrade and therefore a required upgrade.
 DATABASE_UPGRADE: TRUE           // This field indicates that database migration is needed.
 SECURITY_UPGRADE: FALSE          // This field indicates this release does not contain a security upgrade.
 ```
 
-## Nearcore Planned Updates {#nearcore-planned-updates}
+
+## Nearcore Release Schedule {#nearcore-planned-updates}
 
 The nearcore release schedule is shown on the public [NEAR Community Google Calendar](https://calendar.google.com/calendar/u/0/embed?src=nearprotocol.com_ltk89omsjnc2ckgbtk6h9157i0@group.calendar.google.com).
 
@@ -42,9 +43,8 @@ NEAR Protocol team will use the tag `[CODE_RED_TESTNET]` or `[CODE_RED_MAINNET]`
 
 NEAR's team will be mostly active on [Github](https://github.com/near/nearcore), and with limited participation on Discord and Telegram.
 
----
 
-## Runtime Alerts: {#runtime-alerts}
+## Runtime Alerts {#runtime-alerts}
 
 To keep our network healthy and minimize the damage of potential incidents, the NEAR team would like to establish a process with which we communicate updates and emergency situations with validators so that they can respond promptly to properly sustain the operations of the network. To this end, we propose that we use different tags in important messages to validators so that they can be easily picked up by automated systems on validators’ end.
 
