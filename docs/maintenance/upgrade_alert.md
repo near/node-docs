@@ -23,8 +23,8 @@ With these caveats clarified, let's define an upgrade alert. The instructions we
 
 Step 1. Add a PostgreSQL data source with the following credentials:
 
-* `telemetry_testnet` for testnet: https://github.com/near/near-explorer/blob/master/backend/config/env-indexer-testnet
-* `telemetry_mainnet` for mainnet: https://github.com/near/near-explorer/blob/master/backend/config/env-indexer-mainnet
+* `telemetry_testnet` for testnet: https://github.com/near/near-explorer/blob/master/backend/config
+* `telemetry_mainnet` for mainnet: https://github.com/near/near-explorer/blob/master/backend/config
 
 Step 2. Add a dashboard with a Graph panel with the following SQL query. Grafana only supports alerts on the Graph panels, therefore this needs a workaround to fit the Table data into a Graph format.
 

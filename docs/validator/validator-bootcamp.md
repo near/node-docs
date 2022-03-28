@@ -446,25 +446,23 @@ nearup run $NEAR_ENV --account-id <staking pool id>
 ```
 Where AccountId is xx.pool.f863973.m0, xx is your pool name for example bootcamp.pool.f863973.m0
 
-On the first run, NEARUp will ask you to enter a staking-pool id, provide the staking pool id set up previously in the form {pool id}.{staking pool factory}
+On the first run, NEARUp will ask you to enter a staking pool id, provide the staking pool id set up previously in the form {pool id}.{staking pool factory}
 
-> **Note: This is the Chicken and the Egg.\
+> **Note: This is the Chicken and the Egg.
 > You have not created the staking pool, but need to provide the name.**
 
 ####  Check the validator_key.json
 * Run the following command:
 
 For Guildnet
-
-  ```
-  cat ~/.near/guildnet/validator_key.json
-  ```
+```
+cat ~/.near/guildnet/validator_key.json
+```
 
 For Testnet
-  ```
-  cat ~/.near/testnet/validator_key.json
-  ```
-
+```
+cat ~/.near/testnet/validator_key.json
+```
 
 
 > Note: If a validator_key.json is not present, follow these steps to create one
@@ -482,21 +480,22 @@ Make sure to replace YOUR_WALLET by your accountId
 ```
 cp ~/.near-credentials/guildnet/<YOUR_WALLET>.json ~/.near/guildnet/validator_key.json
 ```
-* Edit “account_id” => xx.stake.guildnet\
-  Where xx is your PoolName
+* Edit “account_id” => `xx.stake.guildnet`, where xx is your PoolName
 
-* Change “private_key” to “secret_key”
+* Change `private_key` to `secret_key`
 
 > Note: The account_id must match the staking pool contract name or you will not be able to sign blocks.\
-> File content must be something like :
-> {
->   "account_id": "xx.stake.guildnet",
->   "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
->   "secret_key": "ed25519:****"
-> }
 
+File content must be in the following pattern:
+```
+{
+  "account_id": "xx.stake.guildnet",
+  "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
+  "secret_key": "ed25519:****"
+}
+```
 
-Create a validator_key.json for Testnet
+Create a `validator_key.json` for Testnet
 
 *   Generate the Key file:
 
@@ -508,19 +507,19 @@ Make sure to replace YOUR_WALLET by your accountId
 ```
 cp ~/.near-credentials/testnet/YOUR_WALLET.json ~/.near/testnet/validator_key.json
 ```
-* Edit “account_id” => xx.pool.f863973.m0\
-Where xx is your PoolName
-* Change “private_key” to “secret_key”
+* Edit “account_id” => xx.pool.f863973.m0, where xx is your PoolName
+* Change `private_key` to `secret_key`
 
 > Note: The account_id must match the staking pool contract name or you will not be able to sign blocks.\
-> File content must be something like :
-> {
->   "account_id": "xx.pool.f863973.m0",
->   "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
->   "secret_key": "ed25519:****"
-> }
 
-
+File content must be in the following pattern:
+```
+{
+  "account_id": "xx.stake.guildnet",
+  "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
+  "secret_key": "ed25519:****"
+}
+```
 
 
 #### Step 8 – Check all files were generated
@@ -877,6 +876,9 @@ near call {pool_id}.{staking_pool_factory} update_staking_key '{"stake_public_ke
 
 In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
 
+To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract. You could set up a ping using a cron job or use [Cron Cat](https://cron.cat/).
+
+
 Staking Pools Factories for each network:
 * **GuildNet**: stake.guildnet
 * **TestNet**: pool.f863973.m0
@@ -1019,7 +1021,7 @@ Command:
 curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params": [null]}' -H 'Content-Type: application/json' http://localhost:3030/ | jq -c ".result.current_validators[] | select(.account_id | contains ("POOL_ID"))"
 ```
 ### Prometheus
-Monitoring disk, CPU, memory, network io, missed blocks, and peers is critically important to a healthy node. Prometheus and Granfana combined provide monitoring and visual reporting tools.
+Monitoring disk, CPU, memory, network io, missed blocks, and peers is critically important to a healthy node. Prometheus and Granfana combined provide monitoring and visual reporting tools. Please note that Prometheus is best set up on another machine due the storage requirement for logs.
 
 #### Installation
 Command:
