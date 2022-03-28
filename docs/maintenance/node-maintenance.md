@@ -10,7 +10,7 @@ description: NEAR Node Update and Network Upgrade
 
 As a decentralized network, every update to NEAR Protocol needs some coordination between end users, platforms, developers, and validators.
 
-NEAR merges nearcore updates from nearcore release on Github: https://github.com/near/nearcore/releases. For each nearcore release, there is a release in brief:
+NEAR merges nearcore updates from nearcore release on Github: https://github.com/near/nearcore/releases. For each nearcore release, the release notes indicate the nature of the release:
 ```
 CODE_COLOR: CODE_YELLOW_MAINNET  // This field indicates the release tag (see below).
 RELEASE_VERSION: 1.23.0          // This field indicates the nearcore version.
