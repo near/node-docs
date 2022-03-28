@@ -2,6 +2,7 @@
 id: community-channels
 title: Node Operator Community Channels
 sidebar_label: Node Operator Community Channels
+sidebar_position: 1
 description: Node Operator Community Channels
 ---
 

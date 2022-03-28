@@ -3,6 +3,7 @@ id: db-migrations
 title: Safe Database Migrations
 sidebar_label: Safe Database Migrations
 description: How to do database migrations without corrupting the database
+sidebar_position: 3
 ---
 
 # Database Migrations

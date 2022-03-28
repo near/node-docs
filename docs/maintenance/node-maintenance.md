@@ -2,19 +2,27 @@
 id: maintenance
 title: Node Update and Network Upgrade
 sidebar_label: Node Update and Network Upgrade
+sidebar_position: 2
 description: NEAR Node Update and Network Upgrade
 ---
 
-## Updating a Node {#updating-a-node}
+## Nearcore Releases {#updating-a-node}
 
-As a decentralized network, every update to NEAR Protocol needs some coordination between end users, platforms, developers, and validators. [`nearup`](https://github.com/near/nearup) provides scripts to launch NEAR Protocol `testnet` and `betanet` nodes. Unless it is executed with the switch `--binary-path`, `nearup` will automatically update the local binaries if NEAR's boot nodes fork the network and change the genesis checksum.
+As a decentralized network, every update to NEAR Protocol needs some coordination between end users, platforms, developers, and validators.
 
-For security-critical applications and for validators, `nearup` can run a locally compiled binary of [`nearcore`](https://github.com/near/nearcore), but such updates have to be done manually. Since validators are responsible for creating new blocks, coordination in this process is necessary to avoid any network stall.
+NEAR merges nearcore updates from nearcore release on Github: https://github.com/near/nearcore/releases. For each nearcore release, the release notes indicate the nature of the release:
+```
+CODE_COLOR: CODE_YELLOW_MAINNET  // This field indicates the release tag (see below).
+RELEASE_VERSION: 1.23.0          // This field indicates the nearcore version.
+PROTOCOL_UPGRADE: TRUE           // This indicates that is a protocol upgrade and therefore a required upgrade.
+DATABASE_UPGRADE: TRUE           // This field indicates that database migration is needed.
+SECURITY_UPGRADE: FALSE          // This field indicates this release does not contain a security upgrade.
+```
 
 
-## Nearcore Planned Updates {#nearcore-planned-updates}
+## Nearcore Release Schedule {#nearcore-planned-updates}
 
-NEAR merges node updates from [nearcore releases](https://github.com/near/nearcore/releases) following the schedule shown on the public [NEAR Community Google Calendar](https://calendar.google.com/calendar/u/0/embed?src=nearprotocol.com_ltk89omsjnc2ckgbtk6h9157i0@group.calendar.google.com).
+The nearcore release schedule is shown on the public [NEAR Community Google Calendar](https://calendar.google.com/calendar/u/0/embed?src=nearprotocol.com_ltk89omsjnc2ckgbtk6h9157i0@group.calendar.google.com).
 
 Typically, `testnet` and `mainnet` releases are five weeks apart to allow nearcore to be tested thoroughly on `testnet` before promotion to `mainnet`. From time to time, due to changes in engineering calendar and the nature of the release, release dates may change. Please refer to the [NEAR Community Google Calendar](https://calendar.google.com/calendar/u/0/embed?src=nearprotocol.com_ltk89omsjnc2ckgbtk6h9157i0@group.calendar.google.com) for the most updated release dates.
 - `testnet` Wednesday at 15:00 UTC. The release tag is mapped with `x.y.z-rc.1`
@@ -35,9 +43,8 @@ NEAR Protocol team will use the tag `[CODE_RED_TESTNET]` or `[CODE_RED_MAINNET]`
 
 NEAR's team will be mostly active on [Github](https://github.com/near/nearcore), and with limited participation on Discord and Telegram.
 
----
 
-## Runtime Alerts: {#runtime-alerts}
+## Runtime Alerts {#runtime-alerts}
 
 To keep our network healthy and minimize the damage of potential incidents, the NEAR team would like to establish a process with which we communicate updates and emergency situations with validators so that they can respond promptly to properly sustain the operations of the network. To this end, we propose that we use different tags in important messages to validators so that they can be easily picked up by automated systems on validators’ end.
 
