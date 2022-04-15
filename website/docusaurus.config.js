@@ -38,7 +38,7 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          "editUrl": "https://github.com/near/node-docs/edit/master/website",
+          "editUrl": "https://github.com/near/node-docs/edit/main/website",
           remarkPlugins: [math],
           rehypePlugins: [katex],
           "showLastUpdateAuthor": true,
