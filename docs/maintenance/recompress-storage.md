@@ -3,17 +3,17 @@ id: recompress-storage
 title: Recompressing archival node storage
 sidebar_label: Recompressing archival node storage
 sidebar_position: 4
-description: How to recompress archival node’s storage to reduce it’s size.
+description: How to recompress archival node’s storage to reduce its size.
 ---
 
 # Recompressing archival node storage
 
-The neard 1.26 release introduced various improvements to node’s
+The nearcore 1.26.0 release introduces various improvements to node’s
 storage layer.  Among better performance, the changes result in
 *significant* reduction of the storage on archival nodes: from 7.9 TB
 to 3.1 TB on mainnet and from 4.3 TB to 1.5 TB on testnet.
 
-However, to take full advantage of the saving some manual steps need
+However, to take full advantage of the savings, some manual steps need
 to be taken.  This document describes those steps.  Note that if
 you’re not running an archival node, you don’t need to do anything.
 
@@ -53,7 +53,7 @@ require a continuous access to an archival node, you will need to set
 up a redundant node if one is not already available.
 
 Procedure for stopping a node depends on configuration of your system.
-For example, if nerad is run as a systemd service, the command to stop
+For example, if neard is run as a systemd service, the command to stop
 it might look like:
 
 ```console
@@ -198,5 +198,5 @@ recompression.
 
 Note also that if you are operating an archival node but are worried
 about scheduling (e.g. you’re busy dealing with other issues and thus
-have no time to deal with noeard database changes) you can postpone
-the recompression.
+have no time to deal with neard database changes) you can postpone the
+recompression.
