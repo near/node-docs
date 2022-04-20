@@ -40,9 +40,11 @@ If your host does not have enough free space you will need to resize
 one of the existing partitions (if you are running in the cloud and
 can resize disks freely) or temporarily attach a new disk.
 
-At the end of the recompression, once the new storage is created, it
-will replace the old one.  The old database can be kept as a backup or
-deleted to free space it uses.
+At the end of the process it will be possible to delete the old
+database freeing a lot of space.  Note however that while increasing
+disk size in the cloud is often a simple operation, shrinking it might
+be more complicated.  You need to plan accordingly based on your
+node’s setup.
 
 ### Stopping the node
 
@@ -88,6 +90,11 @@ $ export NEAR_HOME
 $ mv -- "${NEAR_HOME:?}/data"     "${NEAR_HOME:?}/data.bak"
 $ mv -- "${NEAR_HOME:?}/data.new" "${NEAR_HOME:?}/data"
 ```
+
+The `data.bak` backup might be worth keeping at least until
+verification described in the next section is completed.  If the
+verification fails, it will be easy to recover database prior to
+recompression.  Otherwise `data.bak` can be deleted.
 
 #### Disk size considerations
 
@@ -158,7 +165,7 @@ $ neard view-state apply-range --start-index=$start --shard-id=3
 ```
 
 If the commands report no errors or differences, it’s safe to start
-the node again.
+the node again.  This verification should take around 15 minutes.
 
 
 ## What has been changed
