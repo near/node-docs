@@ -820,7 +820,12 @@ Examples:
 * **5**: The fee the pool will charge (e.g. in this case 5 over 100 is 5% of fees).
 * **Account Id**: The NEAR account deploying the staking pool.
 
-> Be sure to have at least 35 NEAR available, it is the minimum required for storage
+> Be sure to have at least 30 NEAR available, it is the minimum required for storage.
+
+To change the pool parameters, such as changing the amount of commission charged to 1% in the example below, use this command:
+```
+near call <pool_name> update_reward_fee_fraction '{"reward_fee_fraction": {"numerator": 1, "denominator": 100}}' --accountId <account_id> --gas=300000000000000
+```
 
 
 You will see something like this:

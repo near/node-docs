@@ -19,13 +19,13 @@ Calls the staking pool factory, creates a new staking pool with the specified na
 For Testnet: (This call will not work as the `code_hash` has not been added to the factory. Please stay tuned for announcement when this contract is ready.)
 
 ```
-near call factory01.littlefarm.testnet  create_staking_pool '{"staking_pool_id": "<poolId>", "owner_id": "<accountId>", "stake_public_key": "<public key in validator.json>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}, "code_hash": "GGfKUF9TuAFN4AzbecPonNGuRTuVqx8UPXmViogN8pRm"}' --accountId="<accountId>" --amount=30 --gas=300000000000000
+near call factory01.littlefarm.testnet  create_staking_pool '{"staking_pool_id": "<poolId>", "owner_id": "<accountId>", "stake_public_key": "<public key in validator.json>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}, "code_hash": "GGfKUF9TuAFN4AzbecPonNGuRTuVqx8UPXmViogN8pRm"}' --accountId="<accountId>" --amount=4 --gas=300000000000000
 ```
 
 For Mainnet:
 
 ```
-near call pool.near create_staking_pool '{"staking_pool_id": "<poolId>", "owner_id": "<accountId>", "stake_public_key": "<public key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' --accountId="<accountId>" --amount=30 --gas=300000000000000
+near call pool.near create_staking_pool '{"staking_pool_id": "<poolId>", "owner_id": "<accountId>", "stake_public_key": "<public key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' --accountId="<accountId>" --amount=4 --gas=300000000000000
 ```
 
 In the example above, you need to replace:
@@ -38,6 +38,7 @@ In the example above, you need to replace:
 * **5**: The fee that the pool will charge (e.g. in this case 5 over 100 is 5% of fees).
 * **Account Id**: The NEAR account deploying the staking pool.
 
+> Be sure to have at least 4 NEAR available, it is the minimum required for storage in the new pool contract.
 
 Once a new staking pool is deployed and associated now with the new node, you can start the stake migration to the new pool. To migrate stake, take a look at the [Stake and Delegation page](/validator/staking-and-delegation).
 
