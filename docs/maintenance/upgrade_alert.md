@@ -3,7 +3,7 @@ id: upgrade_alert
 title: Validator Node Upgrade Alert
 sidebar_label: Validator Node Upgrade Alert
 description: How to setup an alert for validator nodes upgrading.
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # Alerting for Validator Node Upgrades
