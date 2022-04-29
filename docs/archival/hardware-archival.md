@@ -2,6 +2,7 @@
 id: hardware-archival
 title: Hardware Requirements for Archival Node
 sidebar_label: Hardware Requirements
+sidebar_position: 1
 description: NEAR Archival Node Hardware Requirements
 ---
 

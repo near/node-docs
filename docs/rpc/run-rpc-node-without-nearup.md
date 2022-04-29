@@ -1,11 +1,12 @@
 ---
 id: run-rpc-node-without-nearup
-title: Run an RPC Node (without nearup)
-sidebar_label: Run a Node (without nearup)
+title: Run an RPC Node
+sidebar_label: Run a Node 🚀
+sidebar_position: 2
 description: How to run an RPC Node without nearup
 ---
 
-The following instructions are applicable across localnet, testnet, and mainnet. Note: We do not use nearup on mainnet.
+The following instructions are applicable across localnet, testnet, and mainnet.
 
 If you are looking to learn how to compile and run a NEAR RPC node natively for one of the following networks, this guide is for you.
 

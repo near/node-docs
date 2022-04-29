@@ -2,6 +2,7 @@
 id: hardware-rpc
 title: Hardware Requirements for RPC Node
 sidebar_label: Hardware Requirements
+sidebar_position: 1
 description: NEAR RPC Node Hardware Requirements
 ---
 

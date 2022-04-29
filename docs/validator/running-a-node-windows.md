@@ -6,6 +6,8 @@ sidebar_position: 4
 description: How to run a NEAR node using `nearup` on Windows
 ---
 
+*If this is the first time for you to setup a validator node, head to our [Validator Bootcamp 🚀](/validator/validator-bootcamp). We encourage you to set up your node with Neard instead of Nearup as Nearup is not used on Mainnet. Please head to [Run a node](/validator/compile-and-run-a-node) for instructions on how to setup a RPC node with Neard.*
+
 This doc is written for developers, sysadmins, DevOps, or curious people who want to know how to run a NEAR node using `nearup` on Windows.
 
 
