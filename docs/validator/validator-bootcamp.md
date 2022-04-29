@@ -1,11 +1,12 @@
 ---
 id: validator-bootcamp
 title: NEAR Validator Bootcamp
-sidebar_label: NEAR Validator Bootcamp
+sidebar_label: NEAR Validator Bootcamp 🚀
+sidebar_position: 2
 description: NEAR Validator Bootcamp
 ---
 
-# NEAR Validator Bootcamp
+# NEAR Validator Bootcamp 🚀
 ---
 
 ### Validator Onboarding FAQ's

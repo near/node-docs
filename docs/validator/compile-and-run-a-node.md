@@ -1,10 +1,12 @@
 ---
 id: compile-and-run-a-node
-title: Run a Validator Node (without nearup)
-sidebar_label: Run a Node (without nearup)
-sidebar_position: 2
+title: Run a Validator Node
+sidebar_label: Run a Node
+sidebar_position: 3
 description: Compile and Run a NEAR Node without Container in localnet, testnet, and mainnet
 ---
+
+*If this is the first time for you to setup a validator node, head to our [Validator Bootcamp 🚀](/validator/validator-bootcamp).*
 
 The following instructions are applicable across localnet, testnet, and mainnet. Note: We do not use nearup on mainnet.
 

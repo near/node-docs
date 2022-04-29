@@ -2,9 +2,11 @@
 id: run-archival-node-with-nearup
 title: Run an Archival Node (with nearup)
 sidebar_label: Run a Node (with nearup)
-description: How to run an Archival Node with nearup
+sidebar_position: 3
+description: How to run asn Archival Node with nearup
 ---
 
+*We encourage you to set up your node with Neard instead of Nearup as Nearup is not used on Mainnet. Please head to [Run a Node](/archival/run-archival-node-without-nearup) for instructions on how to setup an archival node with Neard.*
 
 <blockquote class="info">
 <strong>Heads up</strong><br /><br />
