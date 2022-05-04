@@ -20,7 +20,7 @@ To enable this debug page on the node, a modificiation is require on `config.jso
   ...
 ```
 
-After the node starts, head to http://your-node-ip/debug to view the Node Debug Page.
+After the node starts, head to `http://<your-node-ip>/debug` to view the Node Debug Page.
 
 ![img](/images/node-debug.png)
 
@@ -55,15 +55,15 @@ What follows is a table of the node peers.
 - `Height`: shows the latest block height.
 - `Tracked Shards`: shows which shards the node is tracking.
 - `Archival`: shows whether the node is archival or not.
-- `Route to validators`: The list of validators that this node is one-hop away.
-
+- `Route to validators`: List of validators, the paths to which contain this current node as a peer.
 
 ### Chain Info
 This page displays the current point-in-time status of the node in terms of orphan blocks and missing chunks.
 
 `Current head: 3mivFUczgGWM6RvwvaT2oQ93zRQQTn3riXNtWxByntD1 @ 64818564`: The current head is the latest block of this node.
 
-`Current header head: 3mivFUczgGWM6RvwvaT2oQ93zRQQTn3riXNtWxByntD1 @ 64818564`: TBD
+`Current header head: 3mivFUczgGWM6RvwvaT2oQ93zRQQTn3riXNtWxByntD1 @ 64818564`:
+The header_head is the latest 'header' that we know of. If node is up-to-date, then head is equal to header_head. If the node is syncing, the header_head may be larger than the head.
 
 `Orphan Pool`: This table shows a list of orphan blocks for this current node. The block hash and block height are listed. (e.g. It is possible that this node received a block for which its predecessor is unknown. Once the predecessor is known, the orphan block would no longer be in the pool.)
 
@@ -79,9 +79,9 @@ The epoch displays the current epoch and the most recent five epoches.
 - `Start height`: the first block of the epoch.
 - `Protocol version`: The protocol version of the epoch.
 - `First block`: Block hash of the first block in the epoch.
-- `Epoch start`: How long ago the epoch has restarted.
+- `Epoch start`: How long ago the epoch has started.
 
-The table below displays the validators in the current epoch and the last five epochs (represented by the epoch hash) with either TRUE or FALSE.  
+The table below displays the validator history in the current epoch and the last five epochs (represented by the epoch hash) with either TRUE or FALSE.  
 
 
 >Got a question?
