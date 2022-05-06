@@ -571,7 +571,7 @@ git clone https://github.com/nearprotocol/nearcore.git
 ```
 * Set environment to the latest release tag
 ```
-export NEAR_RELEASE_VERSION=1.24.0
+export NEAR_RELEASE_VERSION=1.26.0-rc.1
 ```
 ```
 cd nearcore
