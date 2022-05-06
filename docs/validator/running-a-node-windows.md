@@ -113,7 +113,7 @@ The README for `nearup` (linked above) may be **all you need to get a node up an
     nearup logs --follow
     ```
 
-You might be asked for a validator ID; if you do not want to validate, simply press enter. For validation, please refer to the [validation section](https://wiki.near.org/validators/validator-guides/running-a-validator).
+You might be asked for a validator ID; if you do not want to validate, simply press enter. For validation, please follow the [Validator Bootcamp](/validator/validator-bootcamp).
 
 >Got a question?
 <a href="https://stackoverflow.com/questions/tagged/nearprotocol">
