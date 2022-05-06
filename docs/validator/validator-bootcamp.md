@@ -569,9 +569,9 @@ source $HOME/.cargo/env
 ```
 git clone https://github.com/nearprotocol/nearcore.git
 ```
-* Set environment to the latest release tag
+* Set environment to the latest release tag. Check the latest release tag here: https://github.com/near/nearcore/releases. Note: release with suffix of rc is intended for testnet.
 ```
-export NEAR_RELEASE_VERSION=1.24.0
+export NEAR_RELEASE_VERSION=1.25.0
 ```
 ```
 cd nearcore
