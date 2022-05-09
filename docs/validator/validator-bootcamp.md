@@ -129,22 +129,9 @@ Command:
 ```
 export NEAR_ENV=<network> (use guildnet / testnet / mainnet)
 ```
+
 ##### Proposals
 A proposal by a validator indicates they would like to enter the validator set, in order for a proposal to be accepted it must meet the minimum seat price.
-
-Command:
-```
-near proposals
-```
-##### Validators Current
-Shows a list of active validators in the current epoch, the number of blocks produced, number of blocks expected, and online rate. Used to monitor if a validator is having issues.
-
-Command:
-```
-near validators current
-```
-##### Validators Next
-Show validators whose proposal was accepted one epoch ago, and that will enter the validator set in the next epoch.
 
 Command:
 ```
