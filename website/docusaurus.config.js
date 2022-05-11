@@ -1,9 +1,6 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
-
 const math = require('remark-math');
 const katex = require('rehype-katex');
 
@@ -20,9 +17,12 @@ const config = {
   projectName: 'node-docs', // Usually your repo name.
   scripts: [
     "/js/hotjar.js",
+    "https://use.fontawesome.com/releases/v5.15.4/js/all.js",
   ],
   plugins: [require.resolve('docusaurus-lunr-search')],
   stylesheets: [
+    "https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap",
+    "https://cdn.statically.io/gh/nearprotocol/near-global-footer/main/footer.css",
     {
       href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
       type: 'text/css',
@@ -64,12 +64,15 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      colorMode: {
+        defaultMode: "light",
+        disableSwitch: true,
+      },
       navbar: {
         title: 'Node Docs',
         logo: {
           alt: 'NEAR Logo',
           src: 'img/near_logo.svg',
-          srcDark: 'img/near_logo_white.svg',
         },
         items: [
           {
@@ -99,66 +102,7 @@ const config = {
           },
         ],
       },
-      footer: {
-        style: 'dark',
-        links: [
-          {
-            title: 'Docs',
-            items: [
-              {
-                label: 'Nodes',
-                to: '/',
-              },
-              {
-                label: 'Specification',
-                to: 'https://nomicon.io',
-              },
-              {
-                label: 'Dev Docs',
-                to: 'https://docs.near.org',
-              },
-              {
-                label: 'Wiki',
-                to: 'https://wiki.near.org',
-              },
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/nearprotocol',
-              },
-              {
-                label: 'Discord',
-                href: 'https://near.chat',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/NEARProtocol',
-              },
-            ],
-          },
-          {
-            title: 'More',
-            items: [
-              {
-                label: 'SDK Docs',
-                to: 'https://near-sdk.io/',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/near/node-docs',
-              },
-            ],
-          },
-        ],
-        copyright: `Copyright © ${new Date().getFullYear()} <a href="https://near.org">NEAR Protocol</a> | All rights reserved | hello@near.org`,
-      },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
         "additionalLanguages": [
           "rust", "java", "python", "ruby", "go", "toml"
         ]
