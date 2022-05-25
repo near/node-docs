@@ -414,7 +414,7 @@ wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deplo
 ```
 mkdir ~/.near/testnet/data
 cd ~/.near/testnet
-wget -c https://near-protocol-public.s3-accelerate.amazonaws.com/backups/testnet/rpc/data.tar -O - | tar -xf -
+wget -c https://near-protocol-public.s3.amazonaws.com/backups/testnet/rpc/data.tar -O - | tar -xf -
 ```
 
 * Launch this command so set the Near testnet Environment:
