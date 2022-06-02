@@ -19,7 +19,7 @@ The README for `nearup` (linked above) may be **all you need to get a node up an
 ## Prerequisites
 
 - [Git](https://git-scm.com/)
-- [Nearup](https://github.com/near/nearup): Make sure [`nearup`](https://github.com/near/nearup) is installed. You can install `nearup` by following the instructions at https://github.com/near/nearup.
+- [Nearup](https://github.com/near-guildnet/nearup): Make sure [`nearup`](https://github.com/near-guildnet/nearup) is installed. You can install `nearup` by following the instructions at https://github.com/near-guildnet/nearup.
 
 ---
 
