@@ -28,7 +28,7 @@ Rather than performing the recompression, an easier way of getting
 benefits of the storage optimisation is to download a new [node data
 snapshots](/intro/node-data-snapshots).  Note that this option is
 currently available for **testnet only**.  Mainnet snapshots haven’t
-been optimised yet but will be in upcoming weeks.
+been optimized yet but will be in upcoming weeks.
 
 
 ## Performing the operation
