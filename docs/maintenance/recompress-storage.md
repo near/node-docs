@@ -11,7 +11,7 @@ description: How to recompress archival node’s storage to reduce its size.
 The nearcore 1.26.0 release introduces various improvements to node’s
 storage layer.  Among better performance, the changes result in
 *significant* reduction of the storage on archival nodes: from 7.9 TB
-to 3.1 TB on mainnet and from 4.3 TB to 1.5 TB on testnet.
+to 3.1 TB on mainnet and from 3.6 TB to 1.7 TB on testnet.
 
 However, to take full advantage of the savings, some manual steps need
 to be taken.  This document describes those steps.  Note that if
@@ -22,10 +22,19 @@ by the databases.  Because of that, the whole process is referred to
 as ‘recompressing the storage’.
 
 
+## Downloading recompressed snapshot
+
+Rather than performing the recompression, an easier way of getting
+benefits of the storage optimisation is to download a new [node data
+snapshots](/intro/node-data-snapshots).  Note that this option is
+currently available for **testnet only**.  Mainnet snapshots haven’t
+been optimized yet but will be in upcoming weeks.
+
+
 ## Performing the operation
 
-The operation can be performed at any time.  That is, it does not need
-to happen directly after the node upgrade.  In fact, it might be
+The recompression can be performed at any time.  That is, it doesn’t
+need to happen directly after the node upgrade.  In fact, it might be
 better to schedule it some number of days after binary upgrade.  Such
 delay gives time to make sure that the binary release works correctly
 before introducing another change.
