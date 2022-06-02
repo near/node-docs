@@ -18,7 +18,7 @@ This documentation may require additional edits. Please keep this in mind while 
 
 
 ## `nearup` Installation {#nearup-installation}
-You can install `nearup` by following the instructions at https://github.com/near/nearup.
+You can install `nearup` by following the instructions at https://github.com/near-guildnet/nearup.
 
 <blockquote class="info">
 <strong>Heads up</strong><br /><br />
