@@ -143,7 +143,7 @@ $ git fetch origin --tags
 Checkout to the branch you need if not `master` (default). Latest release is recommended. Please check the [releases page on GitHub](https://github.com/near/nearcore/releases).
 
 ```bash
-$ git checkout tags/1.25.0 -b mynode
+$ git checkout tags/1.26.1 -b mynode
 ```
 
 ### 2. Compile `nearcore` binary {#2-compile-nearcore-binary-1}
@@ -247,7 +247,7 @@ release.
 For more information on choosing between `master` and latest release branch [ [click here](/validator/compile-and-run-a-node#choosing-your-nearcore-version) ].
 
 ```bash
-$ git checkout tags/1.25.0 -b mynode
+$ git checkout tags/1.26.1 -b mynode
 ```
 
 ### 2. Compile `nearcore` binary {#2-compile-nearcore-binary-2}

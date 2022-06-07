@@ -12,7 +12,7 @@ This doc is written for developers, sysadmins, DevOps, or curious people who wan
 
 
 ## `nearup` Installation {#nearup-installation}
-You can install `nearup` by following the instructions at https://github.com/near/nearup.
+You can install `nearup` by following the instructions at https://github.com/near-guildnet/nearup.
 
 <blockquote class="info">
 <strong>Heads up</strong><br /><br />
@@ -44,7 +44,7 @@ Note: `nearup` and `neard` are running inside the container. You have to mount t
 Once `nearup` and Docker are installed (by following instructions in previous section), run:
 
 ```sh
-docker run -v $HOME/.near:/root/.near -p 3030:3030 --name nearup nearprotocol/nearup run testnet
+docker run -v $HOME/.near:/root/.near -p 3030:3030 --name nearup nearup/nearprotocol run testnet
 ```
 
 
@@ -63,7 +63,7 @@ Enter your account ID (leave empty if not going to be a validator):
 To run `nearup` in docker's detached (non-blocking) mode, you can add `-d` to the `docker run` command,
 
 ```
-docker run -v $HOME/.near:/root/.near -p 3030:3030 -d --name nearup nearprotocol/nearup run testnet
+docker run -v $HOME/.near:/root/.near -p 3030:3030 -d --name nearup nearup/nearprotocol run testnet
 ```
 
 #### Execute `nearup` commands in container {#execute-nearup-commands-in-container}

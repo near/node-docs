@@ -558,7 +558,7 @@ git clone https://github.com/nearprotocol/nearcore.git
 ```
 * Set environment to the latest release tag. For the latest release tag, please check here: https://github.com/near/nearcore/releases.  Note: RC tags are for Testnet only.
 ```
-export NEAR_RELEASE_VERSION=1.25.0
+export NEAR_RELEASE_VERSION=1.26.1
 ```
 ```
 cd nearcore
