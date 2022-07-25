@@ -26,10 +26,10 @@ _( † ) `localnet` would be the right choice if you prefer to avoid leaking inf
 
 There are a few different networks to potentially run a node. Each network operates with its own independent validators and unique state. To find out more, head to the [network overview](https://docs.near.org/docs/concepts/networks).
 
-* [`mainnet`](https://docs.near.org/docs/concepts/networks#mainnet)
-* [`testnet`](https://docs.near.org/docs/concepts/networks#testnet)
-* [`betanet`](https://docs.near.org/docs/concepts/networks#betanet)
-* [`localnet`](https://docs.near.org/docs/concepts/networks#localnet)
+* [`mainnet`](https://docs.near.org/concepts/basics/networks#mainnet)
+* [`testnet`](https://docs.near.org/concepts/basics/networks#testnet)
+* [`betanet`](https://docs.near.org/concepts/basics/networks#betanet)
+* [`localnet`](https://docs.near.org/concepts/basics/networks#localnet)
 
 
 >Got a question?
