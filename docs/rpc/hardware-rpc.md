@@ -8,7 +8,7 @@ description: NEAR RPC Node Hardware Requirements
 
 This page covers the minimum and recommended hardware requirements for engaging with the NEAR platform as a RPC node.
 
-For testing your RPC once the node is fully sync'd, see [this example RPC request.](https://docs.near.org/docs/api/rpc#node-status)
+For testing your RPC once the node is fully sync'd, see [this example RPC request.](https://docs.near.org/api/rpc/network#node-status)
 
 ## Recommended Hardware Specifications {#recommended-hardware-specifications}
 
