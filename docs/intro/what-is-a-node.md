@@ -24,7 +24,7 @@ _( † ) `localnet` would be the right choice if you prefer to avoid leaking inf
 
 ## Types of Network {#types-of-network}
 
-There are a few different networks to potentially run a node. Each network operates with its own independent validators and unique state. To find out more, head to the [network overview](https://docs.near.org/docs/concepts/networks).
+There are a few different networks to potentially run a node. Each network operates with its own independent validators and unique state. To find out more, head to the [network overview](https://docs.near.org/concepts/basics/networks).
 
 * [`mainnet`](https://docs.near.org/concepts/basics/networks#mainnet)
 * [`testnet`](https://docs.near.org/concepts/basics/networks#testnet)
