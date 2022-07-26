@@ -20,7 +20,7 @@ RPC nodes are RPC service providers that provide public RPC endpoints for develo
 
 Archival nodes store full blockchain data, and build an archive of historical states. These nodes are useful for block explorers, chain analysis, and infrastructure providers.
 
-See [API Setup](https://docs.near.org/docs/api/rpc#setup) section for archival RPC nodes endpoints.
+See [API Setup](https://docs.near.org/api/rpc/setup) section for archival RPC nodes endpoints.
 
 > Got a question?
 > <a href="https://stackoverflow.com/questions/tagged/nearprotocol">
