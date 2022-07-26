@@ -24,7 +24,7 @@ Running a RPC node is very similar to running a [validator node](/validator/runn
 
 ## Prerequisites
 
-- [Rust](https://www.rust-lang.org/). If not already installed, please [follow these instructions](https://docs.near.org/docs/tutorials/contracts/intro-to-rust#3-step-rust-installation).
+- [Rust](https://www.rust-lang.org/). If not already installed, please [follow these instructions](https://docs.near.org/develop/prerequisites).
 - [Git](https://git-scm.com/)
 - Installed developer tools:
   - MacOS
