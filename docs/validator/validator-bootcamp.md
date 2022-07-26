@@ -984,7 +984,7 @@ Any node within the network offers RPC services on port 3030 as long as the port
 
 Find many commands and how to use them in more detail here:
 
-https://docs.near.org/docs/api/rpc
+- https://docs.near.org/api/rpc/introduction
 
 
 
@@ -1369,7 +1369,7 @@ In this lesson you will learn about:
 NEAR uses cryptographic keys to secure accounts and validators, each key has a public and matching private key pair.
 
 Find more detailed information about NEAR and keys:
-https://docs.near.org/docs/videos/accounts-keys#docsNav
+https://docs.near.org/concepts/basics/account#access-keys
 
 #### Validator Keys:
 To manage and sign transactions a node_key and validator_key.
