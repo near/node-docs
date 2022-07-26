@@ -60,7 +60,7 @@ actually gets interrupted.
 
 One of the possible ways to restore a database is to use a known good state of
 the database. Before `1.26.0`, this was mostly done by downloading a
-[node database snapshot](https://docs.near.org/docs/develop/node/intro/node-data-snapshots).
+[node database snapshot](/intro/node-data-snapshots).
 Starting with `1.26.0`, it can be done locally, which is more convenient and
 much faster.
 
