@@ -16,7 +16,6 @@ const config = {
   organizationName: 'near', // Usually your GitHub org/user name.
   projectName: 'node-docs', // Usually your repo name.
   scripts: [
-    "/js/hotjar.js",
     "https://use.fontawesome.com/releases/v5.15.4/js/all.js",
   ],
   plugins: [require.resolve('docusaurus-lunr-search')],
