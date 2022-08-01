@@ -117,7 +117,7 @@ This command will create the required directory structure and will generate `con
 
 From the generated `config.json`, there two parameters to modify:
 - `boot_nodes`: If you had not specify the boot nodes to use during init in Step 3, the generated `config.json` shows an empty array, so we will need to replace it with a full one specifying the boot nodes.
-- `tracked_shards`: In the generated `config.json`, this field is an empty empty. You will have to replace it to `"tracked_shards": [0]`
+- `tracked_shards`: In the generated `config.json`, this field is an empty. You will have to replace it to `"tracked_shards": [0]`
 
 To replace the `config.json`, run the following commands:
 
@@ -211,7 +211,7 @@ This command will create the required directory structure by generating a `confi
 
 From the generated `config.json`, there two parameters to modify:
 - `boot_nodes`: If you had not specify the boot nodes to use during init in Step 3, the generated `config.json` shows an empty array, so we will need to replace it with a full one specifying the boot nodes.
-- `tracked_shards`: In the generated `config.json`, this field is an empty empty. You will have to replace it to `"tracked_shards": [0]`
+- `tracked_shards`: In the generated `config.json`, this field is an empty. You will have to replace it to `"tracked_shards": [0]`
 
 To replace the `config.json`, run the following commands:
 
