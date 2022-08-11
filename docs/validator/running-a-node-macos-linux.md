@@ -122,8 +122,8 @@ brew install cmake protobuf clang llvm
 For Linux, install these dependencies:
 
 ```text
-apt update
-apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python docker.io protobuf-compiler libssl-dev pkg-config clang llvm
+sudo apt update
+sudo apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python docker.io protobuf-compiler libssl-dev pkg-config clang llvm
 ```
 
 Then clone the repo:
@@ -155,14 +155,19 @@ NB. Please ensure you build releases through `make` rather than `cargo
 build --release`.  The latter skips some optimisations (most notably
 link-time optimisation) and thus produces a less efficient executable.
 
-Finally:
-On MacOS or Linux
+If your machine is behind a firewall or NAT, make sure port 24567 is
+open and forwarded to the machine where the node is going to be
+running.
+
+Finally, execute:
 
 ```bash
 nearup run testnet --binary-path path/to/nearcore/target/release
 ```
 
-If you want to run `localnet` instead of `testnet`, then replace `testnet` with `localnet` in the command above.
+If you want to run `localnet` instead of `testnet`, then replace
+`testnet` with `localnet` in the command above.  (If you’re running
+`localnet` you don’t need to open port 24567).
 
 You might be asked for a validator ID; if you do not want to validate, simply press enter. For validation, please follow the [Validator Bootcamp](/validator/validator-bootcamp).
 
@@ -170,18 +175,26 @@ You might be asked for a validator ID; if you do not want to validate, simply pr
 Enter your account ID (leave empty if not going to be a validator):
 ```
 
-## Running a Node on GCP {#running-a-node-on-gcp}
+## Running a Node on the Cloud {#running-a-node-on-the-cloud}
 
-Create a new instance, following the [Hardware requirements](hardware.md).
+Create a new instance following the [Hardware
+requirements](hardware.md).
 
-Add firewall rules to allow traffic to 24567 port from all IPs (0.0.0.0/0)
+Add firewall rules to allow traffic to port 24567 from all IPs
+(0.0.0.0/0).
 
-SSH into the machine (there is "SSH" button in the console or use `gcloud ssh` command) and run:
+SSH into the machine.  Depending on your cloud provider this may
+require different commands.  Often simple `ssh hosts-external-ip`
+should work.  Cloud providers may offer custom command to help with
+connecting to the instances: GCP offers [`gcloud compute
+ssh`](https://cloud.google.com/sdk/gcloud/reference/compute/ssh), AWS
+offers [`aws emr
+ssh`](https://docs.aws.amazon.com/cli/latest/reference/emr/ssh.html)
+and Azure offers [`az
+ssh`](https://docs.microsoft.com/en-gb/cli/azure/ssh?view=azure-cli-latest).
 
-```text
-sudo apt update
-sudo apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python docker.io protobuf-compiler libssl-dev pkg-config clang llvm
-```
+Once connected to the instance, follow [the steps listed
+above](#compiling-and-running-a-node-without-docker).
 
 ## Success Message {#success-message}
 
