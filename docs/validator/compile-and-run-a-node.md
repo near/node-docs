@@ -208,7 +208,7 @@ $ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-p
 > have enough free space on a fast-enough disk.
 
 Note that you don’t have to perform this step if you prefer fully
-decentralised experience when the node downloads data from the NEAR
+decentralized experience when the node downloads data from the NEAR
 network.
 
 ### 5. Run the node {#run-the-node}
@@ -304,7 +304,7 @@ $ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-p
 > have enough free space on a fast-enough disk.
 
 Note that you don’t have to perform this step if you prefer fully
-decentralised experience when the node downloads data from the NEAR
+decentralized experience when the node downloads data from the NEAR
 network.
 
 ### 5. Run the node {#run-the-node-1}
