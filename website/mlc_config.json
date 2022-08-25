@@ -4,6 +4,11 @@
       "pattern": "^https://near-node.zendesk.com"
     }
   ],
+  "ignorePatterns": [
+    {
+      "pattern": "^https://rpc.betanet.near.org"
+    }
+  ],
   "replacementPatterns": [
     {
       "pattern": "^/",
