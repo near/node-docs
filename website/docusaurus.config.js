@@ -18,7 +18,19 @@ const config = {
   scripts: [
     "https://use.fontawesome.com/releases/v5.15.4/js/all.js",
   ],
-  plugins: [require.resolve('docusaurus-lunr-search')],
+  themes: ["@saucelabs/theme-github-codeblock",
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      {
+        hashed: true,
+        indexPages: false,
+        indexBlog: false,
+        docsRouteBasePath: ['/'],
+        docsDir: ["../docs"],
+        language: ["en"],
+      },
+    ],
+  ],
   stylesheets: [
     "https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap",
     "https://cdn.statically.io/gh/nearprotocol/near-global-footer/main/footer.css",
