@@ -16,7 +16,7 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support           |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX                                   |
 | RAM            | 16GB DDR4                                                                 |
-| Storage        | 7 Terabyte SSD                                                            |
+| Storage        | 15 Terabyte SSD                                                            |
 
 _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
 
@@ -27,7 +27,7 @@ _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx``
 | -------------- | -------------------------------------------------------------------------- |
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support            |
 | RAM            | 8GB DDR4                                                                   |
-| Storage        | 7 Terabyte SSD                                                             |
+| Storage        | 15 Terabyte SSD                                                             |
 
 _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
 
@@ -37,9 +37,9 @@ Estimated monthly costs depending on operating system:
 
 | Cloud Provider | Machine Size    | Linux                     |
 | -------------- | --------------- | ------------------------  |
-| AWS            | m5.2xlarge      | $330 CPU + $800 storage † |
-| GCP            | n2-standard-8   | $280 CPU + $800 storage † |
-| Azure          | Standard_F8s_v2 | $180 CPU + $800 storage † |
+| AWS            | m5.2xlarge      | $330 CPU + $1600 storage † |
+| GCP            | n2-standard-8   | $280 CPU + $1600 storage † |
+| Azure          | Standard_F8s_v2 | $180 CPU + $1600 storage † |
 
 _( † ) The storage cost will grow overtime as an archival node stores more data from the growing NEAR blockchain._
 
