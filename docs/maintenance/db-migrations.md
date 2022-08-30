@@ -69,9 +69,10 @@ For the demonstration purposes, let's assume that the near home directory is
 safe database migration works the following way:
 
 1. Creates an instant and free snapshot of the existing database in
-`/home/user/.near/data/db_migration_snapshot` using filesystem hard links.
+`/home/user/.near/data/migration-snapshot` using filesystem hard links.
 <blockquote class="warning">
-If your filesystem doesn't support hardlinks, this step can take significant
+If your filesystem doesn't support hardlinks (or you’ve configured the snapshot
+to be created on a different file system), this step can take significant
 time and double the space used by the database.
 </blockquote>
 2. Runs the database migration.
@@ -84,26 +85,26 @@ by the snapshot will gradually increase as the database migration progresses.
 4. Runs the node normally.
 
 If the migration step is interrupted, a snapshot will not be deleted. Upon
-restart, the **node will detect the presence of the local snapshot, **assumes that a
-database migration was interrupted and that the database is corrupted, and asks
-the user to recover the database from that snapshot.
+restart, the node will detect the presence of the local snapshot, assume that
+a database migration was interrupted (thus corrupting the database) and ask the
+user to recover the database from that snapshot.
 
 ### Recovery
 
 Assuming the corrupted database is in `/home/user/.near/data`, and the snapshot
 is in its default location in the database directory (
-`/home/user/.near/data/db_migration_snapshot`) a user may restore the database
-as follows:
+`/home/user/.near/data/migration-snapshot`) a user may restore the database as
+follows:
 
 ```sh
 # Delete files of the corrupted database
 rm /home/user/.near/data/*.sst
 
 # Move not only the .sst files, but all files, to the data directory
-mv /home/user/.near/data/db_migration_snapshot/* /home/user/.near/data/
+mv /home/user/.near/data/migration-snapshot/* /home/user/.near/data/
 
 # Delete the empty snapshot directory
-rm -r /home/user/.near/data/db_migration_snapshot
+rm -r /home/user/.near/data/migration-snapshot
 
 # Restart
 ./target/release/neard
@@ -111,15 +112,26 @@ rm -r /home/user/.near/data/db_migration_snapshot
 
 ### Configuration
 
-Two options in `config.json` configure the safe database migrations feature:
+Starting with upcoming release 1.30, the safe database migrations feature is
+configured by a `store.migration_snapshot` option (i.e., a `migration_snapshot`
+property of a `store` object).  It can be set to one of the following:
 
-- `use_db_migration_snapshot` - enabled by default. Set to `false` to disable the feature completely.
-- `db_migration_snapshot_path` - lets you override the location of the database snapshot.
+- an absolute path (e.g. `"/srv/neard/migration-snapshot"`) — the snapshot will
+  be created in specified location;
+- a relative path (e.g. `"migration-snapshot"`) — the snapshot will be created
+  in specified sub-directory inside of the database directory;
+- `true` (the default) — equivalent to specifying `"migration-snapshot"`
+  relative path; or
+- `false` — the safe migration feature will be disabled.
 
 Note that the default location of the snapshot is inside the database directory.
-This was chosen to ensure the snapshot is instant and free, because the
-hardlinks only work inside the same filesystem. Many nodes run with
-`/home/user/.near/data` being a separate filesystem.
+This ensures the snapshot is instant and free (so long as the filesystem
+supports hardlinks).
+
+Prior to version 1.30, the feature was configured by `use_db_migration_snapshot`
+and `db_migration_snapshot_path` options.  They are are now deprecated and if
+the node detects that they are set, it will fail a migration with message
+explaining how to migrate to new options.
 
 >Got a question?
 <a href="https://stackoverflow.com/questions/tagged/nearprotocol">
