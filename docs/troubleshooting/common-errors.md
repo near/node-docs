@@ -19,7 +19,7 @@ Normally, a node should find 12 to 15 peers. If your node’s peer count is low 
 Cause: My node has the average number of peers (12-15) and x number of peers are down (such during protocol upgrade when these nodes upgrade late and are kicked), the blocks can be missed.
 
 Solution:
-Restart your node and try to find new peers. A bad performing peer that is close to your node may cause your node to miss blocks. If a peer is malicious, you can consider using `“blacklist": [“KEY@IP:24567”]` in the `config.json` to ban the peer.
+Restart your node and try to find new peers. A bad performing peer that is close to your node may cause your node to miss blocks. If a peer is malicious, you can consider using `"blacklist": ["IP"]` in the `config.json` to ban the peer.
 
 
 ***My node cannot find any peers or has one peer.***
