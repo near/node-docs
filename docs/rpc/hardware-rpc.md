@@ -12,23 +12,23 @@ For testing your RPC once the node is fully sync'd, see [this example RPC reques
 
 ## Recommended Hardware Specifications {#recommended-hardware-specifications}
 
-| Hardware       |  Recommended Specifications                                               |
-| -------------- | -----------------------------------------------------------------------   |
-| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support           |
-| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX                                   |
-| RAM            | 16GB DDR4                                                                 |
-| Storage        | 1TB SSD (NVMe SSD is recommended. HDD will be enough for localnet only )  |
+| Hardware       | Recommended Specifications                                               |
+| -------------- |--------------------------------------------------------------------------|
+| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support          |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX                                  |
+| RAM            | 20GB DDR4                                                                 |
+| Storage        | 1TB SSD (NVMe SSD is recommended. HDD will be enough for localnet only ) |
 
 _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
 
 
 ## Minimal Hardware Specifications {#minimal-hardware-specifications}
 
-| Hardware       |  Minimal Specifications                                                    |
-| -------------- | -------------------------------------------------------------------------- |
-| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support            |
-| RAM            | 8GB DDR4                                                                   |
-| Storage        | 500GB SSD (NVMe SSD is recommended. HDD will be enough for localnet only)  |
+| Hardware       | Minimal Specifications                                                    |
+| -------------- |---------------------------------------------------------------------------|
+| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support           |
+| RAM            | 12GB DDR4                                                                 |
+| Storage        | 500GB SSD (NVMe SSD is recommended. HDD will be enough for localnet only) |
 
 _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
 
