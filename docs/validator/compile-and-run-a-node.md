@@ -190,7 +190,7 @@ This command will create the required directory structure and will generate `con
 
 ### 4. Get data backup {#get-data-backup}
 
-The node is ready to be started.  When started as is it will establish
+The node is ready to be started.  When started as-is, it will establish
 connection to the network and start downloading latest state.  This
 may take a while so an alternative is to download [Node Data Snapshots](/intro/node-data-snapshots)
 which will speed up the syncing.  The short of it is to install AWS
@@ -207,7 +207,7 @@ $ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-p
 > requires SSD to be able to keep up with network.  Make sure that you
 > have enough free space on a fast-enough disk.
 
-Note that you don’t have to perform this step if you prefer fully
+Note that you don’t have to perform this step if you prefer a fully
 decentralized experience when the node downloads data from the NEAR
 network.
 
@@ -286,7 +286,7 @@ This command will create the required directory structure by generating a `confi
 
 ### 4. Get data backup {#get-data-backup-1}
 
-The node is ready to be started.  When started as is it will establish
+The node is ready to be started. When started as-is, it will establish
 connection to the network and start downloading latest state.  This
 may take a while so an alternative is to download [Node Data Snapshots](/intro/node-data-snapshots)
 which will speed up the syncing.  The short of it is to install AWS
@@ -303,7 +303,7 @@ $ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-p
 > requires SSD to be able to keep up with network.  Make sure that you
 > have enough free space on a fast-enough disk.
 
-Note that you don’t have to perform this step if you prefer fully
+Note that you don’t have to perform this step if you prefer a fully
 decentralized experience when the node downloads data from the NEAR
 network.
 
