@@ -58,7 +58,7 @@ $ RUST_LOG=debug,actix_web=info ./target/release/neard --home ~/.near run
 
 ## `localnet` {#localnet}
 
-### 1. Clone `nearcore` project from GitHub {#1-clone-nearcore-project-from-github}
+### 1. Clone `nearcore` project from GitHub {#clone-nearcore-project-from-github}
 
 First, clone the [`nearcore` repository](https://github.com/near/nearcore).
 
@@ -72,7 +72,7 @@ Next, checkout the release branch you need if you will not be using the default 
 $ git checkout master
 ```
 
-### 2. Compile `nearcore` binary {#2-compile-nearcore-binary}
+### 2. Compile `nearcore` binary {#compile-nearcore-binary}
 
 In the repository run the following commands:
 
@@ -99,7 +99,7 @@ For `localnet`, you also have the option to build in nightly mode (which is expe
 $ cargo build --package neard --features nightly_protocol,nightly_protocol_features --release
 ```
 
-### 3. Initialize working directory {#3-initialize-working-directory}
+### 3. Initialize working directory {#initialize-working-directory}
 
 The NEAR node requires a working directory with a couple of configuration files. Generate the initial required working directory by running:
 
@@ -109,7 +109,7 @@ $ ./target/release/neard --home ~/.near init --chain-id localnet
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
-This command will create the required directory structure and will generate `config.json`, `node_key.json`, `validator_key.json`, and `genesis.json` for `localnet` network.
+This command will create the required directory structure and will generate `config.json`, `node_key.json`, `validator_key.json`, and `genesis.json` files for `localnet` network.
 - `config.json` - Configuration parameters which are responsive for how the node will work.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
@@ -117,7 +117,7 @@ This command will create the required directory structure and will generate `con
 - `validator_key.json` - A file which contains a public and private key for local `test.near` account which belongs to the only local network validator.
 
 
-### 4. Run the node {#4-run-the-node}
+### 4. Run the node {#run-the-node}
 
 To run your node, simply run the following command:
 
@@ -130,7 +130,7 @@ That's all. The node is running you can see log outputs in your console.
 
 ## `testnet` {#testnet}
 
-### 1. Clone `nearcore` project from GitHub {#1-clone-nearcore-project-from-github-1}
+### 1. Clone `nearcore` project from GitHub {#clone-nearcore-project-from-github-1}
 
 First, clone the [`nearcore` repository](https://github.com/near/nearcore).
 
@@ -146,7 +146,7 @@ Checkout to the branch you need if not `master` (default). Latest release is rec
 $ git checkout tags/1.26.1 -b mynode
 ```
 
-### 2. Compile `nearcore` binary {#2-compile-nearcore-binary-1}
+### 2. Compile `nearcore` binary {#compile-nearcore-binary-1}
 
 In the `nearcore` folder run the following commands:
 
@@ -169,19 +169,17 @@ optimisation which is disabled by default.
 
 The binary path is `target/release/neard`
 
-### 3. Initialize working directory {#3-initialize-working-directory-1}
+### 3. Initialize working directory {#initialize-working-directory-1}
 
 The NEAR node requires a working directory with a couple of configuration files. Generate the initial required working directory by running:
 
 ```bash
-$ ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis
+$ ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config
 ```
-
-> You can specify trusted boot nodes that you'd like to use by pass in a flag during init: `--boot-nodes ed25519:4k9csx6zMiXy4waUvRMPTkEtAS2RFKLVScocR5HwN53P@34.73.25.182:24567,ed25519:4keFArc3M4SE1debUQWi3F1jiuFZSWThgVuA2Ja2p3Jv@34.94.158.10:24567,ed25519:D2t1KTLJuwKDhbcD9tMXcXaydMNykA99Cedz7SkJkdj2@35.234.138.23:24567,ed25519:CAzhtaUPrxCuwJoFzceebiThD9wBofzqqEMCiupZ4M3E@34.94.177.51:24567`
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
-This command will create the required directory structure and will generate `config.json`, `node_key.json`, and `genesis.json` for `testnet` network.
+This command will create the required directory structure and will generate `config.json`, `node_key.json`, and `genesis.json` files for `testnet` network.
 - `config.json` - Configuration parameters which are responsive for how the node will work.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
@@ -190,34 +188,30 @@ This command will create the required directory structure and will generate `con
 > **Heads up**
 > The genesis file for `testnet` is big (6GB +) so this command will be running for a while and no progress will be shown.
 
+### 4. Get data backup {#get-data-backup}
 
-
-### 4. Replacing the `config.json` {#4-replacing-the-configjson}
-
-From the generated `config.json`, there two parameters to modify:
-- `boot_nodes`: If you had not specify the boot nodes to use during init in Step 3, the generated `config.json` shows an empty array, so we will need to replace it with a full one specifying the boot nodes.
-- `tracked_shards`: In the generated `config.json`, this field is an empty empty. You will have to replace it to `"tracked_shards": [0]`
-
-To replace the `config.json`, run the following commands:
-
-```bash
-$ rm ~/.near/config.json
-$ wget -O ~/.near/config.json https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/config.json
-```
-
-### 5. Get data backup {#5-get-data-backup}
-
-The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
+The node is ready to be started.  When started as-is, it will establish
+connection to the network and start downloading latest state.  This
+may take a while so an alternative is to download [Node Data Snapshots](/intro/node-data-snapshots)
+which will speed up the syncing.  The short of it is to install AWS
+CLI and run:
 
 ```bash
 $ aws s3 --no-sign-request cp s3://near-protocol-public/backups/testnet/rpc/latest .
-$ LATEST=$(cat latest)
-$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/testnet/rpc/$LATEST ~/.near/data
+$ latest=$(cat latest)
+$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/testnet/rpc/$latest ~/.near/data
 ```
 
-NOTE: The .tar file is around 147GB (and will grow) so make sure you have enough disk space to unpack inside the data folder.
+> **Heads up**
+> An RPC node stores around 500GB of data on disk.  Furthermore, it
+> requires SSD to be able to keep up with network.  Make sure that you
+> have enough free space on a fast-enough disk.
 
-### 6. Run the node {#6-run-the-node}
+Note that you don’t have to perform this step if you prefer a fully
+decentralized experience when the node downloads data from the NEAR
+network.
+
+### 5. Run the node {#run-the-node}
 To start your node simply run the following command:
 
 ```bash
@@ -229,7 +223,7 @@ That's all. The node is running you can see log outputs in your console. It will
 
 ## `mainnet` {#mainnet}
 
-### 1. Clone `nearcore` project from GitHub {#1-clone-nearcore-project-from-github-2}
+### 1. Clone `nearcore` project from GitHub {#clone-nearcore-project-from-github-2}
 
 First, clone the [`nearcore` repository](https://github.com/near/nearcore).
 
@@ -250,7 +244,7 @@ For more information on choosing between `master` and latest release branch [ [c
 $ git checkout tags/1.26.1 -b mynode
 ```
 
-### 2. Compile `nearcore` binary {#2-compile-nearcore-binary-2}
+### 2. Compile `nearcore` binary {#compile-nearcore-binary-2}
 
 In the `nearcore` folder run the following commands:
 
@@ -273,15 +267,13 @@ optimisation which is disabled by default.
 
 The binary path is `target/release/neard`
 
-### 3. Initialize working directory {#3-initialize-working-directory-2}
+### 3. Initialize working directory {#initialize-working-directory-2}
 
 In order to work NEAR node requires to have working directory and a couple of configuration files. Generate the initial required working directory by running:
 
 ```bash
-$ ./target/release/neard --home ~/.near init --chain-id mainnet
+$ ./target/release/neard --home ~/.near init --chain-id mainnet --download-config
 ```
-
-> You can specify trusted boot nodes that you'd like to use by pass in a flag during init: `--boot-nodes ed25519:86EtEy7epneKyrcJwSWP7zsisTkfDRH5CFVszt4qiQYw@35.195.32.249:24567,ed25519:BFB78VTDBBfCY4jCP99zWxhXUcFAZqR22oSx2KEr8UM1@35.229.222.235:24567,ed25519:Cw1YyiX9cybvz3yZcbYdG7oDV6D7Eihdfc8eM1e1KKoh@35.195.27.104:24567,ed25519:33g3PZRdDvzdRpRpFRZLyscJdbMxUA3j3Rf2ktSYwwF8@34.94.132.112:24567,ed25519:CDQFcD9bHUWdc31rDfRi4ZrJczxg8derCzybcac142tK@35.196.209.192:24567`
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
@@ -292,34 +284,30 @@ This command will create the required directory structure by generating a `confi
 - `data/` -  A folder in which a NEAR node will write it's state.
 
 
-### 4. Replacing the `config.json` {#4-replacing-the-configjson-1}
+### 4. Get data backup {#get-data-backup-1}
 
-From the generated `config.json`, there two parameters to modify:
-- `boot_nodes`: If you had not specify the boot nodes to use during init in Step 3, the generated `config.json` shows an empty array, so we will need to replace it with a full one specifying the boot nodes.
-- `tracked_shards`: In the generated `config.json`, this field is an empty empty. You will have to replace it to `"tracked_shards": [0]`
-
-To replace the `config.json`, run the following commands:
-
-```bash
-$ rm ~/.near/config.json
-$ wget -O ~/.near/config.json https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json
-```
-
-If you are setting up a backup Mainnet Validator node, please make sure its `config.json` is set up correctly as described in Step 3 and 4.
-
-### 5. Get data backup {#5-get-data-backup-1}
-
-The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
+The node is ready to be started. When started as-is, it will establish
+connection to the network and start downloading latest state.  This
+may take a while so an alternative is to download [Node Data Snapshots](/intro/node-data-snapshots)
+which will speed up the syncing.  The short of it is to install AWS
+CLI and run:
 
 ```bash
 $ aws s3 --no-sign-request cp s3://near-protocol-public/backups/mainnet/rpc/latest .
-$ LATEST=$(cat latest)
-$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/mainnet/rpc/$LATEST ~/.near/data
+$ latest=$(cat latest)
+$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/mainnet/rpc/$latest ~/.near/data
 ```
 
-NOTE: The .tar file is ~125GB (and will grow) so make sure you have enough disk space to unpack inside the data folder.
+> **Heads up**
+> An RPC node stores around 500GB of data on disk.  Furthermore, it
+> requires SSD to be able to keep up with network.  Make sure that you
+> have enough free space on a fast-enough disk.
 
-### 6. Run the node {#6-run-the-node-1}
+Note that you don’t have to perform this step if you prefer a fully
+decentralized experience when the node downloads data from the NEAR
+network.
+
+### 5. Run the node {#run-the-node-1}
 To start your node simply run the following command:
 
 ```bash
