@@ -31,9 +31,11 @@ $ sudo apt-get install awscli -y
 
 Then, download the snapshot using the AWS CLI:
 ```bash
-$ aws s3 --no-sign-request cp s3://near-protocol-public/backups/{mainnet|testnet}/{rpc|archive}/latest .
-$ LATEST=$(cat latest)
-$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/{mainnet|testnet}/{rpc|archive}/$LATEST ~/.near/data
+$ chain="mainnet"  # or "testnet"
+$ kind="rpc"       # or "archive"
+$ aws s3 --no-sign-request cp "s3://near-protocol-public/backups/${chain:?}/${kind:?}/latest .
+$ latest=$(cat latest)
+$ aws s3 --no-sign-request cp --no-sign-request --recursive "s3://near-protocol-public/backups/${chain:?}/${kind:?}/${latest:?}" ~/.near/data
 ```
 
 For a faster snapshot download speed, use s5cmd, the download accelerator for S3 written in Go. For download instruction, please see https://github.com/peak/s5cmd.
