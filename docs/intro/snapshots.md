@@ -33,7 +33,7 @@ Then, download the snapshot using the AWS CLI:
 ```bash
 $ chain="mainnet"  # or "testnet"
 $ kind="rpc"       # or "archive"
-$ aws s3 --no-sign-request cp "s3://near-protocol-public/backups/${chain:?}/${kind:?}/latest .
+$ aws s3 --no-sign-request cp "s3://near-protocol-public/backups/${chain:?}/${kind:?}/latest" .
 $ latest=$(cat latest)
 $ aws s3 --no-sign-request cp --no-sign-request --recursive "s3://near-protocol-public/backups/${chain:?}/${kind:?}/${latest:?}" ~/.near/data
 ```
