@@ -23,7 +23,7 @@ If you are looking to learn how to compile and run a NEAR validator node nativel
 - Installed developer tools:
   - MacOS
     ```bash
-    $ brew install cmake protobuf clang llvm awscli
+    $ brew install cmake protobuf llvm awscli
     ```
   - Linux
     ```bash
