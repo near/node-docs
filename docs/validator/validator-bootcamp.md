@@ -334,7 +334,7 @@ pip3 install --user --upgrade nearup
 ####  Create a wallet
 - MainNet: https://wallet.near.org/
 - TestNet: https://wallet.testnet.near.org/
-- GuildNet: https://wallet.openshards.io/
+- GuildNet: `https://wallet.openshards.io/`
 
 #### Authorize Wallet Locally
 A full access key needs to be installed locally to be able transactions via NEAR-CLI.
