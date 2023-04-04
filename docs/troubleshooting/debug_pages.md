@@ -24,7 +24,7 @@ If you modified your rpc address in config, then debug page will be accessible o
 
 ## Last blocks page
 Displays 50 most recent blocks. Shows hash, as well as time and gas stats for block and every shard.  
-On the left schematically displays the chain to visualise forks.
+On the left schematically displays the chain to visualize forks.
 
 ## Network info page
 Displays a table of peers.
