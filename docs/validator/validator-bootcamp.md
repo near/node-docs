@@ -315,7 +315,7 @@ The node is now running you can see log outputs in your console. Your node shoul
 
 #### Using NearUp
 
-You can set up a node using neard on Mainnet and Testnet. On Guildnet, you have the option to use NearUp to set the node. However, NearUp is not recommended or supported for Mainnet or Testnet. We recommend that you use neard consistently on Guildnet, Testnet, and Mainnet.
+You can set up a node using neard on Mainnet and Testnet. On Guildnet, you have the option to use NearUp to set the node. However, NearUp is not recommended or supported for Mainnet. We recommend that you use neard consistently on Guildnet, Testnet, and Mainnet.
 
 However, if you choose to use NearUp, NearUp will download the necessary binaries and files to get up and running. You just need to provide the network to run and the staking pool id.
 
