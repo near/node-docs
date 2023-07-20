@@ -72,13 +72,13 @@ near call <stakingPoolId> deposit_and_stake --amount <amount> --accountId <accou
 ```
 
 ### Unstake All
-Unstaking takes 2-3 epochs to complete. After the unstaking period, you may withdraw your NEAR from staking pool.
+Unstaking takes 3-4 epochs to complete. After the unstaking period, you may withdraw your NEAR from staking pool.
 ```
 near call <stakingPoolId> unstake_all --accountId <accountId> --gas=300000000000000
 ```
 
 ### Unstake a Specified Amount
-Please note the amount in yoctoNEAR. NB: Unstaking takes 2-3 epochs to complete. After the unstaking period, you may withdraw your NEAR from staking pool.
+Please note the amount in yoctoNEAR. NB: Unstaking takes 3-4 epochs to complete. After the unstaking period, you may withdraw your NEAR from staking pool.
 
 ```
 near call <stakingPoolId> unstake '{"amount": "<amount yoctoNEAR>"}' --accountId <accountId> --gas=300000000000000
