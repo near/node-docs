@@ -16,7 +16,7 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support           |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX                                   |
 | RAM            | 24GB DDR4                                                                 |
-| Storage        | 7 Terabyte SSD                                                            |
+| Storage        | 9 Terabyte SSD                                                            |
 
 _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
 
@@ -27,7 +27,7 @@ _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx``
 | -------------- | -------------------------------------------------------------------------- |
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support            |
 | RAM            | 16GB DDR4                                                                   |
-| Storage        | 7 Terabyte SSD                                                             |
+| Storage        | 9 Terabyte SSD                                                             |
 
 _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
 

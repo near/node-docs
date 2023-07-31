@@ -35,7 +35,7 @@ $ chain="mainnet"  # or "testnet"
 $ kind="rpc"       # or "archive"
 $ aws s3 --no-sign-request cp "s3://near-protocol-public/backups/${chain:?}/${kind:?}/latest" .
 $ latest=$(cat latest)
-$ aws s3 sync --no-sign-request  "s3://near-protocol-public/backups/${chain:?}/${kind:?}/${latest:?}" ~/.near/data
+$ aws s3 sync --delete --no-sign-request  "s3://near-protocol-public/backups/${chain:?}/${kind:?}/${latest:?}" ~/.near/data
 ```
 
 For a faster snapshot download speed, use s5cmd, the download accelerator for S3 written in Go. For download instruction, please see https://github.com/peak/s5cmd.

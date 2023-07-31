@@ -315,7 +315,7 @@ The node is now running you can see log outputs in your console. Your node shoul
 
 #### Using NearUp
 
-You can set up a node using neard on Mainnet and Testnet. On Guildnet, you have the option to use NearUp to set the node. However, NearUp is not recommended or supported for Mainnet or Testnet. We recommend that you use neard consistently on Guildnet, Testnet, and Mainnet.
+You can set up a node using neard on Mainnet and Testnet. On Guildnet, you have the option to use NearUp to set the node. However, NearUp is not recommended or supported for Mainnet. We recommend that you use neard consistently on Guildnet, Testnet, and Mainnet.
 
 However, if you choose to use NearUp, NearUp will download the necessary binaries and files to get up and running. You just need to provide the network to run and the staking pool id.
 
@@ -334,7 +334,7 @@ pip3 install --user --upgrade nearup
 ####  Create a wallet
 - MainNet: https://wallet.near.org/
 - TestNet: https://wallet.testnet.near.org/
-- GuildNet: https://wallet.openshards.io/
+- GuildNet: `https://wallet.openshards.io/`
 
 #### Authorize Wallet Locally
 A full access key needs to be installed locally to be able transactions via NEAR-CLI.
@@ -1014,7 +1014,7 @@ Command:
 curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params": [null]}' -H 'Content-Type: application/json' http://localhost:3030/ | jq -c ".result.current_validators[] | select(.account_id | contains ("POOL_ID"))"
 ```
 ### Prometheus
-Monitoring disk, CPU, memory, network io, missed blocks, and peers is critically important to a healthy node. Prometheus and Granfana combined provide monitoring and visual reporting tools. Please note that Prometheus is best set up on another machine due the storage requirement for logs.
+Monitoring disk, CPU, memory, network io, missed blocks, and peers is critically important to a healthy node. Prometheus and Grafana combined provide monitoring and visual reporting tools. Please note that Prometheus is best set up on another machine due the storage requirement for logs.
 
 #### Installation
 Command:
