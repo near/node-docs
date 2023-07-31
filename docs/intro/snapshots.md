@@ -40,6 +40,43 @@ $ aws s3 sync --no-sign-request  "s3://near-protocol-public/backups/${chain:?}/$
 
 For a faster snapshot download speed, use s5cmd, the download accelerator for S3 written in Go. For download instruction, please see https://github.com/peak/s5cmd.
 
+Next alternative you can use `rclone`. 
+This tool is present in many Linux distributions. There is also a version for Windows.
+And its main merit is multithread.
+You can [read about it on](https://rclone.org)
+
+First, install rclone:
+```
+$ sudo apt install rclone
+```
+Next, prepare config. Because interactivity config very long and you must know meny parameters.
+```
+mkdir -p ~/.config/rclone
+touch ~/.config/rclone/rclone.conf
+```
+... and paste next rows into file rclone.conf 
+```
+[near_s3]
+type = s3
+provider = AWS
+location_constraint = EU
+acl = public-read
+server_side_encryption = AES256
+region = ca-central-1
+```
+Next step very similar with aws-cli. 
+>With two exceptions.
+1. By default rclone use 4 threads. You can change this by adding key `--transfers=X` where X is count of threads.
+2. You can view or not state of downloading. This key is `--progress`
+```
+chain="mainnet"  # or "testnet"
+kind="rpc"       # or "archive"
+rclone copy --no-check-certificate near_s3://near-protocol-public/backups/${chain:?}/${kind:?}/latest ./
+latest=$(cat latest)
+rclone copy --no-check-certificate --progress --transfers=6 \
+  near_s3://near-protocol-public/backups/${chain:?}/${kind:?}/${latest:?} ~/.near/data
+```
+
 >Got a question?
 <a href="https://stackoverflow.com/questions/tagged/nearprotocol">
   <h8>Ask it on StackOverflow!</h8></a>
