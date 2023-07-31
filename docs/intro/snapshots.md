@@ -49,12 +49,13 @@ First, install rclone:
 ```
 $ sudo apt install rclone
 ```
-Next, prepare config. Because interactivity config very long and you must know meny parameters.
+Next, prepare config, so you don't need to specify all the parameters interactively:
 ```
 mkdir -p ~/.config/rclone
 touch ~/.config/rclone/rclone.conf
 ```
-... and paste next rows into file rclone.conf 
+
+, and paste the following config into `rclone.conf`:
 ```
 [near_s3]
 type = s3
@@ -65,9 +66,6 @@ server_side_encryption = AES256
 region = ca-central-1
 ```
 Next step very similar with aws-cli. 
->With two exceptions.
-1. By default rclone use 4 threads. You can change this by adding key `--transfers=X` where X is count of threads.
-2. You can view or not state of downloading. This key is `--progress`
 ```
 chain="mainnet"  # or "testnet"
 kind="rpc"       # or "archive"
