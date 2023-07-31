@@ -40,7 +40,7 @@ $ aws s3 sync --delete --no-sign-request  "s3://near-protocol-public/backups/${c
 
 For a faster snapshot download speed, use s5cmd, the download accelerator for S3 written in Go. For download instruction, please see https://github.com/peak/s5cmd.
 
-Next alternative you can use `rclone`. 
+Another alternative is [`rclone`](https://rclone.org). 
 This tool is present in many Linux distributions. There is also a version for Windows.
 And its main merit is multithread.
 You can [read about it on](https://rclone.org)
