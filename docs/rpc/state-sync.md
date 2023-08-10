@@ -68,7 +68,28 @@ The best way to see the exact config values used is to visit a debug page of you
 
 Check whether state sync is enabled, and check whether it's configured to get state parts from the right location mentioned above.
 
-2. Has your node ran out of available disk space
+2. Has your node ran out of available disk space?
 
 If all seems to be configured fine, then disable state sync (set `"state_sync_enabled": false` in `config.json`) and try again.
 If that doesn't help, then restart from a backup data snapshot.
+
+## Running a Chunk-Only Producer that tracks a single shard
+
+Enable State Sync as explained above.
+
+And then configure the node to track no shards:
+
+```json
+"tracked_shards": [],
+"tracked_accounts": [],
+"tracked_shard_schedule": [],
+```
+
+It is counter-intuitive but it works. If a node stakes and is accepted as a
+validator, then it will track the shard that it needs to track to fulfill its
+validator role. The assignment of validators to shards is done by the consensus
+of validators.
+
+Note that in different epochs a validator may be assigned to different shards. A
+node switches tracked shards by using the State Sync mechanism for a single
+shard. See [catchup](https://github.com/near/nearcore/blob/master/docs/architecture/how/sync.md#catchup).
