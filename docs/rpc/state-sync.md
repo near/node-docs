@@ -57,7 +57,7 @@ If you notice that your node runs state sync and it hasn't completed after 3 hou
 1. Config options related to the state sync in your `config.json` file:
 * `state_sync_enabled`
 * `state_sync`
-* `state_sync_timeout`
+* `consensus.state_sync_timeout`
 * `tracked_shards`
 * `tracked_accounts`
 * `tracked_shard_schedule`
