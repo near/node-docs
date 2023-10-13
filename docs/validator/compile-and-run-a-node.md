@@ -257,6 +257,7 @@ $ echo 'export NEAR_ENV=testnet' >> ~/.bashrc
 
 #### 8. Create a wallet {#create-wallet}
 - TestNet: https://wallet.testnet.near.org/
+>Node: this wallet is deprecated in favor of other wallets (i.e https://app.mynearwallet.com/) and near-cli will be updated soon to reflect this.
 
 #### 9. Authorize Wallet Locally
 A full access key needs to be installed locally to be able transactions via NEAR-CLI.
@@ -286,6 +287,7 @@ $ near login
 
 ![img](/images/5.png)
 
+>Node: this wallet.testnet.near.org is deprecated in favor of other wallets (i.e https://app.mynearwallet.com/) and near-cli will be updated soon to reflect this.
 
 ### 10. Prepare validator key
 
@@ -494,6 +496,7 @@ echo 'export NEAR_ENV=mainnet' >> ~/.bashrc
 
 #### 8. Create a wallet {#create-wallet}
 - MainNet: https://wallet.near.org/
+>Node: this wallet.testnet.near.org is deprecated in favor of other wallets (i.e https://app.mynearwallet.com/) and near-cli will be updated soon to reflect this.
 
 #### 9. Authorize Wallet Locally
 A full access key needs to be installed locally to be able transactions via NEAR-CLI.
@@ -523,6 +526,7 @@ near login
 
 ![img](/images/5.png)
 
+>Node: this wallet.testnet.near.org is deprecated in favor of other wallets (i.e https://app.mynearwallet.com/) and near-cli will be updated soon to reflect this.
 
 ### 10. Prepare validator key
 
