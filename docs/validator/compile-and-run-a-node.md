@@ -8,7 +8,7 @@ description: Compile and Run a NEAR Node without Container in localnet, testnet,
 
 *If this is the first time for you to setup a validator node, head to our [Validator Bootcamp 🚀](/validator/validator-bootcamp).*
 
-The following instructions are applicable across localnet, testnet, and mainnet. Note: We do not use nearup on mainnet.
+The following instructions are applicable across localnet, testnet, and mainnet.
 
 If you are looking to learn how to compile and run a NEAR validator node natively (without containerization) for one of the following networks, this guide is for you.
 
@@ -110,9 +110,9 @@ $ ./target/release/neard --home ~/.near init --chain-id localnet
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
 This command will create the required directory structure and will generate `config.json`, `node_key.json`, `validator_key.json`, and `genesis.json` files for `localnet` network.
-- `config.json` - Configuration parameters which are responsive for how the node will work.
+- `config.json` - Neard node configuration parameters.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
-- `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
+- `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter.
 - `data/` -  A folder in which a NEAR node will write its state.
 - `validator_key.json` - A file which contains a public and private key for local `test.near` account which belongs to the only local network validator.
 
@@ -143,7 +143,7 @@ $ git fetch origin --tags
 Checkout to the branch you need if not `master` (default). Latest release is recommended. Please check the [releases page on GitHub](https://github.com/near/nearcore/releases).
 
 ```bash
-$ git checkout tags/1.28.0 -b mynode
+$ git checkout tags/1.35.0 -b mynode
 ```
 
 ### 2. Compile `nearcore` binary {#compile-nearcore-binary-1}
@@ -180,9 +180,9 @@ $ ./target/release/neard --home ~/.near init --chain-id testnet --download-genes
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
 This command will create the required directory structure and will generate `config.json`, `node_key.json`, and `genesis.json` files for `testnet` network.
-- `config.json` - Configuration parameters which are responsive for how the node will work.
+- `config.json` - Neard node configuration parameters.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
-- `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
+- `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter.
 - `data/` -  A folder in which a NEAR node will write it's state.
 
 > **Heads up**
@@ -219,6 +219,149 @@ $ ./target/release/neard --home ~/.near run
 ```
 
 That's all. The node is running you can see log outputs in your console. It will download a bit of missing data since the last backup was performed but it shouldn't take much time.
+
+### 6. Prepare to become a validator {#prepare-validator-1}
+To start validating we need to prepare by installing nodejs. Check [Nodesource repository](https://github.com/nodesource/distributions) for details on how to install nodejs on your distro. For Ubuntu, this will be done as follows:
+
+```bash
+$ sudo apt-get update
+$ sudo apt-get install -y ca-certificates curl gnupg
+$ sudo mkdir -p /etc/apt/keyrings
+$ curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+
+$ echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+
+$ sudo apt-get update
+$ sudo apt-get install nodejs -y
+$ sudo apt-get install npm -y
+$ sudo npm install -g near-cli
+```
+
+### 7. Install and check near-cli 
+Next we'll need to install near-cli with npm:
+
+```bash
+$ sudo npm install -g near-cli
+$ export NEAR_ENV=testnet
+$ near validators current
+```
+
+You should see a list of current validator for the network.
+
+To make the NEAR_ENV persistent, add it to your bashrc:
+
+```bash
+$ echo 'export NEAR_ENV=testnet' >> ~/.bashrc
+```
+
+
+#### 8. Create a wallet {#create-wallet}
+- TestNet: https://wallet.testnet.near.org/
+>Node: this wallet is deprecated in favor of other wallets (i.e https://app.mynearwallet.com/) and near-cli will be updated soon to reflect this.
+
+#### 9. Authorize Wallet Locally
+A full access key needs to be installed locally to be able transactions via NEAR-CLI.
+
+* You need to run this command:
+
+```bash
+$ near login
+```
+
+> Note: This command launches a web browser allowing for the authorization of a full access key to be copied locally.
+
+1 – Copy the link in your browser
+
+
+![img](/images/1.png)
+
+2 – Grant Access to Near CLI
+
+![img](/images/3.png)
+
+3 – After Grant, you will see a page like this, go back to console
+
+![img](/images/4.png)
+
+4 – Enter your wallet and press Enter
+
+![img](/images/5.png)
+
+>Node: this wallet.testnet.near.org is deprecated in favor of other wallets (i.e https://app.mynearwallet.com/) and near-cli will be updated soon to reflect this.
+
+### 10. Prepare validator key
+
+When step #8 is completed, near-cli will create a key in your ~/.near-credentials/mainnet/ directory. We should use this for our validator. As such we move it to .near directory, add pool factory to accound it and change private_key to secret_key:
+
+```bash 
+$ cp ~/.near-credentials/testnet/<accountId>.testnet.json ~/.near/validator_key.json
+$ sed -i -e "s/<accountId>.testnet/<accountId>.pool.f863973.m0/g"  ~/.near/validator_key.json
+$ sed -i -e 's/private_key/secret_key/g' ~/.near/validator_key.json
+```
+
+### 11. Deploy a staking pool
+
+To create a staking pool on the network, we need to call the create_staking_pool contract with required parameters and deploy it to the indicated accountId:
+
+```bash
+$ near call pool.f863973.m0 create_staking_pool '{"staking_pool_id": "<pool_name>", "owner_id": "<pool_owner_accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": <fee>, "denominator": 100}}' --accountId="<accountId>" --amount=30 --gas=300000000000000
+```
+
+From the command above, you need to replace:
+
+* **Pool Name**: Staking pool name, the factory automatically adds its name to this parameter, creating {pool_name}.{staking_pool_factory}
+Examples:   
+
+  - `myamazingpool.pool.f863973.m0` 
+  - `futureisnearyes.pool.f863973.m0` 
+  
+* **Pool Owner ID**: The NEAR account that will manage the staking pool. Usually your main NEAR account.
+* **Public Key**: The public key from your **validator_key.json** file. 
+* **Fee**: The fee the pool will charge in percents in 0-100 range.
+* **Account Id**: The NEAR account deploying the staking pool. This needs to be a named account initialized within near-cli (be present in ~/.near-credentials/mainnet/ directory and exist on the network). It can be the same account as the pool owner id
+
+> Be sure to have at least 30 NEAR available, it is the minimum required for storage.
+
+You will see something like this:
+
+![img](/images/pool.png)
+
+If there is a “True” at the End. Your pool is created.
+
+To change the pool parameters, such as changing the amount of commission charged to 1% in the example below, use this command:
+```
+$ near call <pool_name> update_reward_fee_fraction '{"reward_fee_fraction": {"numerator": 1, "denominator": 100}}' --accountId <account_id> --gas=300000000000000
+```
+
+
+### 12. Propose to start validating
+> NOTE: Validator must be fully synced before issuing a proposal or depositing funds. Check the neard logs to see if syncing is completed.
+
+In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
+
+To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract.
+
+#### Deposit and Stake NEAR
+
+Deposit token to a pool (can be done using any account, not necessary the one created/used in steps above):
+```bash
+$ near call <staking_pool_id> deposit_and_stake --amount <amount> --accountId <accountId> --gas=300000000000000
+```
+
+#### Ping
+A ping issues a new proposal and updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current.
+
+Command:
+```bash
+$ near call <staking_pool_id> ping '{}' --accountId <accountId> --gas=300000000000000
+```
+
+Once above is completed, verify your validator proposal status:
+
+```bash
+$ near proposals
+```
+Your validator pool should have **"Proposal(Accepted)"** status
 
 
 ## `mainnet` {#mainnet}
@@ -278,7 +421,7 @@ $ ./target/release/neard --home ~/.near init --chain-id mainnet --download-confi
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
 This command will create the required directory structure by generating a `config.json`, `node_key.json`, and downloads a `genesis.json` for `mainnet`.
-- `config.json` - Configuration parameters which are responsive for how the node will work.
+- `config.json` - Neard node configuration parameters.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
 - `data/` -  A folder in which a NEAR node will write it's state.
@@ -314,7 +457,150 @@ To start your node simply run the following command:
 $ ./target/release/neard --home ~/.near run
 ```
 
-That's all. The node is running and you can see log outputs in your console. It will download a bit of missing data since the last backup was performed but it shouldn't take much time.
+The node is running and you can see log outputs in your console. It will download the missing data since the last snapshot was performed but it shouldn't take much time.
+
+### 6. Prepare to become a validator {#prepare-validator-1}
+To start validating we need to prepare by installing nodejs. Check [Nodesource repository](https://github.com/nodesource/distributions) for details on how to install nodejs on your distro. For Ubuntu, this will be done as follows:
+
+```bash
+$ sudo apt-get update
+$ sudo apt-get install -y ca-certificates curl gnupg
+$ sudo mkdir -p /etc/apt/keyrings
+$ curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+
+$ echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+
+$ sudo apt-get update
+$ sudo apt-get install nodejs -y
+$ sudo apt-get install npm -y
+$ sudo npm install -g near-cli
+```
+
+### 7. Install and check near-cli 
+Next we'll need to install near-cli with npm:
+
+```bash
+$ sudo npm install -g near-cli
+$ export NEAR_ENV=mainnet
+$ near validators current
+```
+
+You should see a list of current validator for the network.
+
+To make the NEAR_ENV persistent, add it to your bashrc:
+
+```bash
+echo 'export NEAR_ENV=mainnet' >> ~/.bashrc
+```
+
+
+#### 8. Create a wallet {#create-wallet}
+- MainNet: https://wallet.near.org/
+>Node: this wallet.testnet.near.org is deprecated in favor of other wallets (i.e https://app.mynearwallet.com/) and near-cli will be updated soon to reflect this.
+
+#### 9. Authorize Wallet Locally
+A full access key needs to be installed locally to be able transactions via NEAR-CLI.
+
+* You need to run this command:
+
+```
+near login
+```
+
+> Note: This command launches a web browser allowing for the authorization of a full access key to be copied locally.
+
+1 – Copy the link in your browser
+
+
+![img](/images/1.png)
+
+2 – Grant Access to Near CLI
+
+![img](/images/3.png)
+
+3 – After Grant, you will see a page like this, go back to console
+
+![img](/images/4.png)
+
+4 – Enter your wallet and press Enter
+
+![img](/images/5.png)
+
+>Node: this wallet.testnet.near.org is deprecated in favor of other wallets (i.e https://app.mynearwallet.com/) and near-cli will be updated soon to reflect this.
+
+### 10. Prepare validator key
+
+When step #8 is completed, near-cli will create a key in your ~/.near-credentials/mainnet/ directory. We should use this for our validator. As such we move it to .near directory, add pool factory to accound it and change private_key to secret_key:
+
+```bash 
+$ cp ~/.near-credentials/testnet/<accountId>.mainnet.json ~/.near/validator_key.json
+$ sed -i -e "s/<accountId>.mainnet/<accountId>.poolv1.near/g"  ~/.near/validator_key.json
+$ sed -i -e 's/private_key/secret_key/g' ~/.near/validator_key.json
+```
+
+### 11. Deploy a staking pool
+
+To create a staking pool on the network, we need to call the create_staking_pool contract with required parameters and deploy it to the indicated accountId:
+
+```bash
+$ near call poolv1.near create_staking_pool '{"staking_pool_id": "<pool_name>", "owner_id": "<pool_owner_accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": <fee>, "denominator": 100}}' --accountId="<accountId>" --amount=30 --gas=300000000000000
+```
+
+From the command above, you need to replace:
+
+* **Pool Name**: Staking pool name, the factory automatically adds its name to this parameter, creating {pool_name}.{staking_pool_factory}
+Examples:   
+
+  - `myamazingpool.poolv1.near` 
+  - `futureisnearyes.poolv1.near` 
+  
+* **Pool Owner ID**: The NEAR account that will manage the staking pool. Usually your main NEAR account.
+* **Public Key**: The public key from your **validator_key.json** file. 
+* **Fee**: The fee the pool will charge in percents in 0-100 range.
+* **Account Id**: The NEAR account deploying the staking pool. This needs to be a named account initialized within near-cli (be present in ~/.near-credentials/mainnet/ directory and exist on the network). It can be the same account as the pool owner id
+
+> Be sure to have at least 30 NEAR available, it is the minimum required for storage.
+
+You will see something like this:
+
+![img](/images/pool.png)
+
+If there is a “True” at the End. Your pool is created.
+
+To change the pool parameters, such as changing the amount of commission charged to 1% in the example below, use this command:
+```
+$ near call <pool_name> update_reward_fee_fraction '{"reward_fee_fraction": {"numerator": 1, "denominator": 100}}' --accountId <account_id> --gas=300000000000000
+```
+
+
+### 12. Propose to start validating
+> NOTE: Validator must be fully synced before issuing a proposal or depositing funds. Check the neard logs to see if syncing is completed.
+
+In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
+
+To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract.
+
+#### Deposit and Stake NEAR
+
+Deposit token to a pool (can be done using any account, not necessary the one created/used in steps above):
+```
+$ near call <staking_pool_id> deposit_and_stake --amount <amount> --accountId <accountId> --gas=300000000000000
+```
+
+#### Ping
+A ping issues a new proposal and updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current.
+
+Command:
+```bash
+$ near call <staking_pool_id> ping '{}' --accountId <accountId> --gas=300000000000000
+```
+
+Once above is completed, verify your validator proposal status:
+
+```bash
+$ near proposals
+```
+Your validator pool should have **"Proposal(Accepted)"** status
 
 
 >Got a question?
