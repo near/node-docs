@@ -345,7 +345,7 @@ To note, a ping also updates the staking balances for your delegators. A ping sh
 
 Deposit token to a pool (can be done using any account, not necessary the one created/used in steps above):
 ```bash
-$ near call <staking_pool_id> deposit_and_stake --amount <amount> --accountId <accountId>.mainnet --gas=300000000000000
+$ near call <staking_pool_id> deposit_and_stake --amount <amount> --accountId <accountId>.testnet --gas=300000000000000
 ```
 
 #### Ping
