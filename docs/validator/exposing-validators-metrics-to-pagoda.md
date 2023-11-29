@@ -7,15 +7,30 @@ sidebar_position: 8
 
 ## Exposing Validator Metrics[^1]
 
+The following instructions are applicable for mainnet validator nodes.
+
+We kindly asking you to expose port 3030 to our scrapper, which is running from following addresses:
+
+35.204.219.60
+
+34.90.9.220
+
+It's highly recommended to deny traffic from other sources.
+
 The following instructions are applicable for mainnet validator nodes. 
 
 > Note: We take security seriously, so we put a lot of effort into doing things right on this front. Also, as we appreciate your eventual concerns, we are happy to disclose architecture on our end, so you can put your mind at ease.
+
+Please make sure that metrics are working - by looking at localhost:3030/metrics - if it doesn’t work  - please see the instructions below on configuring neard.
 
 ### How are we going to use the data?
 
 The collected data will be used to monitor the health and performance of the network in general. We will use the data to look into performance of low-level details of running details, both in aggregate and of individual nodes.
 
 However, note that we are not planning to investigate performance issues or missing blocks of individual nodes. We are only interested in the issues affecting the chain in general.
+
+### Share you public IP with us
+Please fill-in this form Sharing Validator Metrics with Pagoda - https://forms.gle/rQwwe9q4PKuUmGAx9
 
 ### Prerequisites
 - *Linux* node [running validator](https://near-nodes.io/validator/compile-and-run-a-node#mainnet)
