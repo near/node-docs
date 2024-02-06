@@ -53,7 +53,7 @@ Commands to run:
 ```
 chain="mainnet"  # or "testnet"
 kind="rpc"       # or "archive"
-rclone copy --no-check-certificate near_s3://near-protocol-public/backups/${chain:?}/${kind:?}/latest ./
+rclone copy --no-check-certificate near_cf://near-protocol-public/backups/${chain:?}/${kind:?}/latest ./
 latest=$(cat latest)
 rclone copy --no-check-certificate --progress --transfers=6 \
   near_cf://near-protocol-public/backups/${chain:?}/${kind:?}/${latest:?} ~/.near/data
