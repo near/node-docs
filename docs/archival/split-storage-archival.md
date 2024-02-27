@@ -81,6 +81,54 @@ cat <<< $(jq '.save_trie_changes = true | .cold_store = .store | .cold_store.pat
 ```
 4. Restart the node
 
+### If your node is out of sync after restarting from the latest snapshot {#syncing node}
+Downloading the cold database can take a long time (days). In this time your database can become very far behind the chain.
+You may wait for your node to catchup, but it still can take a long time.
+One alternative approach is to sync up your node by only downloading fresh hot database, and let the neard binary do the work of bringing cold database up to speed.
+
+1. Check the head of cold database (your node has to be running for this step)
+```bash
+curl --silent  0.0.0.0:3030/metrics | grep cold_head_height
+```
+2. Check the time of creation of this block in any explorer of your choice
+3. Check available split storage snapshots
+```bash
+chain=testnet/mainnet
+aws s3 --no-sign-request ls s3://near-protocol-public/backups/$chain/archive/
+```
+This list contains both split storage snapshots and legacy archival snapshots. To check that some snapshot is for split storage run
+```bash
+timestamp=<snapshot timestamp>
+aws s3 --no-sign-request ls s3://near-protocol-public/backups/$chain/archive/$timestamp/ | head -n3
+```
+If the snapshot is for legacy node, you should see some sst files. If the snapshot is for split storage node, you should see
+```bash
+                           PRE cold-data/
+                           PRE hot-data/
+```
+4. Select split storage snapshot with a timestamp roughly 48 hours after the time of creation of the cold head block.
+5. Stop your node.
+5. Replace your local database with hot database from selected snapshot
+```bash
+NEAR_HOME=/home/ubuntu/.near
+HOT_DATA=$NEAR_HOME/hot-data
+rm -r $HOT_DATA
+aws s3 --no-sign-request cp --recursive s3://near-protocol-public/backups/$chain/archive/$timestamp/hot-data $HOT_DATA
+```
+6. Restart your node.
+7. Check that head of the cold database is progressing
+```bash
+for i in {0..5}
+do
+    curl --silent  0.0.0.0:3030/metrics | grep cold_head_height
+    sleep 60`
+done
+```
+
+This process should make your node "jump" to the selected timestamp.
+Your cold database will need some time to copy everything new from the fresh hot database.
+If after a day your node is still not in sync, you can repeat the process.
+
 ## Doing the migration manually (based on an S3 RPC snapshot or your own node) {#manual migration}
 Note: We prepared an optimistic migration script that we have used several times to migrate our nodes.
 It follows a second scenario of using manual migration + S3 snapshots.
