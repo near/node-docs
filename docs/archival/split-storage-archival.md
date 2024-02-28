@@ -85,7 +85,13 @@ cat <<< $(jq '.save_trie_changes = true | .cold_store = .store | .cold_store.pat
 Downloading the cold database can take a long time (days). In this time your database can become very far behind the chain.
 You may wait for your node to catchup, but it still can take a long time.
 One alternative approach is to sync up your node by only downloading fresh hot database, and let the neard binary do the work of bringing cold database up to speed.
+Another option is to use an rpc database instead of hot. You will need to run some extra commands, but you will have database options (as rpc dbs are uploaded twice a day) and can sync up faster.
 
+This process should make your node "jump" to the head of a new snapshot.
+Your cold database will need some time to copy everything new from the fresh hot database.
+If after a day your node is still not in sync, you can repeat the process.
+
+#### Fast-forward node via downloading fresh hot database {#hot fast forward}
 1. Check the head of cold database (your node has to be running for this step)
 ```bash
 curl --silent  0.0.0.0:3030/metrics | grep cold_head_height
@@ -108,15 +114,15 @@ If the snapshot is for legacy node, you should see some sst files. If the snapsh
 ```
 4. Select split storage snapshot with a timestamp roughly 48 hours after the time of creation of the cold head block.
 5. Stop your node.
-5. Replace your local database with hot database from selected snapshot
+6. Replace your local database with hot database from selected snapshot
 ```bash
 NEAR_HOME=/home/ubuntu/.near
 HOT_DATA=$NEAR_HOME/hot-data
 rm -r $HOT_DATA
 aws s3 --no-sign-request cp --recursive s3://near-protocol-public/backups/$chain/archive/$timestamp/hot-data $HOT_DATA
 ```
-6. Restart your node.
-7. Check that head of the cold database is progressing
+7. Restart your node.
+8. Check that head of the cold database is progressing
 ```bash
 for i in {0..5}
 do
@@ -125,9 +131,51 @@ do
 done
 ```
 
-This process should make your node "jump" to the selected timestamp.
-Your cold database will need some time to copy everything new from the fresh hot database.
-If after a day your node is still not in sync, you can repeat the process.
+#### Fast-forward node via downloading fresh rpc database {#rpc fast forward}
+1. Check the head of cold database (your node has to be running for this step)
+```bash
+curl --silent  0.0.0.0:3030/metrics | grep cold_head_height
+```
+2. Check the time of creation of this block in any explorer of your choice
+3. Check available rpc snapshots
+```bash
+chain=testnet/mainnet
+aws s3 --no-sign-request ls s3://near-protocol-public/backups/$chain/rpc/
+```
+4. Select rpc snapshot with a timestamp roughly 48 hours after the time of creation of the cold head block.
+Or use any snapshot that fully covers the epoch of cold head.
+For public snapshot 48 hours used as 12h * (5 - 1), because we roughly estimate an epoch to last 12 hours, and the snapshot nodes are set up to keep 5 epochs.
+If you have some rpc snapshot that keeps 10 epochs, for example, you may use it if it's head was created ~4.5 days after cold head.
+If your snapshot is incompatible with your cold database you are going to see it during the last step, because in that case cold head would not increase (or even wouldn't be present in logs).
+5. Stop your node.
+6. Replace your local database with rpc database snapshot
+```bash
+NEAR_HOME=/home/ubuntu/.near
+HOT_DATA=$NEAR_HOME/hot-data
+rm -r $HOT_DATA
+aws s3 --no-sign-request cp --recursive s3://near-protocol-public/backups/$chain/rpc/$timestamp/ $HOT_DATA
+```
+7. Turn an rpc snapshot into a hot snapshot. All you need to do is change the `DbKind` of the database.
+This can be done with
+```bash
+NEAR_HOME=/home/ubuntu/.near
+CONFIG=$NEAR_HOME/config.json
+CONFIG_BKP=$NEAR_HOME/config.json.backup
+
+cp $CONFIG $CONFIG_BKP # preserving your old config
+cat <<< $(jq '.cold_store = null | .archive = false' $CONFIG) > $CONFIG # adjust config to open hot-data as rpc db
+./neard --home $NEAR_HOME database change-db-kind --new-kind HOT change-hot # change DbKind of hot-data to HOT
+cp $CONFIG_BKP $CONFIG # return original config
+```
+8. Restart your node.
+9. Check that head of the cold database is progressing
+```bash
+for i in {0..5}
+do
+    curl --silent  0.0.0.0:3030/metrics | grep cold_head_height
+    sleep 60`
+done
+```
 
 ## Doing the migration manually (based on an S3 RPC snapshot or your own node) {#manual migration}
 Note: We prepared an optimistic migration script that we have used several times to migrate our nodes.
