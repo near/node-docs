@@ -60,6 +60,16 @@ If you observe problems with block production or resharding performance, you can
 This does not require a node restart, you can send a signal to the neard process to load the new config.
 Read more [on github](https://github.com/near/nearcore/blob/master/docs/architecture/how/resharding.md#monitoring).
 
+### Mitigating state snapshot issue {#state snapshot}
+Node has to have a state snapshot in order for resharding to run.
+State snapshot is a smaller checkpoint of the whole DB taken at the epoch boundary.
+If you see any errors around creating or opening state snapshot, you may download state snapshot and attach it to your node.
+Look for `ERROR state_snapshot` log lines around the epoch switch times.
+For 1.37 the epoch switch happened around `2024-03-11 19:28:30`.
+
+Further instructions are in [Attaching State Snapshot page](/troubleshooting/attach-state-snapshot).
+For 1.37 release resharding use block hash `EqT4A5h9ayaALpJZNX4SK3dG3HDPWUH9QDuhfCcWSXHi`.
+
 ### After resharding {#after 1.37}
 If your node failed to reshard or is not able to sync with the network after the protocol upgrade, you will need to download the latest DB snapshot provided by Pagoda from s3
 [Node Data Snapshots](/intro/node-data-snapshots).
