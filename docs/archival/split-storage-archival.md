@@ -164,7 +164,7 @@ CONFIG_BKP=$NEAR_HOME/config.json.backup
 
 cp $CONFIG $CONFIG_BKP # preserving your old config
 cat <<< $(jq '.cold_store = null | .archive = false' $CONFIG) > $CONFIG # adjust config to open hot-data as rpc db
-./neard --home $NEAR_HOME database change-db-kind --new-kind HOT change-hot # change DbKind of hot-data to HOT
+./neard --home $NEAR_HOME database change-db-kind --new-kind Hot change-hot # change DbKind of hot-data to Hot
 cp $CONFIG_BKP $CONFIG # return original config
 ```
 8. Restart your node.
