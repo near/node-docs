@@ -16,8 +16,8 @@ For testing your RPC once the node is fully sync'd, see [this example RPC reques
 | -------------- |--------------------------------------------------------------------------|
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support          |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX                                  |
-| RAM            | 20GB DDR4                                                                 |
-| Storage        | 1TB SSD (NVMe SSD is recommended. HDD will be enough for localnet only ) |
+| RAM            | 20GB DDR4                                                                |
+| Storage        | 3TB Nvme SSD                                                             |
 
 _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
 
@@ -28,7 +28,7 @@ _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx``
 | -------------- |---------------------------------------------------------------------------|
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support           |
 | RAM            | 12GB DDR4                                                                 |
-| Storage        | 500GB SSD (NVMe SSD is recommended. HDD will be enough for localnet only) |
+| Storage        | 2Tb Nvme SSD                                                              |
 
 _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
 
@@ -38,9 +38,9 @@ Estimated monthly costs depending on operating system:
 
 | Cloud Provider | Machine Size    | Linux                  |
 | -------------- | --------------- | ---------------------- |
-| AWS            | m5.2xlarge      | $330 CPU + $80 storage |
-| GCP            | n2-standard-8   | $280 CPU + $80 storage |
-| Azure          | Standard_F8s_v2 | $180 CPU + $40 storage |
+| AWS            | m5.2xlarge      | $330 CPU + $160 storage |
+| GCP            | n2-standard-8   | $280 CPU + $160 storage |
+| Azure          | Standard_F8s_v2 | $180 CPU + $80 storage |
 
 <blockquote class="info">
 <strong>Resources for Cost Estimation</strong><br /><br />
