@@ -16,7 +16,7 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores                 |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX                                      |
 | RAM            | 24GB DDR4                                                                    |
-| Storage        | 1TB SSD (NVMe SSD is recommended. HDD will be enough for localnet only)      |
+| Storage        | 2TB SSD (NVMe SSD is recommended. HDD will be enough for localnet only)      |
 
 Verify CPU feature support by running the following command on Linux:
 
@@ -33,7 +33,7 @@ lscpu | grep -P '(?=.*avx )(?=.*sse4.2 )(?=.*cx16 )(?=.*popcnt )' > /dev/null \
 | CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores                |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX                                     |
 | RAM            | 16GB DDR4                                                                    |
-| Storage        | 500GB SSD (NVMe SSD is recommended. HDD will be enough for localnet only)   |
+| Storage        | 1TB SSD (NVMe SSD is recommended. HDD will be enough for localnet only)   |
 
 Verify CPU feature support by running the following command on Linux:
 
