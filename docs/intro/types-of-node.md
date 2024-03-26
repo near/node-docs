@@ -22,6 +22,12 @@ Archival nodes store full blockchain data, and build an archive of historical st
 
 See [API Setup](https://docs.near.org/api/rpc/setup) section for archival RPC nodes endpoints.
 
+### Near RPC Node providers {#rpc-node}
+
+Warning: third party service, DYOR
+
+[GetBlock](https://getblock.io/nodes/near/) is a service providing access to blockchain nodes, supporting over 50 blockchain protocols, including Near: https://getblock.io/nodes/near/
+
 > Got a question?
 > <a href="https://stackoverflow.com/questions/tagged/nearprotocol">
 > <h8>Ask it on StackOverflow!</h8></a>
