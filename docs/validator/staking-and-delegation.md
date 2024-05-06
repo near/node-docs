@@ -10,9 +10,9 @@ sidebar_position: 6
 Staking is a process of sending `StakeTransaction` that informs the network that a given node intends to become a validator in upcoming epochs. This particular type of transaction must provide a public key and staking amount. After the transaction is sent, a node that has a private key associated with the public key in the staking transaction must wait until two epochs to become a validator.
 
 ## What is a minimum amount to stake as a validator?
-A node can become a NEAR validator only if the amount in the staking transaction is above [the seat price defined by the protocol](https://near.org/papers/economics-in-sharded-blockchain/#validators). The seat price is dynamically calculated and is a function of the amount of NEAR tokens staked by other validators.
+A node can become a NEAR validator only if the amount in the staking transaction is above [the seat price defined by the protocol](https://docs.near.org/concepts/basics/validators#intro-to-validators). The seat price for becoming a validator on the NEAR blockchain can fluctuate based on several factors, including the total number of tokens staked on the network and the number of validators.
 
-The current seat price for validator is available here on the Explorer page: https://explorer.near.org/nodes/validators
+The current seat price for validator is available here: [nearblocks.io/node-explorer](https://nearblocks.io/node-explorer)
 
 ## Smart Contract Based Staking
 
