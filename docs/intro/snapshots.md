@@ -15,10 +15,10 @@ Here are the available snapshots directories based on node type and network. Ple
 
 | Node Type and Network| S3 Path                                                                  |
 | -------------------- | ------------------------------------------------------------------------ |
-| RPC testnet          | https://dcf58hz8pnro2.cloudfront.net/backups/testnet/rpc/latest          |
-| RPC mainnet          | https://dcf58hz8pnro2.cloudfront.net/backups/mainnet/rpc/latest          |
-| Archival testnet     | https://dcf58hz8pnro2.cloudfront.net/backups/testnet/archive/latest      |
-| Archival mainnet     | https://dcf58hz8pnro2.cloudfront.net/backups/mainnet/archive/latest      |
+| RPC testnet          | `https://dcf58hz8pnro2.cloudfront.net/backups/testnet/rpc/latest`        |
+| RPC mainnet          | `https://dcf58hz8pnro2.cloudfront.net/backups/mainnet/rpc/latest`        |
+| Archival testnet     | `https://dcf58hz8pnro2.cloudfront.net/backups/testnet/archive/latest`    |
+| Archival mainnet     | `https://dcf58hz8pnro2.cloudfront.net/backups/mainnet/archive/latest`    |
 
 ----
 Prerequisite:
