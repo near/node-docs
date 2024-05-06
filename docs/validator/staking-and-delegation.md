@@ -44,8 +44,9 @@ near stake <accountId> <publicKey> --amount 0
 
 # Delegation on NEAR
 
-## How does delegating staking works?
-NEAR token holders are encouraged to earn reward by delegate their tokens. By staking your NEAR tokens, you help to secure the network and earn rewards. When you delegate your tokens, you are depositing and staking your token with a specific staking pool that has been deployed by a validator.
+## How does delegating staking work?
+
+NEAR token holders are encouraged to earn rewards by delegating their tokens. By staking your NEAR tokens, you help to secure the network and earn rewards. When you delegate your tokens, you are depositing and staking your token with a specific staking pool that has been deployed by a validator.
 
 ## How to choose your validator(s)?
 A list of available pools for delegation (one per validator) is available on the [Explorer Validator](https://explorer.near.org/nodes/validators) page. Delegators should review validators' performance and commission charged to decide how best to delegate.
@@ -56,7 +57,7 @@ Delegators may use the [NEAR wallet](https://wallet.near.org/) or the [NEAR CLI]
 
 For delegators, who would like to delegate using the NEAR wallet, please create your `mainnet` wallet:
 - Go to [wallet.near.org](https://wallet.near.org/) and create an account.
-- Navigate to the [staking](https://wallet.near.org/staking) tab to select an available staking pool to delegate your tokens.
+- Navigate to the [staking](https://app.mynearwallet.com/staking) tab to select an available staking pool to delegate your tokens.
 
 
 ## Delegate with the NEAR CLI

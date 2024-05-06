@@ -4,6 +4,9 @@
       "pattern": "^https://near-node.zendesk.com"
     },
     {
+      "pattern": "^https://twitter.com"
+    },
+    {
       "pattern": "^https://rpc.betanet.near.org"
     }
   ],

@@ -64,7 +64,7 @@ If you notice that your node runs state sync and it hasn't completed after 3 hou
 * `archive`
 * `block_fetch_horizon`
 
-The best way to see the exact config values used is to visit a debug page of your node: http://127.0.0.1:3030/debug/client_config
+The best way to see the exact config values used is to visit a debug page of your node: `http://127.0.0.1:3030/debug/client_config`
 
 Check whether state sync is enabled, and check whether it's configured to get state parts from the right location mentioned above.
 
