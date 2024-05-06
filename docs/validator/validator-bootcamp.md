@@ -13,7 +13,7 @@ description: NEAR Validator Bootcamp
 
 ***What’s the current protocol upgrade that will increase the number of validators on Mainnet?***
 
-The next upgrade to increase the number of mainnet validators will introduce Chunk-Only Producers, and is currently slated for Q3 2022. To find out more about how to become a Chunk-Only Producer, please head to https://near.org/decentralize/ and register.
+The next upgrade to increase the number of mainnet validators will introduce Chunk-Only Producers, and is currently slated for Q3 2022. 
 
 ***How do I join NEAR as a validator on the Mainnet? What steps do I need to take?***
 
@@ -1504,9 +1504,8 @@ INFO stats: #42376888 Waiting for peers 0/0/40 peers ⬇ 0 B/s ⬆ 0 B/s 0.00 bp
 
 **Resolution**
 Download the latest config.json file and restart:
-- For Guildnet: https://s3.us-east-2.amazonaws.com/build.openshards.io/nearcore-deploy/guildnet/config.json
-- For Testnet: https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/config.json
-- For Mainnet: https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json
+- For Testnet: `https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/config.json`
+- For Mainnet: `https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json`
 
 
 ## LESSON 7 - NODE FAILOVER
