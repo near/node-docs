@@ -6,7 +6,7 @@ sidebar_position: 3
 description: How to run an Archival Node with nearup
 ---
 
-*This page is DEPRECATED Please Use [Run a Node](/archival/split-storage-archival)
+*This page is DEPRECATED Please Use [Run a Split Storage Archival](/archival/split-storage-archival)
 
 *We encourage you to set up your node with Neard instead of Nearup as Nearup is not used on Mainnet. Please head to [Run a Node](/archival/run-archival-node-without-nearup) for instructions on how to setup an archival node with Neard.*
 
