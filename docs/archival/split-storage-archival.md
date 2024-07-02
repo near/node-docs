@@ -62,17 +62,50 @@ Example:
 }
 ```
 
-## Using Pagoda-provided S3 split-storage snapshots {#S3 migration}
+## Using Pagoda-provided S3/CloudFrontsplit-storage snapshots {#S3 migration}
+
+Prerequisite:
+
+Recommended download client [`rclone`](https://rclone.org).
+This tool is present in many Linux distributions. There is also a version for Windows.
+And its main merit is multithread.
+You can [read about it on](https://rclone.org)
+** rclone version needs to be v1.66.0 or higher
+
+First, install rclone:
+```
+$ sudo -v ; curl https://rclone.org/install.sh | sudo bash
+```
+Next, prepare config, so you don't need to specify all the parameters interactively:
+```
+mkdir -p ~/.config/rclone
+touch ~/.config/rclone/rclone.conf
+```
+
+, and paste exactly the following config into `rclone.conf`:
+```
+[near_cf]
+type = s3
+provider = AWS
+download_url = https://dcf58hz8pnro2.cloudfront.net/
+acl = public-read
+server_side_encryption = AES256
+region = ca-central-1
+
+```
+
 1. Find latest snapshot
 ```bash
 chain=testnet/mainnet
-aws s3 --no-sign-request cp s3://near-protocol-public/backups/$chain/archive/latest_split_storage .
+rclone copy --no-check-certificate near_cf://near-protocol-public/backups/${chain:?}/archive/latest_split_storage ./
+latest=$(cat latest_split_storage)
 latest=$(cat latest_split_storage)
 ```
 2. Download cold and hot databases
 ```bash
 NEAR_HOME=/home/ubuntu/.near
-aws s3 --no-sign-request cp --recursive s3://near-protocol-public/backups/$chain/archive/$latest/ $NEAR_HOME
+rclone copy --no-check-certificate --progress --transfers=6 --checkers=6 \
+  near_cf://near-protocol-public/backups/${chain:?}/archive/${latest:?} $NEAR_HOME
 ```
 This will download cold database to `$NEAR_HOME/cold-data`, and hot database to `$NEAR_HOME/hot-data`
 3. Make changes to your config.json
@@ -266,6 +299,4 @@ These two metrics should be very close to each other.
 `near_cold_store_copy_result` – status of the continuous block-by-block migration that is performed in background to block production and can be interrupted.
 
 Size of the hot db – should be close to the size of an RPC node’s storage.
-Size of the cold db – should be close to the size of a legacy archival node’s storage. 
-
-
+Size of the cold db – should be close to the size of a legacy archival node’s storage.

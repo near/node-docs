@@ -5,6 +5,7 @@ sidebar_label: Run a Node 🚀
 sidebar_position: 2
 description: How to run an Archival Node without nearup
 ---
+## This page is DEPRECATED in favor of split storage archival.  Please Use [Run a Split Storage Archival](/archival/split-storage-archival)
 
 The following instructions are applicable across localnet, testnet, and mainnet.
 
