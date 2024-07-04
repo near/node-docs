@@ -41,7 +41,14 @@ sudo sysctl -w net.ipv4.tcp_wmem="4096 16384 $MaxExpectedPathBDP"
 sudo sysctl -w net.ipv4.tcp_slow_start_after_idle=0
 ```
 
-It is required to apply these changes for freshly started node and after each restart.
+These changes do not persist across system restarts. To apply them automatically on boot, add the following in `/etc/sysctl.d/local.conf`:
+```bash
+net.core.rmem_max = 8388608
+net.core.wmem_max = 8388608
+net.ipv4.tcp_rmem = 4096 87380 8388608
+net.ipv4.tcp_wmem = 4096 16384 8388608
+net.ipv4.tcp_slow_start_after_idle = 0
+```
 
 ## How to use this document {#how-to-use-this-document}
 
