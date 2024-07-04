@@ -14,7 +14,7 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | Hardware       |  Recommended Specifications                                               |
 | -------------- | -----------------------------------------------------------------------   |
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support           |
-| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX                                   |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                           |
 | RAM            | 24GB DDR4                                                                 |
 | Storage        | 9 Terabyte SSD                                                            |
 
