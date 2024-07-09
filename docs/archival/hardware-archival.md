@@ -1,6 +1,6 @@
 ---
 id: hardware-archival
-title: Hardware Requirements for Archival Node
+title: Hardware Requirements for Archival Split-Storage Node
 sidebar_label: Hardware Requirements
 sidebar_position: 1
 description: NEAR Archival Node Hardware Requirements
@@ -16,7 +16,8 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support           |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                           |
 | RAM            | 24GB DDR4                                                                 |
-| Storage        | 9 Terabyte SSD                                                            |
+| Hot Storage    | 3 Terabyte SSD                                                            |
+| Cold Storage   | 40 Terabyte  NON-SSD Persistent Disks                                     |
 
 _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
 
@@ -26,8 +27,9 @@ _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx``
 | Hardware       |  Minimal Specifications                                                    |
 | -------------- | -------------------------------------------------------------------------- |
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support            |
-| RAM            | 16GB DDR4                                                                   |
-| Storage        | 9 Terabyte SSD                                                             |
+| RAM            | 16GB DDR4                                                                  |
+| Hot Storage    | 3 Terabyte SSD                                                             |
+| Cold Storage   | 40 Terabyte NON-SSD Persistent Disks                                       |
 
 _Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
 

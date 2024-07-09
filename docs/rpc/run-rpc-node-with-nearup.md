@@ -77,11 +77,42 @@ Then run:
   $ nearup stop
 ```
 
-Retrieve a copy of the latest RPC snapshot from S3:
+Retrieve a copy of the latest RPC snapshot from S3 using rclone:
+Prerequisite:
+
+Recommended download client [`rclone`](https://rclone.org).
+This tool is present in many Linux distributions. There is also a version for Windows.
+And its main merit is multithread.
+You can [read about it on](https://rclone.org)
+** rclone version needs to be v1.66.0 or higher
+
+First, install rclone:
+```
+$ sudo -v ; curl https://rclone.org/install.sh | sudo bash
+```
+Next, prepare config, so you don't need to specify all the parameters interactively:
+```
+mkdir -p ~/.config/rclone
+touch ~/.config/rclone/rclone.conf
+```
+
+, and paste exactly the following config into `rclone.conf`:
+```
+[near_cf]
+type = s3
+provider = AWS
+download_url = https://dcf58hz8pnro2.cloudfront.net/
+acl = public-read
+server_side_encryption = AES256
+region = ca-central-1
+
+```
+
 ```bash
-$ aws s3 --no-sign-request cp s3://near-protocol-public/backups/testnet/rpc/latest .
+$ rclone copy --no-check-certificate near_cf://near-protocol-public/backups/testnet/rpc/latest ./
 $ LATEST=$(cat latest)
-$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/testnet/rpc/$LATEST ~/.near/data
+$ rclone copy --no-check-certificate --progress --transfers=6 --checkers=6 \
+  near_cf://near-protocol-public/backups/testnet/rpc/${latest:?} ~/.near/data
 ```
 
 
