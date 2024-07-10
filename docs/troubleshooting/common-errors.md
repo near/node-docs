@@ -3,6 +3,7 @@ id: common-errors
 title: Common Node Errors and Solutions
 sidebar_label: Common Node Errors and Solutions
 description: Common Node Errors and Solutions
+sidebar_position: 1
 ---
 
 
