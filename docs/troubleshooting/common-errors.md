@@ -124,11 +124,10 @@ Solution: Waiting for the node to try to catch up. If you are kicked, then try t
 
 ***What’s a typical incident recovery plan on mainnet with a primary validator node and a secondary node***
 
-1. Copy over node_key.json to secondary node
-2. Copy over validator_key.json to secondary node
-3. Stop the primary node
-4. Stop the secondary node
-5. Restart the secondary node
+1. Copy over validator_key.json to secondary node
+2. Stop the primary node
+3. Stop the secondary node
+4. Restart the secondary node
 
 
 ***What happens in a typical validator / RPC node upgrade process?***
