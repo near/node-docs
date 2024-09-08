@@ -754,7 +754,7 @@ The identifying information that we ask the validators:to provide are:
 - URL
 - Country and country code
 - Email (for support)
-- Telegram, Discord, or Twitter
+- Telegram, Discord, or X previously (Twitter)
 
 Command:
 
