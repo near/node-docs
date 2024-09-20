@@ -54,11 +54,11 @@ You can find instructions on how to migrate to split storage on [Split Storage p
 
 #### Monitoring {#monitoring 1.37}
 To monitor resharding you can use metrics `near_resharding_status`, `near_resharding_batch_size`, and `near_resharding_batch_prepare_time_bucket`.
-You can read more [on github](https://github.com/near/nearcore/blob/master/docs/architecture/how/resharding.md#monitoring).
+You can read more [on github](https://github.com/near/nearcore/blob/master/docs/architecture/how/resharding_v2.md#monitoring).
 
 If you observe problems with block production or resharding performance, you can adjust resharding throttling configuration.
 This does not require a node restart, you can send a signal to the neard process to load the new config.
-Read more [on github](https://github.com/near/nearcore/blob/master/docs/architecture/how/resharding.md#monitoring).
+Read more [on github](https://github.com/near/nearcore/blob/master/docs/architecture/how/resharding_v2.md#monitoring).
 
 ### After resharding {#after 1.37}
 If your node failed to reshard or is not able to sync with the network after the protocol upgrade, you will need to download the latest DB snapshot provided by Pagoda from s3

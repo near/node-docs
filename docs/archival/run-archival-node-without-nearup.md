@@ -25,7 +25,7 @@ Running an archival node is very similar to running a [validator node](/validato
 
 ## Prerequisites {#prerequisites}
 
-- [Rust](https://www.rust-lang.org/). If not already installed, please [follow these instructions](https://docs.near.org/sdk/rust/introduction#install-rust-and-wasm-toolchain).
+- [Rust](https://www.rust-lang.org/)
 - [Git](https://git-scm.com/)
 - Installed developer tools:
   - MacOS
