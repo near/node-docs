@@ -5,6 +5,15 @@ sidebar_label: Common Node Errors and Solutions
 description: Common Node Errors and Solutions
 ---
 
+***How can I check if my CPU supports all the needed features?***
+
+Verify CPU feature support by running the following command on Linux:
+
+```
+lscpu | grep -P '(?=.*avx )(?=.*sse4.2 )(?=.*cx16 )(?=.*popcnt )(?=.*sha_ni )' > /dev/null \
+  && echo "Supported" \
+  || echo "Not supported"
+```
 
 ***My node is looking for peers on guildnet, testnet, and mainnet. Why?***
 
