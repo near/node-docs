@@ -36,8 +36,8 @@ Estimated monthly costs depending on cloud provider:
 | Cloud Provider | Machine Size    | Linux                      |
 | -------------- | --------------- |----------------------------|
 | AWS            | m5a.2xlarge     | $160 CPU + $1200 storage † |
-| GCP            | n2-standard-8   | $280 CPU + $1200 storage † |
-| Azure          | Standard_D8s_v5 | $180 CPU + $1200 storage † |
+| GCP            | n2-standard-8   | $280 CPU + $2100 storage † |
+| Azure          | Standard_D8s_v5 | $180 CPU + $400 storage †  |
 
 _( † ) The storage cost will grow overtime as an archival node stores more data from the growing NEAR blockchain._
 
@@ -50,17 +50,17 @@ _( † ) The storage cost will grow overtime as an archival node stores more dat
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                 |
 | RAM            | 24GB DDR4                                                       |
-| Hot Storage    | 3 Terabyte SSD                                                  |
-| Cold Storage   | 40 Terabyte  NON-SSD Persistent Disks                           |
+| Hot Storage    | 1 Terabyte SSD                                                  |
+| Cold Storage   | 15 Terabyte NON-SSD Persistent Disks                            |
 
 ## Minimal Hardware Specifications {#minimal-hardware-specifications-testnet}
 
-| Hardware       |  Minimal Specifications                                                    |
-| -------------- | -------------------------------------------------------------------------- |
-| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support            |
-| RAM            | 16GB DDR4                                                                  |
-| Hot Storage    | 3 Terabyte SSD                                                             |
-| Cold Storage   | 40 Terabyte NON-SSD Persistent Disks                                       |
+| Hardware       | Minimal Specifications                                          |
+| -------------- |-----------------------------------------------------------------|
+| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support |
+| RAM            | 16GB DDR4                                                       |
+| Hot Storage    | 1 Terabyte SSD                                                  |
+| Cold Storage   | 15 Terabyte NON-SSD Persistent Disks                            |
 
 ## Cost Estimation {#cost-estimation-testnet}
 
@@ -68,9 +68,9 @@ Estimated monthly costs depending on cloud provider:
 
 | Cloud Provider | Machine Size    | Linux                     |
 | -------------- | --------------- |---------------------------|
-| AWS            | m5a.2xlarge     | $160 CPU + $800 storage † |
-| GCP            | n2-standard-8   | $280 CPU + $800 storage † |
-| Azure          | Standard_D8s_v5 | $180 CPU + $800 storage † |
+| AWS            | m5a.2xlarge     | $160 CPU + $350 storage † |
+| GCP            | n2-standard-8   | $280 CPU + $600 storage † |
+| Azure          | Standard_D8s_v5 | $180 CPU + $150 storage † |
 
 _( † ) The storage cost will grow overtime as an archival node stores more data from the growing NEAR blockchain._
 

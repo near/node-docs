@@ -54,11 +54,11 @@ This page covers the minimum and recommended hardware requirements for engaging 
 
 Estimated monthly costs depending on cloud provider:
 
-| Cloud Provider | Machine Size     | Linux                  |
-| -------------- |------------------|------------------------|
-| AWS            | m5a.2xlarge      | $160 CPU + $80 storage |
-| GCP            | n2-standard-8    | $280 CPU + $80 storage |
-| Azure          | Standard_D8s_v5  | $180 CPU + $40 storage |
+| Cloud Provider | Machine Size     | Linux                   |
+| -------------- |------------------|-------------------------|
+| AWS            | m5a.2xlarge      | $160 CPU + $160 storage |
+| GCP            | n2-standard-8    | $280 CPU + $240 storage |
+| Azure          | Standard_D8s_v5  | $180 CPU + $200 storage |
 
 # Testnet
 
@@ -71,7 +71,7 @@ Estimated monthly costs depending on cloud provider:
 | CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
 | RAM            | 32GB DDR4                                                    |
-| Storage        | 2TB NVMe SSD                                                 |
+| Storage        | 1TB NVMe SSD                                                 |
 
 ### Chunk validators
 
@@ -80,7 +80,7 @@ Estimated monthly costs depending on cloud provider:
 | CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
 | RAM            | 32GB DDR4                                                    |
-| Storage        | 2TB NVMe SSD                                                 |
+| Storage        | 1TB NVMe SSD                                                 |
 
 ## Minimal Hardware Specifications {#minimal-hardware-specifications}
 
@@ -91,7 +91,7 @@ Estimated monthly costs depending on cloud provider:
 | CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
 | RAM            | 24GB DDR4                                                    |
-| Storage        | 1TB NVMe SSD                                                 |
+| Storage        | 600GB NVMe SSD                                               |
 
 ### Chunk validators
 
@@ -100,17 +100,17 @@ Estimated monthly costs depending on cloud provider:
 | CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
 | RAM            | 24GB DDR4                                                    |
-| Storage        | 1TB NVMe SSD                                                 |
+| Storage        | 600GB NVMe SSD                                               |
 
 ## Cost Estimation {#cost-estimation}
 
 Estimated monthly costs depending on cloud provider:
 
-| Cloud Provider | Machine Size     | Linux                  |
-| -------------- |------------------|------------------------|
-| AWS            | m5a.2xlarge      | $160 CPU + $80 storage |
-| GCP            | n2-standard-8    | $280 CPU + $80 storage |
-| Azure          | Standard_D8s_v5  | $180 CPU + $40 storage |
+| Cloud Provider | Machine Size     | Linux                   |
+| -------------- |------------------|-------------------------|
+| AWS            | m5a.2xlarge      | $160 CPU + $80 storage  |
+| GCP            | n2-standard-8    | $280 CPU + $120 storage |
+| Azure          | Standard_D8s_v5  | $180 CPU + $100 storage |
 
 <blockquote class="info">
 <strong>Resources for Cost Estimation</strong><br /><br />
