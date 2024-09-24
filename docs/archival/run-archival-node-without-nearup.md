@@ -97,7 +97,7 @@ The binary path is `target/release/neard`
 The NEAR node requires a working directory with a couple of configuration files. Generate the initial required working directory by running:
 
 ```bash
-$ ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config
+$ ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config archival
 ```
 
 > You can specify trusted boot nodes that you'd like to use by pass in a flag during init: `--boot-nodes ed25519:4k9csx6zMiXy4waUvRMPTkEtAS2RFKLVScocR5HwN53P@34.73.25.182:24567,ed25519:4keFArc3M4SE1debUQWi3F1jiuFZSWThgVuA2Ja2p3Jv@34.94.158.10:24567,ed25519:D2t1KTLJuwKDhbcD9tMXcXaydMNykA99Cedz7SkJkdj2@35.234.138.23:24567,ed25519:CAzhtaUPrxCuwJoFzceebiThD9wBofzqqEMCiupZ4M3E@34.94.177.51:24567`
@@ -105,7 +105,9 @@ $ ./target/release/neard --home ~/.near init --chain-id testnet --download-genes
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
 This command will create the required directory structure and will generate `config.json`, `node_key.json`, and `genesis.json` for `testnet` network.
-- `config.json` - Configuration parameters which are responsive for how the node will work.
+- `config.json` - Configuration parameters which are responsive for how the node will work. This file should contain the following fields critical for archival nodes:
+  - `"archive": true` - to save the data for all blocks to storage.
+  - `"tracked_shards": [0]` - to track all shards.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
 - `data/` -  A folder in which a NEAR node will write it's state.
@@ -113,39 +115,12 @@ This command will create the required directory structure and will generate `con
 > **Heads up**
 > The genesis file for `testnet` is big (8GB +) so this command will be running for a while and no progress will be shown.
 
-
-### 4. Replacing the `config.json` {#4-replacing-the-configjson}
-
-From the generated `config.json`, there two parameters to modify:
-- `boot_nodes`: If you had not specify the boot nodes to use during init in Step 3, the generated `config.json` shows an empty array, so we will need to replace it with a full one specifying the boot nodes.
-- `tracked_shards`: In the generated `config.json`, this field is an empty empty. You will have to replace it to `"tracked_shards": [0]`
-
-To replace the `config.json`, run the following commands:
-
-```bash
-$ rm ~/.near/config.json
-$ wget https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/config.json -P ~/.near/
-```
-
-### Configuration Update {#configuration-update}
-
-The `config.json` should contain the following fields. Currently, NEAR testnet and mainnet have 4 shards. To track all 4 shards, use `"tracked_shards": [0]`. In the future, there will be the possibility to track different or multiple shards.
-
-```
-{
-  ...
-  "archive": true,
-  "tracked_shards": [0],
-  ...
-}
-```
-
 Please make sure that the node is not running while changing the `config.json`.
 
 Once the config has been changed, you can restart the node and the node will start syncing new archival data. In the case where you want the full archival history, you can delete the data dir and start the node from scratch syncing full history or use one of the latest backups containing the data directory snapshot which can be copied under the near home dir (default: ~/.near/data).
 
 
-### 5. Get data backup {#5-get-data-backup}
+### 4. Get data backup {#4-get-data-backup}
 
 The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
 
@@ -155,7 +130,9 @@ $ LATEST=$(cat latest)
 $ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/testnet/archive/$LATEST ~/.near/data
 ```
 
-### 6. Run the node {#6-run-the-node}
+In the case where you want the full archival history again (for example, if the database gets into an invalid state), you can delete the data dir and start the node from scratch syncing full history or use one of the latest backups containing the data directory snapshot which can be copied under the near home dir (default: ~/.near/data).
+
+### 5. Run the node {#5-run-the-node}
 To start your node simply run the following command:
 
 ```bash
@@ -213,7 +190,7 @@ The binary path is `target/release/neard`
 The NEAR node requires a working directory with a couple of configuration files. Generate the initial required working directory by running:
 
 ```bash
-$ ./target/release/neard --home ~/.near init --chain-id mainnet --download-genesis --download-config
+$ ./target/release/neard --home ~/.near init --chain-id mainnet --download-genesis --download-config archival
 ```
 
 > You can specify trusted boot nodes that you'd like to use by pass in a flag during init: `--boot-nodes ed25519:86EtEy7epneKyrcJwSWP7zsisTkfDRH5CFVszt4qiQYw@35.195.32.249:24567,ed25519:BFB78VTDBBfCY4jCP99zWxhXUcFAZqR22oSx2KEr8UM1@35.229.222.235:24567,ed25519:Cw1YyiX9cybvz3yZcbYdG7oDV6D7Eihdfc8eM1e1KKoh@35.195.27.104:24567,ed25519:33g3PZRdDvzdRpRpFRZLyscJdbMxUA3j3Rf2ktSYwwF8@34.94.132.112:24567,ed25519:CDQFcD9bHUWdc31rDfRi4ZrJczxg8derCzybcac142tK@35.196.209.192:24567`
@@ -221,43 +198,15 @@ $ ./target/release/neard --home ~/.near init --chain-id mainnet --download-genes
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
 This command will create the required directory structure by generating a `config.json`, `node_key.json`, and downloads a `genesis.json` for `mainnet`.
-- `config.json` - Configuration parameters which are responsive for how the node will work.
+- `config.json` - Configuration parameters which are responsive for how the node will work. This file should contain the following fields critical for archival nodes:
+  - `"archive": true` - to save the data for all blocks to storage.
+  - `"tracked_shards": [0]` - to track all shards.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
 - `data/` -  A folder in which a NEAR node will write it's state.
 
-### 4. Replacing the `config.json` {#4-replacing-the-configjson-1}
 
-From the generated `config.json`, there two parameters to modify:
-- `boot_nodes`: If you had not specify the boot nodes to use during init in Step 3, the generated `config.json` shows an empty array, so we will need to replace it with a full one specifying the boot nodes.
-- `tracked_shards`: In the generated `config.json`, this field is an empty empty. You will have to replace it to `"tracked_shards": [0]`
-
-To replace the `config.json`, run the following commands:
-
-```bash
-$ rm ~/.near/config.json
-$ wget https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json -P ~/.near/
-```
-
-### Configuration Update {#configuration-update-1}
-
-The `config.json` should contain the following fields. Currently, NEAR testnet and mainnet have 4 shards. To track all 4 shards, use `"tracked_shards": [0]`. In the future, there will be the possibility to track different or multiple shards.
-
-```
-{
-  ...
-  "archive": true,
-  "tracked_shards": [0],
-  ...
-}
-```
-
-Please make sure that the node is not running while changing the `config.json`.
-
-Once the config has been changed, you can restart the node and the node will start syncing new archival data. In the case where you want the full archival history, you can delete the data dir and start the node from scratch syncing full history or use one of the latest backups containing the data directory snapshot which can be copied under the near home dir (default: ~/.near/data).
-
-
-### 5. Get data backup {#5-get-data-backup-1}
+### 4. Get data backup {#4-get-data-backup-1}
 
 The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
 
@@ -267,7 +216,9 @@ $ LATEST=$(cat latest)
 $ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/mainnet/archive/$LATEST ~/.near/data
 ```
 
-### 6. Run the node {#6-run-the-node-1}
+In the case where you want the full archival history again (for example, if the database gets into an invalid state), you can delete the data dir and start the node from scratch syncing full history or use one of the latest backups containing the data directory snapshot which can be copied under the near home dir (default: ~/.near/data).
+
+### 5. Run the node {#5-run-the-node-1}
 To start your node simply run the following command:
 
 ```bash

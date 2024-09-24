@@ -193,13 +193,14 @@ The binary path is `target/release/neard`
 The NEAR node requires a working directory with a couple of configuration files. Generate the initial required working directory by running:
 
 ```bash
-$ ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config
+$ ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config validator
 ```
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
 This command will create the required directory structure and will generate `config.json`, `node_key.json`, and `genesis.json` files for `testnet` network.
-- `config.json` - Neard node configuration parameters.
+- `config.json` - Configuration parameters which are responsive for how the node will work. This file should contain the following fields critical for validator nodes:
+  - `"tracked_shards": []` - to enable single-shard tracking. The shard the validator should track will be assigned by the protocol.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter.
 - `data/` -  A folder in which a NEAR node will write it's state.
@@ -434,13 +435,14 @@ The binary path is `target/release/neard`
 In order to work NEAR node requires to have working directory and a couple of configuration files. Generate the initial required working directory by running:
 
 ```bash
-$ ./target/release/neard --home ~/.near init --chain-id mainnet --download-config
+$ ./target/release/neard --home ~/.near init --chain-id mainnet --download-config validator
 ```
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
 This command will create the required directory structure by generating a `config.json`, `node_key.json`, and downloads a `genesis.json` for `mainnet`.
-- `config.json` - Neard node configuration parameters.
+- `config.json` - Configuration parameters which are responsive for how the node will work. This file should contain the following fields critical for validator nodes:
+  - `"tracked_shards": []` - to enable single-shard tracking. The shard the validator should track will be assigned by the protocol.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
 - `data/` -  A folder in which a NEAR node will write it's state.

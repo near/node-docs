@@ -45,8 +45,10 @@ provides access to the state of every shard every epoch:
 Run the following command to download the reference `config.json` file:
 
 ```shell
-./neard --home /tmp/ init --download-genesis --download-config --chain-id <testnet or mainnet>
+./neard --home /tmp/ init --download-genesis --download-config rpc --chain-id <testnet or mainnet>
 ```
+
+*This command is for an RPC node. If you want to download the reference `config.json` file for a validator or archival node, replace the `--download-config rpc` option with `--download-config validator` or `--download-config archival`, respectively.*
 
 The file will be available at `/tmp/config.json`.
 
@@ -73,7 +75,7 @@ Check whether state sync is enabled, and check whether it's configured to get st
 If all seems to be configured fine, then disable state sync (set `"state_sync_enabled": false` in `config.json`) and try again.
 If that doesn't help, then restart from a backup data snapshot.
 
-## Running a Chunk-Only Producer that tracks a single shard
+## Running a validator that tracks a single shard
 
 Enable State Sync as explained above.
 
