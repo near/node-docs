@@ -87,6 +87,7 @@ The README for `nearup` (linked above) may be **all you need to get a node up an
 
     First we need to check a version which is currently working in `testnet`:
     ```sh
+    sudo chmod 644 /nearcore
     curl -s https://rpc.testnet.near.org/status | jq .version
     ```
     You’ll get something like this: "1.13.0-rc.2". "1.13.0" is a branch which we need to clone to build our node for `testnet`.
@@ -97,7 +98,7 @@ The README for `nearup` (linked above) may be **all you need to get a node up an
 12. This created a nearcore directory, change into that one and build a noce:
     ```sh
     cd nearcore
-    make neard
+    make release
     ```
 13. Install nearup
     ```sh
