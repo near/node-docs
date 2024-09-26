@@ -179,8 +179,7 @@ Enter your account ID (leave empty if not going to be a validator):
 
 ## Running a Node on the Cloud {#running-a-node-on-the-cloud}
 
-Create a new instance following the [Hardware
-requirements](hardware.md).
+Create a new instance following the [Hardware requirements](hardware-validator.md).
 
 Add firewall rules to allow traffic to port 24567 from all IPs
 (0.0.0.0/0).

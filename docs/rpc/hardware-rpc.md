@@ -6,47 +6,78 @@ sidebar_position: 1
 description: NEAR RPC Node Hardware Requirements
 ---
 
-This page covers the minimum and recommended hardware requirements for engaging with the NEAR platform as a RPC node.
+This page covers the minimum and recommended hardware requirements for engaging with the NEAR platform as an RPC node.
 
 For testing your RPC once the node is fully sync'd, see [this example RPC request.](https://docs.near.org/api/rpc/network#node-status)
 
+The `gc_num_epochs_to_keep` config parameter controls how many epochs are stored on your RPC node.
+The default is 5, with a minimum of 3. Increasing it requires more SSD storage and keeps data for a longer period.
+
+# Mainnet
+
 ## Recommended Hardware Specifications {#recommended-hardware-specifications}
 
-| Hardware       | Recommended Specifications                                               |
-| -------------- |--------------------------------------------------------------------------|
-| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent                           |
-| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                          |
-| RAM            | 20GB DDR4                                                                 |
-| Storage        | 1TB SSD (NVMe SSD is recommended. HDD will be enough for localnet only ) |
-
-_Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
-
+| Hardware       | Recommended Specifications                      |
+| -------------- |-------------------------------------------------|
+| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent  |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI |
+| RAM            | 32GB DDR4                                       |
+| Storage        | 3TB NVMe SSD                                    |
 
 ## Minimal Hardware Specifications {#minimal-hardware-specifications}
 
-| Hardware       | Minimal Specifications                                                    |
-| -------------- |---------------------------------------------------------------------------|
-| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent                            |
-| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                           |
-| RAM            | 12GB DDR4                                                                 |
-| Storage        | 500GB SSD (NVMe SSD is recommended. HDD will be enough for localnet only) |
-
-_Verify AVX support on Linux by issuing the command ```$ lscpu | grep -oh  avx```. If the output is empty, your CPU is not supported._
+| Hardware       | Minimal Specifications                          |
+| -------------- |-------------------------------------------------|
+| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent  |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI |
+| RAM            | 24GB DDR4                                       |
+| Storage        | 2.5TB NVMe SSD                                  |
 
 ## Cost Estimation {#cost-estimation}
 
-Estimated monthly costs depending on operating system:
+Estimated monthly costs depending on cloud provider:
 
-| Cloud Provider | Machine Size    | Linux                  |
-| -------------- | --------------- | ---------------------- |
-| AWS            | m5.2xlarge      | $330 CPU + $80 storage |
-| GCP            | n2-standard-8   | $280 CPU + $80 storage |
-| Azure          | Standard_F8s_v2 | $180 CPU + $40 storage |
+| Cloud Provider | Machine Size     | Linux                   |
+| -------------- |------------------|-------------------------|
+| AWS            | m5a.2xlarge      | $160 CPU + $300 storage |
+| GCP            | n2-standard-8    | $280 CPU + $400 storage |
+| Azure          | Standard_D8s_v5  | $180 CPU + $300 storage |
+
+# Testnet
+
+## Recommended Hardware Specifications {#recommended-hardware-specifications-testnet}
+
+| Hardware       | Recommended Specifications                      |
+| -------------- |-------------------------------------------------|
+| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent  |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI |
+| RAM            | 32GB DDR4                                       |
+| Storage        | 1TB NVMe SSD                                    |
+
+## Minimal Hardware Specifications {#minimal-hardware-specifications-testnet}
+
+| Hardware       | Minimal Specifications                          |
+| -------------- |-------------------------------------------------|
+| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent  |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI |
+| RAM            | 24GB DDR4                                       |
+| Storage        | 600GB NVMe SSD                                  |
+
+## Cost Estimation {#cost-estimation-testnet}
+
+Estimated monthly costs depending on cloud provider:
+
+| Cloud Provider | Machine Size     | Linux                   |
+| -------------- |------------------|-------------------------|
+| AWS            | m5a.2xlarge      | $160 CPU + $80 storage  |
+| GCP            | n2-standard-8    | $280 CPU + $120 storage |
+| Azure          | Standard_D8s_v5  | $180 CPU + $100 storage |
 
 <blockquote class="info">
 <strong>Resources for Cost Estimation</strong><br /><br />
 
-All prices reflect *reserved instances* which offer deep discounts on all platforms with a 1 year commitment
+All prices reflect *reserved instances* which offer deep discounts on all platforms with a 1-year commitment.
+We cannot guarantee the prices mentioned above as they may change at any moment.
 
 - AWS
   - cpu: https://aws.amazon.com/ec2/pricing/reserved-instances/pricing
