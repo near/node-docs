@@ -165,7 +165,7 @@ In this lesson you will learn about:
 * Config file (config.json)
 
 ### Server Requirements
-For Block Producing Validators, please refer to the [`Validator Hardware`](/validator/hardware)
+For Block Producing Validators, please refer to the [`Validator Hardware`](hardware-validator.md)
 For Chunk-Only Producers (an upcoming role on NEAR), please see the hardware requirement below:
 
 | Hardware       | Chunk-Only Producer  Specifications                                   |
@@ -178,7 +178,7 @@ For Chunk-Only Producers (an upcoming role on NEAR), please see the hardware req
 ### Install required software & set the configuration
 
 #### Prerequisites:
-Before you start, you may want to confirm that your machine has the right CPU features. For more hardware specific information, please take a look of the [Hardware requirement](/validator/hardware).
+Before you start, you may want to confirm that your machine has the right CPU features. For more hardware specific information, please take a look of the [Hardware requirement](hardware-validator.md).
 
 ```
 lscpu | grep -P '(?=.*avx )(?=.*sse4.2 )(?=.*cx16 )(?=.*popcnt )' > /dev/null \
