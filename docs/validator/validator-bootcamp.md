@@ -360,15 +360,15 @@ near login
 
 2 – Grant Access to Near CLI
 
-![img](/images/3.png)
+![img](/images/2.png)
 
 3 – After Grant, you will see a page like this, go back to console
 
-![img](/images/4.png)
+![img](/images/3.png)
 
 4 – Enter your wallet and press Enter
 
-![img](/images/5.png)
+![img](/images/4.png)
 
 
 For Guildnet
