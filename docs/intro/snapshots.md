@@ -7,6 +7,11 @@ description: Node Data Snapshots
 ---
 
 
+### !!!Note!!!
+FastNEAR provides an alternative way to download snapshots. Please visit https://docs.fastnear.com/docs/snapshots for more details. 
+
+## Overview
+
 Before you start running a node, you must first sync with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have. You can speed up this process by downloading the latest data snapshots from a public cloudfront endpoint.
 
 Here are the available snapshots directories based on node type and network. Please note that the RPC snapshots are updated every 12 hours. Split-Storage Archival snapshots are updated every 72 hours due to the size of cold storage data.
@@ -20,6 +25,9 @@ Here are the available snapshots directories based on node type and network. Ple
 | Archival mainnet     | `https://dcf58hz8pnro2.cloudfront.net/backups/mainnet/archive/latest_split_storage`    |
 
 ----
+
+## Sample instruction
+
 Prerequisite:
 
 Recommended download client [`rclone`](https://rclone.org). 
