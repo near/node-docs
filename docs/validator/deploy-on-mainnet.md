@@ -70,13 +70,13 @@ Once the daemon executable is built it’s time to initialize the node.
 that at this point the `<POOL_ID>.poolv1.near` account doesn’t yet
 exist.  We’re going to create it in the next step.
 
-This command will create a `~/.near/validator_key.json` file which
+This command will create a `~/.near/node_key.json` file which
 will contain validator’s private key.  It’s a good idea to back this
 file up in a secure location.  For now, read the validator’s public
 key from this file:
 
 ```bash
-grep public_key ~/.near/validator_key.json
+grep public_key ~/.near/node_key.json
 ```
 
 
@@ -105,7 +105,7 @@ following parameters:
   methods](https://github.com/near/core-contracts/tree/master/staking-pool#owner-only-methods)
   for more information),
 - `<VALIDATOR_KEY>` is the validator node public key read in the
-  previous step from the `~/.near/validator_key.json` file,
+  previous step from the `~/.near/node_key.json` file,
 - `{"numerator": <X>, "denominator": <Y>}` sets the validator fees
   (for example`X=10` and `Y=100` means 10%),
 - `--amount 30` attaches 30 $NEAR to the transaction to pay the
