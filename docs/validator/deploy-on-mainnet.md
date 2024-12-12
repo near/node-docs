@@ -125,11 +125,11 @@ Once the daemon is built, node is initialized and staking pool
 created, the validator can be started.  To make sure the node has been
 set up correctly, check that the configuration file located at
 `~/.near/config.json` is the same as [this mainnet
-config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json):
+config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json):
 
 ```bash
 sha1sum <~/.near/config.json
-curl -s https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json | sha1sum
+curl -s https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json | sha1sum
 ```
 
 If everything is in order, start your node with the following command:

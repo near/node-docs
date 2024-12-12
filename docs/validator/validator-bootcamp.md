@@ -271,13 +271,9 @@ This command will create the directory structure and will generate `config.json`
 
 ### Replace the `config.json`
 
-From the generated `config.json`, there two parameters to modify:
-- `boot_nodes`: If you had not specify the boot nodes to use during init in Step 3, the generated `config.json` shows an empty array, so we will need to replace it with a full one specifying the boot nodes.
-- `tracked_shards`: In the generated `config.json`, this field is an empty empty. You will have to replace it to `"tracked_shards": [0]`
-
 ```
 rm ~/.near/config.json
-wget -O ~/.near/config.json https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/<network>/config.json
+wget -O ~/.near/config.json https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/<network>/validator/config.json
 ```
 
 ### Get data backup
@@ -405,7 +401,7 @@ For Testnet
 
 ```
 cd ~/.near/testnet
-wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/config.json
+wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/validator/config.json
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/genesis.json
 ```
 
@@ -621,7 +617,7 @@ near login
 mkdir ~/.near
 cd ~/.near
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/genesis.json
-wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json
+wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json
 ```
 * Download the latest snapshot from [the snapshot page](/intro/node-data-snapshots).
 
@@ -1504,8 +1500,8 @@ INFO stats: #42376888 Waiting for peers 0/0/40 peers ⬇ 0 B/s ⬆ 0 B/s 0.00 bp
 
 **Resolution**
 Download the latest config.json file and restart:
-- For Testnet: `https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/config.json`
-- For Mainnet: `https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/config.json`
+- For Testnet: `https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/validator/config.json`
+- For Mainnet: `https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json`
 
 
 ## LESSON 7 - NODE FAILOVER

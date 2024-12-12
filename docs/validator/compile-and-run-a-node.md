@@ -199,14 +199,24 @@ $ ./target/release/neard --home ~/.near init --chain-id testnet --download-genes
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
 This command will create the required directory structure and will generate `config.json`, `node_key.json`, and `genesis.json` files for `testnet` network.
-- `config.json` - Configuration parameters which are responsive for how the node will work. This file should contain the following fields critical for validator nodes:
-  - `"tracked_shards": []` - to enable single-shard tracking. The shard the validator should track will be assigned by the protocol.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter.
 - `data/` -  A folder in which a NEAR node will write it's state.
+- `config.json` - should be replaced with one of the files listed below, see p.3.1
 
 > **Heads up**
 > The genesis file for `testnet` is big (6GB +) so this command will be running for a while and no progress will be shown.
+
+#### 3.1 Set up the config file for your needs
+
+We have created basic configuration files for different purposes.
+The default file works well for any use case on localnet.
+
+For testnet, the default file should be replaced with one of the following, depending on your requirements:
+
+1. [Regular RPC Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/rpc/config.json) stores recent info for all the shards, and can serve RPC queries for the last N epochs (N=5 by default).
+2. [Archival RPC Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/archival/config.json) stores all the info starting for genesis, can serve RPC queries for the entire history. Requires significant storage.
+3. [Validator Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/validator/config.json) is designed for the validators. Heavily optimized, does not store the full state, and cannot serve RPC queries.
 
 ### 4. Get data backup {#get-data-backup}
 
@@ -441,12 +451,21 @@ $ ./target/release/neard --home ~/.near init --chain-id mainnet --download-confi
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
 This command will create the required directory structure by generating a `config.json`, `node_key.json`, and downloads a `genesis.json` for `mainnet`.
-- `config.json` - Configuration parameters which are responsive for how the node will work. This file should contain the following fields critical for validator nodes:
-  - `"tracked_shards": []` - to enable single-shard tracking. The shard the validator should track will be assigned by the protocol.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
 - `data/` -  A folder in which a NEAR node will write it's state.
+- `config.json` - should be replaced with one of the files listed below, see p.3.1
 
+#### 3.1 Set up the config file for your needs
+
+We have created basic configuration files for different purposes.
+The default file works well for any use case on localnet.
+
+For mainnet, the default file should be replaced with one of the following, depending on your requirements:
+
+1. [Regular RPC Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/rpc/config.json) stores recent info for all the shards, and can serve RPC queries for the last N epochs (N=5 by default).
+2. [Archival RPC Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/archival/config.json) stores all the info starting for genesis, can serve RPC queries for the entire history. Requires significant storage.
+3. [Validator Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json) is designed for the validators. Heavily optimized, does not store the full state, and cannot serve RPC queries.
 
 ### 4. Get data backup {#get-data-backup-1}
 
