@@ -6,6 +6,10 @@ sidebar_position: 4
 description: Split Storage for NEAR Archival Nodes
 ---
 
+### !!!Note!!!
+As the NEAR ecosystem continues to decentralize, Pagoda will cease operations within the next six months and decentralize its functions into NEAR ecosystem teams and committees.
+FastNEAR will be the sole provider of snapshots downloads starting Jan 1, 2025. Please visit https://docs.fastnear.com/docs/snapshots for more details. 
+
 This page presents the Split Storage option for NEAR Archival nodes.
 
 ## Introduction {#introduction}
