@@ -8,7 +8,8 @@ description: Node Data Snapshots
 
 
 ### !!!Note!!!
-FastNEAR provides an alternative way to download snapshots. Please visit https://docs.fastnear.com/docs/snapshots for more details. 
+As the NEAR ecosystem continues to decentralize, Pagoda has cease operations and decentralize its functions into NEAR ecosystem teams and committees.
+FastNEAR will be the sole provider of snapshots downloads starting Jan 1, 2025. Please visit https://docs.fastnear.com/docs/snapshots for more details. 
 
 ## Overview
 
