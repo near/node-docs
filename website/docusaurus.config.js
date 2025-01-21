@@ -102,11 +102,6 @@ const config = {
             position: 'left',
           },
           {
-            href: 'https://wiki.near.org/',
-            label: 'Wiki',
-            position: 'left',
-          },
-          {
             href: 'https://github.com/near/node-docs',
             label: 'GitHub',
             position: 'right',
