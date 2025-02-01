@@ -135,7 +135,7 @@ A proposal by a validator indicates they would like to enter the validator set, 
 
 Command:
 ```
-near proposals
+near validators proposals
 ```
 
 ##### Validators Current
