@@ -4,11 +4,17 @@
 ### Recommended Hardware Specifications
 
 CPU	x86_64 (Intel, AMD) processor with at least 8 physical cores
+
 CPU Features: 	CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI
+
 RAM:	16GB DDR4
+
 Storage:	2TB NVMe SSD
-1Gb networkbandwidth.
+
+1Gb network bandwidth.
+
 Distribution: Ubuntu 22.04
+
 
 
 ### Node installation
