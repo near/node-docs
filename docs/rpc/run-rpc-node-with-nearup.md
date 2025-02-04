@@ -81,7 +81,3 @@ Then run:
 
 The latest daily snapshots are made available to the public by FastNear, and can be used to set up a validator node or RPC. 
 For detailed instructions, please refer to [HERE](https://docs.fastnear.com/docs/snapshots).
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>
