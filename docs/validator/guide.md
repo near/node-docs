@@ -131,6 +131,10 @@ This will reduce the number of epoch store from 5 (default) to 3, without any is
 jq '.gc_num_epochs_to_keep = 3' ~/.near/config.json > ~/.near/config.json.tmp && mv ~/.near/config.json.tmp ~/.near/config.json
 ```
 
+Update config.json to activate the validator config
+```
+sed -i 's/"tracked_shards": \[\s*0\s*\]/"tracked_shards": []/' ~/.near/config.json
+```
 
 #### Neard Service
 
