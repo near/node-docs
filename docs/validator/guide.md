@@ -187,9 +187,7 @@ jq --arg newBootNodes "$(curl -s -X POST https://rpc.mainnet.near.org -H "Conten
           "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)" \
    '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
 ```
-after that, just restart the node ( sudo systemctl restart neard) and you will see something like this:
-
-p2pstate-sync
+after that, just restart the node ( sudo systemctl restart neard).
 
 Wait for sometime (maybe 10 hours) and you are done, follow the next step to become an active validator!
 
@@ -217,7 +215,6 @@ Watch logs:
 journalctl -n 100 -f -u neard | ccze -A
 ```
 
-Image
 
 Check the running status of the validator node. If you see something like the image above, it means the node is fully synced, and you are ready to become an active validator!
 
@@ -270,9 +267,6 @@ near contract call-function as-transaction <full_pool_id> update_reward_fee_frac
 ```
 Note: full_pool_id: <pool_id>.poolv1.near , it’s panda.poolv1.near in this case
 
-You will see something like this:
-
-img
 If there is a “True” at the End. Your pool is created.
 
 Congrats! You have now configure your Staking pool up and running 🚀🚀🚀🚀
@@ -428,7 +422,15 @@ $list1[] as $active_peer | $list2[] |
 select(.peer_id == $active_peer.id) |
 "\(.peer_id)@\($active_peer.addr)"' |\
 awk 'NR>2 {print ","} length($0) {print p} {p=$0}' ORS="" | sed 's/"//g'`
-````  
+````
+
+##### How to get Metrics from my node
+
+You can check metrics with :
+```
+curl -s http://localhost:3030/metrics
+``` 
+Content/Type: application/json
   
 ##### Warn message  
   
@@ -436,7 +438,7 @@ Warn message can be ignored. You don't really need to worry about it.
   
 ##### Always kicked  
   
-Make sure the config file have store.load_mem_tries_for_tracked_shards  with true value
+Make sure the config file have store.load_mem_tries_for_tracked_shards with true value
 
 #### Usefull links: 
 NEAR Chain Status Twitter: https://x.com/NEARChainStatus   
