@@ -82,7 +82,7 @@ grep public_key ~/.near/validator_key.json
 
 ### 4. Deploy `mainnet` Staking Pool {#deploy-staking-pool}
 
-You can deploy the staking pool with [near-cli](https://github.com/near/near-cli),
+You can deploy the staking pool with [near-cli]([https://github.com/near/near-cli](https://github.com/near/near-cli-rs),
 using the `near call` command:
 
 ```bash
@@ -91,7 +91,7 @@ near call poolv1.near create_staking_pool '{
     "owner_id": "<OWNER_ID>",
     "stake_public_key": "<VALIDATOR_KEY>",
     "reward_fee_fraction": {"numerator": <X>, "denominator": <Y>}
-}' --account_id <OWNER_ID> --amount 30 --gas 300000000000000
+}' --accountId <OWNER_ID> --amount 30 --gas 300000000000000
 ```
 
 It will invoke the `staking-pool-factory` method from [NEAR Core
