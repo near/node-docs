@@ -165,9 +165,31 @@ systemctl enable neard'
 
 
 #### Syncing Data
+
+There are two ways to synchronize the node state with the network:
+* [Decentralized state sync](#using-near-peer-to-peers-state-sync)
+* [Using a snapshot](#sync-data-with-snapshot) (a centralized solution)
+
+Before decentralized state sync happens, the node first needs to download block headers. This phase can be much faster thanks to the Epoch Sync, where only a small subset of block headers is required for a node to start state sync.
+Epoch Sync is enabled by default and requires boot nodes to be specified in the config file. Setting boot nodes is described below for decentralized state sync, so there is nothing more you need to do if you want to use Epoch Sync.
+
+You can tweak Epoch Sync behavior through the `config.json` file. The default values are:
+```
+  "epoch_sync": {
+    "disable_epoch_sync_for_bootstrapping": false,
+    "ignore_epoch_sync_network_requests": false,
+    "epoch_sync_horizon": 216000,
+    "timeout_for_epoch_sync": {
+      "secs": 60,
+      "nanos": 0
+    }
+  },
+```
+
 ##### Using NEAR Peer-to-peers state sync
 
-NEAR has decentralized state sync, a torrent like protocol for nodes to sync data with each others without relies on snapshot providers, to sync with p2p state sync, you would need to get the latest boot nodes list from the NEAR network and update to config.json file and then start the neard service, here is the command:
+NEAR has decentralized state sync, a torrent like protocol for nodes to sync data with each others without relies on snapshot providers.
+To sync with p2p state sync, you would need to get the latest boot nodes list from the NEAR network and update to `config.json` file and then start the neard service, here is the command:
 
 ```
 curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
@@ -187,11 +209,11 @@ jq --arg newBootNodes "$(curl -s -X POST https://rpc.mainnet.near.org -H "Conten
           "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)" \
    '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
 ```
-after that, just restart the node ( sudo systemctl restart neard).
+after that, just restart the node (sudo systemctl restart neard).
 
 Wait for sometime (maybe 10 hours) and you are done, follow the next step to become an active validator!
 
- 
+
 
 ##### Sync data with snapshot:
 
