@@ -3,19 +3,7 @@
 
 ### Recommended Hardware Specifications
 
-CPU	x86_64 (Intel, AMD) processor with at least 8 physical cores
-
-CPU Features: 	CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI
-
-RAM:	16GB DDR4
-
-Storage:	2TB NVMe SSD
-
-1Gb network bandwidth.
-
-Distribution: Ubuntu 22.04
-
-
+Please refer to [Hardware Requirements for Validator Node](/validator/hardware-validator).
 
 ### Node installation
 
