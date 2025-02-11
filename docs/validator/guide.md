@@ -166,14 +166,24 @@ systemctl enable neard'
 
 #### Syncing Data
 
-There are two ways to synchronize the node state with the network:
-* [Decentralized state sync](#using-near-peer-to-peers-state-sync)
-* [Using a snapshot](#sync-data-with-snapshot) (a centralized solution)
+Sync is a three-step process:
+1. **Syncing past block headers** - this can be achieved in two ways:
+- [Epoch Sync](#epoch-sync) - recommended, decentralized approach.
+- [Using a snapshot](#sync-data-with-snapshot) - a centralized solution.
+- If neither option is used, the node will fall back to Header Sync, which can be extremely slow.
+2. **Syncing state** (to the beginning of a recent epoch) - this can be achieved in two ways:
+- [Decentralized state sync](#using-near-peer-to-peers-state-sync) - recommended.
+- Centralized state sync - the default route.
+3. **Syncing blocks** (catch up with the chain from the synced state).
+- The node will request blocks from peers.
 
-Before decentralized state sync happens, the node first needs to download block headers. This phase can be much faster thanks to the Epoch Sync, where only a small subset of block headers is required for a node to start state sync.
-Epoch Sync is enabled by default and requires boot nodes to be specified in the config file. Setting boot nodes is described below for decentralized state sync, so there is nothing more you need to do if you want to use Epoch Sync.
+##### Epoch Sync
+Epoch Sync allows a node to sync from genesis without relying on a snapshot.
+Unlike Header Sync, it does not require downloading all past block headers but only a small subset of them.
+Epoch Sync is enabled by default and requires boot nodes to be specified in the config file.
+Instructions for setting boot nodes are provided below for decentralized state sync, so no additional configuration is needed to use Epoch Sync.
 
-You can tweak Epoch Sync behavior through the `config.json` file. The default values are:
+You can adjust Epoch Sync behavior through the `config.json` file. The default values are as follows:
 ```
   "epoch_sync": {
     "disable_epoch_sync_for_bootstrapping": false,
@@ -217,7 +227,7 @@ Wait for sometime (maybe 10 hours) and you are done, follow the next step to bec
 
 ##### Sync data with snapshot:
 
-To sync data faster, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process will take a few hours, the expected data size will be around 580GB.
+To sync data fast, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process will take a few hours, the expected data size will be around 580GB.
 
 Run this to download snapshot and start the node (huge thanks FastNEAR for maintaining this):
 
@@ -416,7 +426,7 @@ Replace <node_version> with the correct nearcore release version.
 #### Monitor the node performance
 Take a look at : https://github.com/LavenderFive/near_prometheus_exporter and https://github.com/LavenderFive/near-monitoring
 
-#### Monitor the node (Telegram BOT)):
+#### Monitor the node (Telegram BOT):
 Take a look here: https://t.me/nearvalidatorwatcherbot
 
 #### How to withdraw your rewards  
