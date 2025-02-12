@@ -423,6 +423,19 @@ select(.peer_id == $active_peer.id) |
 "\(.peer_id)@\($active_peer.addr)"' |\
 awk 'NR>2 {print ","} length($0) {print p} {p=$0}' ORS="" | sed 's/"//g'`
 ````
+##### Weird error on running command
+First check that you are using the correct NEAR-CLI
+```
+near --version
+```
+
+MUST return near-cli-rs 0.XX.X
+
+If return X.X.XX
+
+It seems that NEAR CLI JS is still overshadowing the Rust one.
+
+You can use npx near-cli-rs instead of near to make is explicit call to the Rust CLI, or uninstall near-cli: npm remove near-cli
 
 ##### How to get Metrics from my node
 
