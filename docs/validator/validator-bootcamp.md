@@ -280,20 +280,10 @@ wget -O ~/.near/config.json https://s3-us-west-1.amazonaws.com/build.nearprotoco
 
 The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
 
-First, please install AWS CLI:
-```
-sudo apt-get install awscli -y
-```
+The latest daily snapshots are made available to the public by FastNear, and can be used to set up a validator node. 
+For detailed instructions, please refer to [this guide](https://docs.fastnear.com/docs/snapshots).
 
-Then, download the snapshot using the AWS CLI:
-```
-aws s3 --no-sign-request cp s3://near-protocol-public/backups/<testnet|mainnet>/rpc/latest .
-LATEST=$(cat latest)
-aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/<testnet|mainnet>/rpc/$LATEST ~/.near/data
-```
-
-
-NOTE: The .tar file is around 147GB (and will grow) so make sure you have enough disk space to unpack inside the data folder.
+NOTE: Make sure you have enough disk space to unpack inside the data folder.
 
 ### Run the node
 To start your node simply run the following command:
