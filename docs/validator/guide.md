@@ -245,7 +245,7 @@ Note: STAKING POOL CONTRACT WONT HAVE WRITE ACCESS TO ALL SUB ACCOUNTS FUNDS OR 
 Calls the staking pool factory, creates a new staking pool with the specified name, and deploys it to the indicated accountId.
 
 ``` 
-near contract call-function as-transaction poolv1.near create_staking_pool json-args '{"staking_pool_id": "<pool_id>", "owner_id": "<accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '100.0 Tgas' attached-deposit '30 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
+near contract call-function as-transaction poolv1.near create_staking_pool json-args '{"staking_pool_id": "<pool_id>", "owner_id": "<accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
 ``` 
 From the example above, you need to replace:
 
@@ -258,7 +258,7 @@ Be sure to have at least 30 NEAR available, it is the minimum required for stora
 
 Final command will look something like this:
 ```
-near contract call-function as-transaction poolv1.near create_staking_pool json-args '{"staking_pool_id": "panda", "owner_id": "validator_near.near", "stake_public_key": "ed25519:xxx", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '100.0 Tgas' attached-deposit '30 NEAR' sign-as validator_near.near network-config mainnet sign-with-keychain
+near contract call-function as-transaction poolv1.near create_staking_pool json-args '{"staking_pool_id": "panda", "owner_id": "validator_near.near", "stake_public_key": "ed25519:xxx", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as validator_near.near network-config mainnet sign-with-keychain
 ```  
 
 To change the pool parameters, such as changing the amount of commission charged to 1% in the example below, use this command:
