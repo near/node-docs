@@ -376,6 +376,14 @@ View validator infos on NEARScope or NEARBlocks:
 The info will show like this: (source: NearScope)
 Pasted image 20240929194648.png
 
+#### How to know when update node version
+
+You can use:
+Discord: https://discord.gg/nearprotocol
+Telegram: https://t.me/near_validators
+X: https://x.com/NEARChainStatus (Only Mainnet)
+Email : https://near.us14.list-manage.com/subscribe?u=faedf5dec8739fb92e05b4131&id=befd133f18 
+
 #### How to update new node version
 When there is a new node version, you will get a notification on the Telegram Validator group, run this command to update the node.  
   
