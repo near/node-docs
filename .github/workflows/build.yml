@@ -12,5 +12,3 @@ jobs:
         run: |
           cd website && npm install
           npm run build
-        env:
-          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
