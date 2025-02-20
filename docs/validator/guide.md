@@ -234,6 +234,7 @@ Check the running status of the validator node. If you see something like the im
 ##### State sync from external storage
 
 To configure your node to sync from external storage, follow the [link](https://github.com/near/nearcore/blob/master/docs/misc/state_sync_from_external_storage.md).
+The new state sync bucket is `fast-state-parts` and it is maintained by FastNEAR.
 
 
 #### Becoming an active Validator
