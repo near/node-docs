@@ -463,6 +463,12 @@ Content/Type: application/json
 ##### Warn message  
   
 Warn message can be ignored. You don't really need to worry about it.  
+
+
+##### Get Latest Config.json
+
+Config.json can be find :
+ ```https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json ```
   
 ##### Always kicked  
   
