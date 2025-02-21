@@ -153,9 +153,22 @@ systemctl enable neard'
 
 
 #### Syncing Data
-##### Using NEAR Peer-to-peers state sync
 
-NEAR has decentralized state sync, a torrent like protocol for nodes to sync data with each others without relies on snapshot providers, to sync with p2p state sync, you would need to get the latest boot nodes list from the NEAR network and update to config.json file and then start the neard service, here is the command:
+Syncing consists of two main steps:
+1. **Syncing headers** - achieved in one of three ways:
+- [Epoch Sync](#epoch-sync): the recommended, decentralized approach. This solution results in the smallest database size, as the node will only contain compacted block headers.
+- [Using a snapshot](#sync-data-with-snapshot): a centralized solution.
+- Fallback: If neither option is used, the node defaults to Header Sync, which can be extremely slow.
+2. **Syncing blocks** - this involves downloading the blockchain state at the start of the latest epoch and then processing remaining blocks to fully sync with the chain. State sync, the process of downloading the state, can be done in two ways:
+- Decentralized state sync: the default method, which pulls data directly from peers.
+- [Centralized state sync](#state-sync-from-external-storage): uses cloud-based storage as a fallback when configured in `config.json`.
+
+
+##### Epoch Sync
+
+Epoch Sync enables a node to sync from genesis without relying on snapshots.
+Unlike Header Sync, it requires downloading only a small subset of past block headers rather than all of them.
+To sync using Epoch Sync, update the `config.json` file with the latest boot nodes list from the NEAR network and then start the `neard` service, here is the command:
 
 ```
 curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
@@ -175,15 +188,15 @@ jq --arg newBootNodes "$(curl -s -X POST https://rpc.mainnet.near.org -H "Conten
           "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)" \
    '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
 ```
-after that, just restart the node ( sudo systemctl restart neard).
+after that, just restart the node (sudo systemctl restart neard).
 
-Wait for sometime (maybe 10 hours) and you are done, follow the next step to become an active validator!
+Wait for approximately 3 hours and you are done, follow the next step to become an active validator!
 
- 
 
-##### Sync data with snapshot:
 
-To sync data faster, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process will take a few hours, the expected data size will be around 580GB.
+##### Sync data with snapshot
+
+To sync data fast, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process will take a few hours, the expected data size will be around 580GB.
 
 Run this to download snapshot and start the node (huge thanks FastNEAR for maintaining this):
 
@@ -205,6 +218,12 @@ journalctl -n 100 -f -u neard | ccze -A
 
 
 Check the running status of the validator node. If you see something like the image above, it means the node is fully synced, and you are ready to become an active validator!
+
+##### State sync from external storage
+
+To configure your node to sync from external storage, follow the [link](https://github.com/near/nearcore/blob/master/docs/misc/state_sync_from_external_storage.md).
+The new state sync bucket is `fast-state-parts` and it is maintained by FastNEAR.
+
 
 #### Becoming an active Validator
 In order to become a validator and enter the validator set to help secure the network and earn rewards, a minimum set of success criteria must be met:
@@ -390,7 +409,7 @@ Replace <node_version> with the correct nearcore release version.
 #### Monitor the node performance
 Take a look at : https://github.com/LavenderFive/near_prometheus_exporter and https://github.com/LavenderFive/near-monitoring
 
-#### Monitor the node (Telegram BOT)):
+#### Monitor the node (Telegram BOT):
 Take a look here: https://t.me/nearvalidatorwatcherbot
 
 #### How to withdraw your rewards  
