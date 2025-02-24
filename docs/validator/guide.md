@@ -50,8 +50,8 @@ https://app.mynearwallet.com/
 
 https://wallet.meteorwallet.app/
 
-![](file:///C:/Users/ddealmeida/Downloads/wallet_creation.png)  
-  
+![wallet_creation](https://github.com/user-attachments/assets/da2685a4-11c5-455f-a5eb-9fff4d28c934)
+
 Add at least 31 NEAR to this wallet.  
 30 Near will be used for the wallet creation  
 1 Near will be use for the fees of transactions  
@@ -71,7 +71,8 @@ near login
 ``Note: This command launches a web browser allowing for the authorization of a full access key to be copied locally.``
 
 1 – Copy the link in your browser
-![](file:///C:/Users/ddealmeida/Downloads/login.png)
+![login](https://github.com/user-attachments/assets/a4c14115-91d2-4a74-a2b8-781e76ada20b)
+
 
 2 – Grant Access to Near CLI, fill your validator address and press Enter
 
