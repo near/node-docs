@@ -391,8 +391,11 @@ Pasted image 20240929194648.png
 
 You can use:
 Discord: https://discord.gg/nearprotocol
+
 Telegram: https://t.me/near_validators
+
 X: https://x.com/NEARChainStatus (Only Mainnet)
+
 Email : https://near.us14.list-manage.com/subscribe?u=faedf5dec8739fb92e05b4131&id=befd133f18 
 
 #### How to update new node version
@@ -478,7 +481,7 @@ Config.json can be find :
   
 Make sure the config file have store.load_mem_tries_for_tracked_shards with true value
 
-#### Usefull links: 
+#### Useful links: 
 NEAR Chain Status Twitter: https://x.com/NEARChainStatus   
 
 https://near-staking.com/
