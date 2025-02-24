@@ -44,7 +44,7 @@ source ~/.bashrc
 
 During the building time, let's make a wallet.
 
-We recommand to use a partner wallet like Meteor, MyNearWallet or SenderWallet.  
+We recommend to use a partner wallet like Meteor, MyNearWallet or SenderWallet.  
 
 https://app.mynearwallet.com/  
 
@@ -63,7 +63,7 @@ When this wallet is created and build is done, follow this step:
   
 #### Wallet Authorization  
 
-A full access key needs to be installed locally to be able transactions via NEAR-CLI.
+A full access key needs to be installed locally to be able to send transactions via NEAR-CLI.
 ```
 near login 
 ```
@@ -371,8 +371,11 @@ Change validator name and description:
 
 Replace <full_pool_id> with your pool address, for example: panda.poolv1.near
 Replace <accountId> with your authenticated wallet address, validator_near.near for this case
-near contract call-function as-transaction pool-details.near update_field json-args '{"pool_id": "<full_pool_id>", "name": "name", "value": "PandaPool"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
-near contract call-function as-transaction pool-details.near update_field json-args '{"pool_id": "<full_pool_id>", "name": "description", "value": "PandaPool Description"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
+
+```near contract call-function as-transaction pool-details.near update_field json-args '{"pool_id": "<full_pool_id>", "name": "name", "value": "PandaPool"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain```
+
+```near contract call-function as-transaction pool-details.near update_field json-args '{"pool_id": "<full_pool_id>", "name": "description", "value": "PandaPool Description"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain```
+
 View your validator infos from CLI:
 
 near contract call-function as-read-only pool-details.near get_fields_by_pool json-args '{"pool_id":"<full_pool_id>"}' network-config mainnet now
