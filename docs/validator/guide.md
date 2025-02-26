@@ -1,4 +1,3 @@
-
 ## Run a Node on Linux
 
 ### Recommended Hardware Specifications
@@ -7,35 +6,39 @@ Please refer to [Hardware Requirements for Validator Node](/validator/hardware-v
 
 ### Node installation
 
-#### Get Build and latest update 
-```sh 
+#### Get Build and latest update
+
+```sh
 sudo apt update && sudo apt upgrade -y && sudo apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python3 docker.io protobuf-compiler libssl-dev pkg-config clang llvm awscli tmux jq ccze rclone
 ```
 
 #### Install Rust
-  
+
 For Rust, we use standard installation, just press "Enter" when asked for the setup.
-```sh 
+
+```sh
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh && source $HOME/.cargo/env
 ```
 
-#### Install NEAR CLI and NEAR-Validator 
+#### Install NEAR CLI and NEAR-Validator
 
-```
+```sh
 curl --proto '=https' --tlsv1.2 -LsSf https://github.com/near/near-cli-rs/releases/latest/download/near-cli-rs-installer.sh | sh &&
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/near-cli-rs/near-validator-cli-rs/releases/latest/download/near-validator-installer.sh | sh && 
-source $HOME/.cargo/env 
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/near-cli-rs/near-validator-cli-rs/releases/latest/download/near-validator-installer.sh | sh &&
+source $HOME/.cargo/env
 ```
 
-#### Clone Nearcore repo 
+#### Clone Nearcore repo
 
-First get lastest version available :
-```
+First get latest version available:
+
+```sh
 Nearcore_Version=$(curl -s https://api.github.com/repos/near/nearcore/releases/latest | jq -r .tag_name)
 ```
 
-Clone the nearcore repo, choose the latest stable branch for mainnet and build the nearcore from source
-```
+Clone the nearcore repo, choose the latest stable branch for mainnet and build the nearcore from source:
+
+```sh
 cd ~ && git clone https://github.com/near/nearcore && cd nearcore/ && git checkout $Nearcore_Version
 make release
 echo 'export NEAR_ENV=mainnet' >> ~/.bashrc
@@ -44,92 +47,82 @@ source ~/.bashrc
 
 During the building time, let's make a wallet.
 
-We recommend to use a partner wallet like Meteor, MyNearWallet or SenderWallet.  
+We recommend to use a partner wallet like Meteor, MyNearWallet or SenderWallet.
 
-https://app.mynearwallet.com/  
-
-https://wallet.meteorwallet.app/
+- [MyNearWallet](https://app.mynearwallet.com/)
+- [MeteorWallet](https://wallet.meteorwallet.app/)
 
 ![wallet_creation](https://github.com/user-attachments/assets/da2685a4-11c5-455f-a5eb-9fff4d28c934)
 
-Add at least 31 NEAR to this wallet.  
-30 Near will be used for the wallet creation  
-1 Near will be use for the fees of transactions  
-  
-/!\ This 30 Near can't be recovered if you decided to stop your validator.
+Add at least **31 NEAR** to this wallet:
+- **30 NEAR** will be used for wallet creation
+- **1 NEAR** will be used for transaction fees
+
+⚠️ This **30 NEAR** can't be recovered if you decide to stop your validator.
 
 
-When this wallet is created and build is done, follow this step:  
-  
-#### Wallet Authorization  
+#### Wallet Authorization
 
 A full access key needs to be installed locally to be able to send transactions via NEAR-CLI.
+
+```sh
+near login
 ```
-near login 
-```
 
-``Note: This command launches a web browser allowing for the authorization of a full access key to be copied locally.``
+**Note:** This command launches a web browser allowing for the authorization of a full access key to be copied locally.
 
-1 – Copy the link in your browser
-![login](https://github.com/user-attachments/assets/a4c14115-91d2-4a74-a2b8-781e76ada20b)
+1. Copy the link in your browser.
+   
+   ![login](https://github.com/user-attachments/assets/a4c14115-91d2-4a74-a2b8-781e76ada20b)
 
+2. Grant Access to Near CLI, fill your validator address and press **Enter**.
+3. Choose **"Store the access key in my keychain"** from the CLI command.
 
-2 – Grant Access to Near CLI, fill your validator address and press Enter
+If you get an error, you can retry `near login` with **"Store the access key in my legacy keychain (compatible with the old near CLI)"**.
 
+### Initialize & Start the Node
 
-3 - Choose “Store the access key in my keychain” from the CLI command.  
-  
-If you got error, you can retry near login with “Store the access key in my legacy keychain (compatible with the old near CLI)”
+Time to think about your validator name.
 
+Your validator node will finish with a `poolv1.near`. 
+For example:
+- If you want to have a validator pool named "panda", set `panda.poolv1.near`.
+- If you want to have a name "validator_near", your full pool name will be `validator_near.poolv1.near`.
 
-#### Initialize & Start the Node  
-  
-Time to think about your validator name.  
-  
-Your validator node will finish with a poolv1.near  
-Example, i want to have a validator pool named "panda", i will set panda.poolv1.near  
-Or i want to have a name "validator_near", my full poolname  will be validator_near.poolv1.near
+#### Reminder:
+- `<pool_id>` – your pool name, for example `panda`.
+- `<full_pool_id>` – `xxx.poolv1.near`, where `xxx` is your pool_id like `panda.poolv1.near`.
+- `<accountId>` or `accountId` – `xxx.near`, where `xxx` is your account name, for example `validator_near.near`.
 
-
-Reminder:
-
-<pool_id> – your pool name, for example panda  
-<full_pool_id> – xxx.poolv1.near, where xxx is your pool_id like panda.poolv1.near  
-<accountId> or accountId – xxx.near where xxx your account name, for example validator_near.near
-
-```
+```sh
 cd ~/nearcore && target/release/neard init --chain-id="mainnet" --account-id=<full_pool_id>
 ```
 
-Set your <full_pool_id>, example: xxx.poolv1.near, where xxx is your pool_id
+Set your `<full_pool_id>`, example: `xxx.poolv1.near`, where `xxx` is your pool_id.
 
+`validator_key.json` generated after the above command in `~/.near/` folder must be something like this:
 
+The `account_id` must match the staking pool contract ID, or you will not be able to sign/verify blocks.
 
-validator_key.json generated after the above command in ~/.near/ folder must be something like this:
+#### Tips before launching the node
+If you want to reduce the size used by the data folder, you can run this command:
 
-
-
-The account_id must match the staking pool contract id  or you will not be able to sign/verify blocks.
-
-
-Tips before launching the node, if you want to reduce the size used by the data folder.  
-You can run this command :  
-  
-This will reduce the number of epoch store from 5 (default) to 3, without any issue for your node.
-```
+This will reduce the number of epoch stores from **5 (default) to 3**, without any issue for your node.
+```sh
 jq '.gc_num_epochs_to_keep = 3' ~/.near/config.json > ~/.near/config.json.tmp && mv ~/.near/config.json.tmp ~/.near/config.json
 ```
 
-Update config.json to activate the validator config
-```
+#### Update `config.json` to activate the validator config
+```sh
 sed -i 's/"tracked_shards": \[\s*0\s*\]/"tracked_shards": []/' ~/.near/config.json
 ```
+
 
 #### Neard Service
 
 Let's setup Systemd so the node will always run with the system
 
-```
+```sh
 sudo bash -c 'cat > /etc/systemd/system/neard.service << EOF
 [Unit]
 Description=NEARd Daemon Service
@@ -149,20 +142,21 @@ KillMode=mixed
 WantedBy=multi-user.target
 EOF
 systemctl enable neard'
-
 ```
-
 
 #### Syncing Data
 
 Syncing consists of two main steps:
-1. **Syncing headers** - achieved in one of three ways:
-- [Epoch Sync](#epoch-sync): the recommended, decentralized approach. This solution results in the smallest database size, as the node will only contain compacted block headers.
-- [Using a snapshot](#sync-data-with-snapshot): a centralized solution.
-- Fallback: If neither option is used, the node defaults to Header Sync, which can be extremely slow.
-2. **Syncing blocks** - this involves downloading the blockchain state at the start of the latest epoch and then processing remaining blocks to fully sync with the chain. State sync, the process of downloading the state, can be done in two ways:
-- Decentralized state sync: the default method, which pulls data directly from peers.
-- [Centralized state sync](#state-sync-from-external-storage): uses cloud-based storage as a fallback when configured in `config.json`.
+
+1. **Syncing headers** – achieved in one of three ways:
+   - **[Epoch Sync](#epoch-sync)**: the recommended, decentralized approach. This solution results in the smallest database size, as the node will only contain compacted block headers.
+   - **[Using a snapshot](#sync-data-with-snapshot)**: a centralized solution.
+   - **Fallback**: If neither option is used, the node defaults to Header Sync, which can be extremely slow.
+
+2. **Syncing blocks** – involves downloading the blockchain state at the start of the latest epoch and then processing the remaining blocks to fully sync with the chain. State sync, the process of downloading the state, can be done in two ways:
+   - **Decentralized state sync**: the default method, which pulls data directly from peers.
+   - **[Centralized state sync](#state-sync-from-external-storage)**: uses cloud-based storage as a fallback when configured in `config.json`.
+
 
 
 ##### Epoch Sync
@@ -234,30 +228,30 @@ In order to become a validator and enter the validator set to help secure the ne
  - The contract must be initialized with the public_key in validator_key.json
  - The account_id must be set to the staking pool contract id  
  - There must be enough delegations to meet the minimum seat price. See the seat price here or just run this command     
-```
+```sh
 near-validator validators network-config mainnet next
- ```
+```
 - A proposal must be submitted by pinging the contract
 - Once a proposal is accepted a validator must wait 2-3 epoch to enter the validator set
 - Once in the validator set the validator must produce great than 90% of assigned blocks or your node will be kick out
 
-Check the running status of the validator node. If “Validator” is showing up, your pool is selected in the current validators list.
+Check the running status of the validator node. If "Validator" is showing up, your pool is selected in the current validators list.
 
 ##### Deploy your staking pool contract
 NEAR uses a staking pool factory with a whitelisted staking contract to ensure delegators’ funds are safe. In order to run a validator on NEAR, a staking pool must be deployed to a NEAR account and integrated into a NEAR validator node. Delegators must use a UI or the command line to stake to the pool. A staking pool is a smart contract that is deployed to a NEAR account.
 
-Note: STAKING POOL CONTRACT WONT HAVE WRITE ACCESS TO ALL SUB ACCOUNTS FUNDS OR DATA, this also applies for any sub accounts on NEAR, that means your staking balance is SAFU!
+Note: STAKING POOL CONTRACT WON'T HAVE WRITE ACCESS TO ALL SUB ACCOUNTS FUNDS OR DATA, this also applies for any sub accounts on NEAR, that means your staking balance is SAFE!
 
 ##### Deploy a Staking Pool Contract
 
 Calls the staking pool factory, creates a new staking pool with the specified name, and deploys it to the indicated accountId.
 
-``` 
+```sh
 near contract call-function as-transaction poolv1.near create_staking_pool json-args '{"staking_pool_id": "<pool_id>", "owner_id": "<accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
 ``` 
 From the example above, you need to replace:
 
-**pool_id**: Staking pool name example “panda”  
+**pool_id**: Staking pool name example "panda"  
 **owner_id**: The NEAR account that will manage the staking pool. Usually your main NEAR account.  
 **public_key**: The public key in your validator_key.json file.  
 **5**: The fee the pool will charge (e.g. in this case 5 over 100 is 5% of fees), usually validators take 5% fee, if you set the fee so high, no one will stake to your node 😉   
@@ -265,38 +259,41 @@ From the example above, you need to replace:
 Be sure to have at least 30 NEAR available, it is the minimum required for storage.
 
 Final command will look something like this:
-```
+```sh
 near contract call-function as-transaction poolv1.near create_staking_pool json-args '{"staking_pool_id": "panda", "owner_id": "validator_near.near", "stake_public_key": "ed25519:xxx", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as validator_near.near network-config mainnet sign-with-keychain
 ```  
 
 To change the pool parameters, such as changing the amount of commission charged to 1% in the example below, use this command:
-```
+```sh
 near contract call-function as-transaction <full_pool_id> update_reward_fee_fraction json-args '{"reward_fee_fraction": {"numerator": 1, "denominator": 100}}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <account_id> network-config mainnet sign-with-keychain
 ```
-Note: full_pool_id: <pool_id>.poolv1.near , it’s panda.poolv1.near in this case
+Note: full_pool_id: `<pool_id>.poolv1.near` , it’s `panda.poolv1.near` in this case.
 
-If there is a “True” at the End. Your pool is created.
+If there is a "True" at the End. Your pool is created.
 
 Congrats! You have now configure your Staking pool up and running 🚀🚀🚀🚀
 
+
 #### Manage your staking pool contract
+
 Few useful commands you should know:
 
 Retrieve the owner ID of the staking pool
-```
+```sh
 near contract call-function as-read-only <full_pool_id> get_owner_id json-args {} network-config mainnet now  
 ```
 Issue this command to retrieve the public key the network has for your validator
-```
+```sh
 near contract call-function as-read-only <full_pool_id> get_staking_key json-args {} network-config mainnet now  
 ```  
   
-  
 If the public key does not match you can update the staking key like this (replace the pubkey below with the key in your validator.json file)
-```
+```sh
 near contract call-function as-transaction <full_pool_id> update_staking_key json-args '{"stake_public_key": "<public key>"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain  
 ```
+
 Working with Staking Pools
+
 NOTE: Your validator must be fully synced before issuing a proposal or depositing funds.
 
 #### Proposals and Pings   
@@ -306,10 +303,9 @@ To note, a ping also updates the staking balances for your delegators. A ping sh
   
 Ping are done by Metapool too, you don't need anymore to use a script ping but you can. You need at least 1 ping to be visible for the first time.
 
+Replace `<full_pool_id>` and `<account_id>` before execution:
 
-Replace <full_pool_id> and <account_id> before execution:
-
-```
+```sh
 mkdir -p /home/root/scripts /home/root/logs && sudo bash -c 'cat > /home/root/scripts/ping.sh << EOF
 #!/bin/sh
 # Ping call to renew Proposal added to crontab
@@ -322,26 +318,26 @@ date >> \$LOGS/near_ping.log
 near contract call-function as-transaction \$POOLID ping json-args '\''{"stake_public_key": "<public key>"}'\'' prepaid-gas '\''100.0 Tgas'\'' attached-deposit '\''0 NEAR'\'' sign-as \$ACCOUNTID network-config mainnet sign-with-keychain >> \$LOGS/near_ping.log
 EOF
 chmod +x /home/root/scripts/ping.sh && (crontab -l 2>/dev/null; echo "0 */8 * * * sh /home/root/scripts/ping.sh") | crontab -'
-```  
+```
+  
 This will ping you node every 8h
 
 List crontab to see it is running:
-```
+```sh
 crontab -l
 ```
 
 Review your logs
-```
+```sh
 cat $HOME/logs/near_ping.log
 ```
 
 Now you only need to have enough token staked to start earning Rewards.  
 
-
 #### Network optimizations
 To optimize the network settings for better validator performance, execute the following commands:
 
-```
+```sh
 MaxExpectedPathBDP=8388608 && \
 sudo sysctl -w net.core.rmem_max=$MaxExpectedPathBDP && \
 sudo sysctl -w net.core.wmem_max=$MaxExpectedPathBDP && \
@@ -359,78 +355,107 @@ EOL
 sudo sysctl --system
 ```
 
-#### How to have Logo, description, contact details on Nearscope - Near Staking
-Adding pool information helps delegators and also helps with outreach for upgrades and other important announcements: https://github.com/zavodil/near-pool-details.
+### How to have Logo, Description, Contact Details on Nearscope - Near Staking
 
-The available fields to add are: https://github.com/zavodil/near-pool-details/blob/master/FIELDS.md.
+Adding pool information helps delegators and also helps with outreach for upgrades and other important announcements: [Near Pool Details](https://github.com/zavodil/near-pool-details).
 
-The identifying information that validators need to provide are: name, description, url, telegram, twitter…
+The available fields to add are: [Fields Documentation](https://github.com/zavodil/near-pool-details/blob/master/FIELDS.md).
 
-Example commands:
+The identifying information that validators need to provide includes:
+- Name
+- Description
+- URL
+- Telegram
+- Twitter
 
-Change validator name and description: 
+#### Example Commands
 
-Replace <full_pool_id> with your pool address, for example: panda.poolv1.near
-Replace <accountId> with your authenticated wallet address, validator_near.near for this case
+**Change validator name and description:**  
+Replace `<full_pool_id>` with your pool address, e.g., `panda.poolv1.near`.  
+Replace `<accountId>` with your authenticated wallet address, e.g., `validator_near.near`.
 
-```near contract call-function as-transaction pool-details.near update_field json-args '{"pool_id": "<full_pool_id>", "name": "name", "value": "PandaPool"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain```
+```
+near contract call-function as-transaction pool-details.near update_field json-args '{"pool_id": "<full_pool_id>", "name": "name", "value": "PandaPool"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
+```
 
-```near contract call-function as-transaction pool-details.near update_field json-args '{"pool_id": "<full_pool_id>", "name": "description", "value": "PandaPool Description"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain```
+```
+near contract call-function as-transaction pool-details.near update_field json-args '{"pool_id": "<full_pool_id>", "name": "description", "value": "PandaPool Description"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
+```
 
-View your validator infos from CLI:
-
+**View your validator info from CLI:**
+```
 near contract call-function as-read-only pool-details.near get_fields_by_pool json-args '{"pool_id":"<full_pool_id>"}' network-config mainnet now
- 
+```
 
-View validator infos on NEARScope or NEARBlocks:
+**View validator info on NearScope or NearBlocks:**
+The info will appear as shown on NearScope.
 
-The info will show like this: (source: NearScope)
-Pasted image 20240929194648.png
+---
 
-#### How to know when update node version
+### How to Know When to Update Node Version
 
-You can use:
-Discord: https://discord.gg/nearprotocol
+You can get update notifications from:
+- **Discord:** [NEAR Protocol Discord](https://discord.gg/nearprotocol)
+- **Telegram:** [NEAR Validators Group](https://t.me/near_validators)
+- **Twitter (X):** [NEAR Chain Status](https://x.com/NEARChainStatus) *(Only for Mainnet)*
+- **Email Subscription:** [NEAR Update Notifications](https://near.us14.list-manage.com/subscribe?u=faedf5dec8739fb92e05b4131&id=befd133f18)
 
-Telegram: https://t.me/near_validators
+---
 
-X: https://x.com/NEARChainStatus (Only Mainnet)
+### How to Update Node Version
 
-Email : https://near.us14.list-manage.com/subscribe?u=faedf5dec8739fb92e05b4131&id=befd133f18 
-
-#### How to update new node version
-When there is a new node version, you will get a notification on the Telegram Validator group, run this command to update the node.  
-  
-[CODE_RED_<network_id>] where <network_id> is either MAINNET or TESTNET. This represents the most dire and urgent situation. Usually it means that the network has stalled or crashed and we need validators to take immediate actions to bring the network up. Alternatively it could mean that we discovered some highly critical security vulnerabilities and a patch is needed as soon as possible. If it is about mainnet, we expect that validators will react immediately to such alerts, ideally within 30 minutes.
-
-[CODE_YELLOW_<network_id>] where <network_id> is either MAINNET or TESTNET. This represents a less urgent announcement. Usually it means the release of a protocol change or a fix of a moderate security issue. In such cases, validators are not expected to take immediate actions but are still expected to react within days.
-
-[CODE_GREEN_<network_id>] where <network_id> is either MAINNET or TESTNET. This usually means some general announcement that is more informational or doesn’t require actions within a short period of time. It could be an announcement of a release that improves performance or a fix some minor issues.
-
+When there is a new node version, you will receive a notification on the Telegram Validator group. Run the following command to update your node:
 
 ```
 cd ~/nearcore && git fetch && export NEAR_RELEASE_VERSION=<node_version> && git checkout $NEAR_RELEASE_VERSION && make release && sudo systemctl stop neard && sudo systemctl start neard
 ```
-Replace <node_version> with the correct nearcore release version.
 
-#### Monitor the node performance
-Take a look at : https://github.com/LavenderFive/near_prometheus_exporter and https://github.com/LavenderFive/near-monitoring
+Replace `<node_version>` with the correct NEAR core release version.
 
-#### Monitor the node (Telegram BOT):
-Take a look here: https://t.me/nearvalidatorwatcherbot
+**Update Priority Codes:**
+- **CODE_RED_<network_id>** – where `<network_id>` is either `MAINNET` or `TESTNET`. This represents the most dire and urgent situation. Usually it means that the network has stalled or crashed and we need validators to take immediate actions to bring the network up. Alternatively it could mean that we discovered some highly critical security vulnerabilities and a patch is needed as soon as possible. If it is about mainnet, we expect that validators will react **immediately** to such alerts, ideally within 30 minutes.
+- **CODE_YELLOW_<network_id>** – where `<network_id>` is either `MAINNET` or `TESTNET`. This represents a less urgent announcement. Usually it means the release of a protocol change or a fix of a moderate security issue. In such cases, validators are not expected to take immediate actions but are still expected to **react within days**.
+- **CODE_GREEN_<network_id>** – where `<network_id>` is either `MAINNET` or `TESTNET`. This usually means some general announcement that is more informational or doesn<E2><80><99>t require actions within a short period of time. It could be an announcement of a release that improves performance or a fix some minor issues.
 
-#### How to withdraw your rewards  
-Logged on a wallet with the wallet you created few steps  before, unstake (take 3epoch) and withdraw.
+---
 
-#### Useful commands
-Get active epoch data like : list of active validators and the current seat price, their current performance: near-validator validators network-config mainnet now
-Next epoch validators list: near-validator validators network-config mainnet next
-View validator staked balance: near-validator staking view-stake <full_pool_id> network-config mainnet now
-  
-#### Troubleshoot
-  
-##### No peers
-If you don't have any peers, run this script:  
+### Monitor the Node Performance
+- **Monitoring Tools:**  
+  - [NEAR Prometheus Exporter](https://github.com/LavenderFive/near_prometheus_exporter)  
+  - [NEAR Monitoring](https://github.com/LavenderFive/near-monitoring)
+- **Telegram BOT Monitoring:** [Near Validator Watcher Bot](https://t.me/nearvalidatorwatcherbot)
+
+---
+
+### How to Withdraw Your Rewards
+
+Log in to your wallet you created few steps before, unstake (takes 3 epochs), and withdraw.
+
+---
+
+### Useful Commands
+
+**Get active epoch data (list of active validators, seat price, and performance):**
+```
+near-validator validators network-config mainnet now
+```
+
+**Next epoch validators list:**
+```
+near-validator validators network-config mainnet next
+```
+
+**View validator staked balance:**
+```
+near-validator staking view-stake <full_pool_id> network-config mainnet now
+```
+
+---
+
+### Troubleshooting
+
+#### No Peers
+If you have no peers, run this script:
 ```  
 neard  `curl -X POST https://rpc.mainnet.near.org \  -H "Content-Type: application/json" \
   -d '{
@@ -445,51 +470,49 @@ select(.peer_id == $active_peer.id) |
 "\(.peer_id)@\($active_peer.addr)"' |\
 awk 'NR>2 {print ","} length($0) {print p} {p=$0}' ORS="" | sed 's/"//g'`
 ````
-##### Weird error on running command
-First check that you are using the correct NEAR-CLI
+
+#### Weird Error When Running a Command
+
+First, check that you are using the correct NEAR-CLI:
 ```
 near --version
 ```
+**Expected Output:** `near-cli-rs 0.XX.X`
 
-MUST return near-cli-rs 0.XX.X
+If it returns `X.X.XX`, the NEAR CLI JS version is overshadowing the Rust version. You can either:
+- Use `npx near-cli-rs` instead of `near`.
+- Uninstall `near-cli` with: `npm remove near-cli`.
 
-If return X.X.XX
-
-It seems that NEAR CLI JS is still overshadowing the Rust one.
-
-You can use npx near-cli-rs instead of near to make is explicit call to the Rust CLI, or uninstall near-cli: npm remove near-cli
-
-##### How to get Metrics from my node
-
-You can check metrics with :
+#### How to Get Metrics from My Node
+Check metrics with:
 ```
 curl -s http://localhost:3030/metrics
-``` 
-Content/Type: application/json
-  
-##### Warn message  
-  
-Warn message can be ignored. You don't really need to worry about it.  
+```
+**Content Type:** `application/json`
 
+#### Warning Messages
+Warning messages can be ignored unless they indicate critical issues.
 
-##### Get Latest Config.json
+#### Get Latest Config.json
+Find the latest `config.json` here:
+```
+https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json
+```
 
-Config.json can be find :
- ```https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json ```
-  
-##### Always kicked  
-  
-Make sure the config file have store.load_mem_tries_for_tracked_shards with true value
+#### Always Kicked Issue
+Ensure your config file has `store.load_mem_tries_for_tracked_shards` set to `true`.
 
-#### Useful links: 
-NEAR Chain Status Twitter: https://x.com/NEARChainStatus   
+---
 
-https://near-staking.com/
+### Useful Links
+- **NEAR Chain Status Twitter:** [@NEARChainStatus](https://x.com/NEARChainStatus)
+- **NEAR Staking:** [Near Staking Website](https://near-staking.com/)
+- **NEARBlocks Node Explorer:** [NearBlocks](https://nearblocks.io/node-explorer)
+- **NearScope:** [NearScope](https://nearscope.net/)
 
-https://nearblocks.io/node-explorer
+---
 
-https://nearscope.net/  
-  
-####  Support:
-Telegram: https://t.me/near_validators  
-Discord: https://discord.gg/nearprotocol
+### Support
+- **Telegram:** [NEAR Validators](https://t.me/near_validators)
+- **Discord:** [NEAR Protocol Discord](https://discord.gg/nearprotocol)
+
