@@ -407,7 +407,7 @@ You can get update notifications from:
 When there is a new node version, you will receive a notification on the Telegram Validator group. Run the following command to update your node:
 
 ```
-cd ~/nearcore && git fetch && export NEAR_RELEASE_VERSION=<node_version> && git checkout $NEAR_RELEASE_VERSION && make release && sudo systemctl stop neard && sudo systemctl start neard
+cd ~/nearcore && git fetch && export NEAR_RELEASE_VERSION=<node_version> && git checkout tags/$NEAR_RELEASE_VERSION && make release && sudo systemctl stop neard && sudo systemctl start neard
 ```
 
 Replace `<node_version>` with the correct NEAR core release version.
