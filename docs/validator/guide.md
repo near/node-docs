@@ -94,9 +94,17 @@ For example:
 - `<full_pool_id>` – `xxx.poolv1.near`, where `xxx` is your pool_id like `panda.poolv1.near`.
 - `<accountId>` or `accountId` – `xxx.near`, where `xxx` is your account name, for example `validator_near.near`.
 
-```sh
-cd ~/nearcore && target/release/neard init --chain-id="mainnet" --account-id=<full_pool_id>
-```
+# You can use any RPC provider for this command.
+```BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+cd ~/nearcore && target/release/neard init --chain-id="mainnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES ```
 
 Set your `<full_pool_id>`, example: `xxx.poolv1.near`, where `xxx` is your pool_id.
 
@@ -112,11 +120,26 @@ This will reduce the number of epoch stores from **5 (default) to 3**, without a
 jq '.gc_num_epochs_to_keep = 3' ~/.near/config.json > ~/.near/config.json.tmp && mv ~/.near/config.json.tmp ~/.near/config.json
 ```
 
-#### Update `config.json` to activate the validator config
-```sh
-sed -i 's/"tracked_shards": \[\s*0\s*\]/"tracked_shards": []/' ~/.near/config.json
-```
+#### Network optimizations
+To optimize the network settings for better validator performance, execute the following commands:
 
+```sh
+MaxExpectedPathBDP=8388608 && \
+sudo sysctl -w net.core.rmem_max=$MaxExpectedPathBDP && \
+sudo sysctl -w net.core.wmem_max=$MaxExpectedPathBDP && \
+sudo sysctl -w net.ipv4.tcp_rmem="4096 87380 $MaxExpectedPathBDP" && \
+sudo sysctl -w net.ipv4.tcp_wmem="4096 16384 $MaxExpectedPathBDP" && \
+sudo sysctl -w net.ipv4.tcp_slow_start_after_idle=0 && \
+sudo bash -c "cat > /etc/sysctl.d/local.conf" <<EOL
+# Network settings for better validator performance
+net.core.rmem_max = $MaxExpectedPathBDP
+net.core.wmem_max = $MaxExpectedPathBDP
+net.ipv4.tcp_rmem = 4096 87380 $MaxExpectedPathBDP
+net.ipv4.tcp_wmem = 4096 16384 $MaxExpectedPathBDP
+net.ipv4.tcp_slow_start_after_idle = 0
+EOL
+sudo sysctl --system
+```
 
 #### Neard Service
 
@@ -129,7 +152,7 @@ Description=NEARd Daemon Service
 
 [Service]
 Type=simple
-User=root
+User=[USER] /!_ UPDATE HERE
 WorkingDirectory=/root/.near
 ExecStart=/root/nearcore/target/release/neard run
 Restart=on-failure
@@ -166,13 +189,7 @@ Unlike Header Sync, it requires downloading only a small subset of past block he
 To sync using Epoch Sync, update the `config.json` file with the latest boot nodes list from the NEAR network and then start the `neard` service, here is the command:
 
 ```
-curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | \
-jq --arg newBootNodes "$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
+BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
         "jsonrpc": "2.0",
         "method": "network_info",
         "params": [],
@@ -180,8 +197,8 @@ jq --arg newBootNodes "$(curl -s -X POST https://rpc.mainnet.near.org -H "Conten
       }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
           $list1[] as $active_peer | $list2[] |
           select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)" \
-   '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
 ```
 after that, just restart the node (sudo systemctl restart neard).
 
@@ -333,27 +350,6 @@ cat $HOME/logs/near_ping.log
 ```
 
 Now you only need to have enough token staked to start earning Rewards.  
-
-#### Network optimizations
-To optimize the network settings for better validator performance, execute the following commands:
-
-```sh
-MaxExpectedPathBDP=8388608 && \
-sudo sysctl -w net.core.rmem_max=$MaxExpectedPathBDP && \
-sudo sysctl -w net.core.wmem_max=$MaxExpectedPathBDP && \
-sudo sysctl -w net.ipv4.tcp_rmem="4096 87380 $MaxExpectedPathBDP" && \
-sudo sysctl -w net.ipv4.tcp_wmem="4096 16384 $MaxExpectedPathBDP" && \
-sudo sysctl -w net.ipv4.tcp_slow_start_after_idle=0 && \
-sudo bash -c "cat > /etc/sysctl.d/local.conf" <<EOL
-# Network settings for better validator performance
-net.core.rmem_max = $MaxExpectedPathBDP
-net.core.wmem_max = $MaxExpectedPathBDP
-net.ipv4.tcp_rmem = 4096 87380 $MaxExpectedPathBDP
-net.ipv4.tcp_wmem = 4096 16384 $MaxExpectedPathBDP
-net.ipv4.tcp_slow_start_after_idle = 0
-EOL
-sudo sysctl --system
-```
 
 ### How to have Logo, Description, Contact Details on Nearscope - Near Staking
 
