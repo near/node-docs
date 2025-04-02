@@ -94,8 +94,9 @@ For example:
 - `<full_pool_id>` – `xxx.poolv1.near`, where `xxx` is your pool_id like `panda.poolv1.near`.
 - `<accountId>` or `accountId` – `xxx.near`, where `xxx` is your account name, for example `validator_near.near`.
 
+```sh
 # You can use any RPC provider for this command.
-```BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
+BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
         "jsonrpc": "2.0",
         "method": "network_info",
         "params": [],
