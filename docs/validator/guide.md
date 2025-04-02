@@ -454,18 +454,16 @@ near-validator staking view-stake <full_pool_id> network-config mainnet now
 #### No Peers
 If you have no peers, run this script:
 ```  
-neard  `curl -X POST https://rpc.mainnet.near.org \  -H "Content-Type: application/json" \
-  -d '{
+BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
         "jsonrpc": "2.0",
         "method": "network_info",
         "params": [],
         "id": "dontcare"
-      }' | \
-jq '.result.active_peers as $list1 | .result.known_producers as $list2 |
-$list1[] as $active_peer | $list2[] |
-select(.peer_id == $active_peer.id) |
-"\(.peer_id)@\($active_peer.addr)"' |\
-awk 'NR>2 {print ","} length($0) {print p} {p=$0}' ORS="" | sed 's/"//g'`
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
 ````
 
 #### Weird Error When Running a Command
