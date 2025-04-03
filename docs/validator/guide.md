@@ -412,7 +412,7 @@ Replace `<node_version>` with the correct NEAR core release version.
 **Update Priority Codes:**
 - **CODE_RED_<network_id>** – where `<network_id>` is either `MAINNET` or `TESTNET`. This represents the most dire and urgent situation. Usually it means that the network has stalled or crashed and we need validators to take immediate actions to bring the network up. Alternatively it could mean that we discovered some highly critical security vulnerabilities and a patch is needed as soon as possible. If it is about mainnet, we expect that validators will react **immediately** to such alerts, ideally within 30 minutes.
 - **CODE_YELLOW_<network_id>** – where `<network_id>` is either `MAINNET` or `TESTNET`. This represents a less urgent announcement. Usually it means the release of a protocol change or a fix of a moderate security issue. In such cases, validators are not expected to take immediate actions but are still expected to **react within days**.
-- **CODE_GREEN_<network_id>** – where `<network_id>` is either `MAINNET` or `TESTNET`. This usually means some general announcement that is more informational or doesn<E2><80><99>t require actions within a short period of time. It could be an announcement of a release that improves performance or a fix some minor issues.
+- **CODE_GREEN_<network_id>** – where `<network_id>` is either `MAINNET` or `TESTNET`. This usually means some general announcement that is more informational or doesn't require actions within a short period of time. It could be an announcement of a release that improves performance or a fix some minor issues.
 
 ---
 
