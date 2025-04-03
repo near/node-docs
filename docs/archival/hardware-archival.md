@@ -18,7 +18,7 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                 |
 | RAM            | 32GB DDR4                                                       |
 | Hot Storage    | 3 Terabyte SSD                                                  |
-| Cold Storage   | 60 Terabyte  NON-SSD Persistent Disks                           |
+| Cold Storage   | 90 Terabyte  NON-SSD Persistent Disks                           |
 
 ## Minimal Hardware Specifications {#minimal-hardware-specifications}
 
@@ -27,7 +27,7 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support |
 | RAM            | 24GB DDR4                                                       |
 | Hot Storage    | 3 Terabyte SSD                                                  |
-| Cold Storage   | 60 Terabyte NON-SSD Persistent Disks                            |
+| Cold Storage   | 85 Terabyte NON-SSD Persistent Disks                            |
 
 ## Cost Estimation {#cost-estimation}
 
@@ -35,9 +35,9 @@ Estimated monthly costs depending on cloud provider:
 
 | Cloud Provider | Machine Size    | Linux                      |
 | -------------- | --------------- |----------------------------|
-| AWS            | m5a.2xlarge     | $160 CPU + $1200 storage † |
-| GCP            | n2-standard-8   | $280 CPU + $2100 storage † |
-| Azure          | Standard_D8s_v5 | $180 CPU + $400 storage †  |
+| AWS            | m5a.4xlarge     | $300 CPU + $1200 storage † |
+| GCP            | n2d-standard-16 | $400 CPU + $2100 storage † |
+| Azure          | Standard_d16-v3 | $334 CPU + $400 storage †  |
 
 _( † ) The storage cost will grow overtime as an archival node stores more data from the growing NEAR blockchain._
 
@@ -50,7 +50,7 @@ _( † ) The storage cost will grow overtime as an archival node stores more dat
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                 |
 | RAM            | 24GB DDR4                                                       |
-| Hot Storage    | 1 Terabyte SSD                                                  |
+| Hot Storage    | 1.5 Terabyte SSD                                                  |
 | Cold Storage   | 15 Terabyte NON-SSD Persistent Disks                            |
 
 ## Minimal Hardware Specifications {#minimal-hardware-specifications-testnet}
