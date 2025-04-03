@@ -105,7 +105,8 @@ BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: appl
           $list1[] as $active_peer | $list2[] |
           select(.peer_id == $active_peer.id) |
           "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-cd ~/nearcore && target/release/neard init --chain-id="mainnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES ```
+cd ~/nearcore && target/release/neard init --chain-id="mainnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES
+```
 
 Set your `<full_pool_id>`, example: `xxx.poolv1.near`, where `xxx` is your pool_id.
 
