@@ -5,9 +5,6 @@
     },
     {
       "pattern": "^https://twitter.com"
-    },
-    {
-      "pattern": "^https://rpc.betanet.near.org"
     }
   ],
   "replacementPatterns": [
