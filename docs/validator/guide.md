@@ -32,6 +32,7 @@ source $HOME/.cargo/env
 
 First get latest version available:
 
+##### MainNet
 ```sh
 Nearcore_Version=$(curl -s https://api.github.com/repos/near/nearcore/releases/latest | jq -r .tag_name)
 ```
@@ -45,9 +46,27 @@ echo 'export NEAR_ENV=mainnet' >> ~/.bashrc
 source ~/.bashrc
 ```
 
+##### TestNet
+```sh
+Nearcore_Version=$(curl -s https://api.github.com/repos/near/nearcore/releases | jq -r '[.[] | select(.prerelease == true)][0].tag_name')
+```
+
+Clone the nearcore repo, choose the latest stable branch for mainnet and build the nearcore from source:
+
+```sh
+cd ~ && git clone https://github.com/near/nearcore && cd nearcore/ && git checkout $Nearcore_Version
+make release
+echo 'export NEAR_ENV=testnet' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Wallet creation
+
+⚠️ **Make sure to create a wallet for correct target network (e.g MainNet)**
+
 During the building time, let's make a wallet.
 
-We recommend to use a partner wallet like Meteor, MyNearWallet or SenderWallet.
+You can use any wallet supporting Near Protocol like Meteor, MyNearWallet or SenderWallet.
 
 - [MyNearWallet](https://app.mynearwallet.com/)
 - [MeteorWallet](https://wallet.meteorwallet.app/)
@@ -84,18 +103,19 @@ If you get an error, you can retry `near login` with **"Store the access key in 
 
 Time to think about your validator name.
 
-Your validator node will finish with a `poolv1.near`. 
+Your validator node will finish with a `poolv1.near` (MainNet) or `poolv1.testnet` (TestNet). 
 For example:
-- If you want to have a validator pool named "panda", set `panda.poolv1.near`.
-- If you want to have a name "validator_near", your full pool name will be `validator_near.poolv1.near`.
+- If you want to have a validator pool named "panda", set `panda.pool.near` for MainNet, `panda.poolv1.testnet` for TestNet.
 
 #### Reminder:
 - `<pool_id>` – your pool name, for example `panda`.
-- `<full_pool_id>` – `xxx.poolv1.near`, where `xxx` is your pool_id like `panda.poolv1.near`.
+- `<full_pool_id>` – `xxx.poolv1.near`, where `xxx` is your pool_id like `panda.pool.near`.
 - `<accountId>` or `accountId` – `xxx.near`, where `xxx` is your account name, for example `validator_near.near`.
 
 ```sh
 # You can use any RPC provider for this command.
+
+# MainNet
 BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
         "jsonrpc": "2.0",
         "method": "network_info",
@@ -105,8 +125,26 @@ BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: appl
           $list1[] as $active_peer | $list2[] |
           select(.peer_id == $active_peer.id) |
           "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+
 cd ~/nearcore && target/release/neard init --chain-id="mainnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES
+
+# TestNet
+BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+
+cd ~/nearcore && target/release/neard init --chain-id="testnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES
 ```
+
+If you have trouble downloading genesis.config, they can be manually downloaded from the following links as well:
+* MainNet: https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/genesis.json
+* TestNet: https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/genesis.json
 
 Set your `<full_pool_id>`, example: `xxx.poolv1.near`, where `xxx` is your pool_id.
 
