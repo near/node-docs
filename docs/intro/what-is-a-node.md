@@ -19,7 +19,7 @@ You may decide to run a node of your own for a few reasons:
 - To develop and deploy contracts on a local (independent and isolated) node (sometimes called "localnet"). (†)
 - To quickly extract blockchain data that can be used for chain analytics, block explorer, etc.
 
-_( † ) `localnet` would be the right choice if you prefer to avoid leaking information about your work during the development process since `testnet` and `betanet` are *public* networks. `localnet` also gives you total control over accounts, economics and other factors for more advanced use cases (ie. making changes to `nearcore`)._
+_( † ) `localnet` would be the right choice if you prefer to avoid leaking information about your work during the development process since `testnet` is a *public* network. `localnet` also gives you total control over accounts, economics and other factors for more advanced use cases (ie. making changes to `nearcore`)._
 
 
 ## Types of Network {#types-of-network}
@@ -28,7 +28,6 @@ There are a few different networks to potentially run a node. Each network opera
 
 * [`mainnet`](https://docs.near.org/concepts/basics/networks#mainnet)
 * [`testnet`](https://docs.near.org/concepts/basics/networks#testnet)
-* [`betanet`](https://docs.near.org/concepts/basics/networks#betanet)
 * [`localnet`](https://docs.near.org/concepts/basics/networks#localnet)
 
 

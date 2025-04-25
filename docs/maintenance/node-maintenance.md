@@ -28,13 +28,6 @@ Typically, `testnet` and `mainnet` releases are five weeks apart to allow nearco
 - `testnet` Wednesday at 15:00 UTC. The release tag is mapped with `x.y.z-rc.1`
 - `mainnet` Wednesday at 15:00 UTC. The release tag is mapped with `x.y.z`
 
-<blockquote class="warning">
-<strong>Heads up</strong><br /><br />
-
-`betanet` provides cutting-edge testing grounds for validators, with daily updates and frequent hard-forks. For more information on nodes that are running on `betanet`, please see the [betanet analysis group on the governance forum](https://gov.near.org/t/betanet-analysis-group-reports/339).
-</blockquote>
-
-
 ## Nearcore Emergency Updates {#nearcore-emergency-updates}
 
 We may issue a `[CODE_YELLOW_TESTNET]` or `[CODE_YELLOW_MAINNET]` if the network is suffering minor issues, or a new software release introduces incompatibilities and requires additional testing.
@@ -56,7 +49,7 @@ The tags we propose are as follows:
 
 `[CODE_GREEN_<network_id>]` where `<network_id>` is either `MAINNET` or `TESTNET`. This usually means some general announcement that is more informational or doesn’t require actions within a short period of time. It could be an announcement of a release that improves performance or a fix some minor issues.
 
-Call-to-actions for technical teams if the network is stalling and there's the need to coordinate a manual node restart. Such messages begin with `[CODE_RED_BETANET]` or `[CODE_RED_TESTNET]`, and will be posted in the read-only Validator Announcement channel on [Discord](https://discord.gg/xsrHaCb). The same message may be repeated in other channels, to have higher outreach.
+Call-to-actions for technical teams if the network is stalling and there's the need to coordinate a manual node restart. Such messages begin with `[CODE_RED_MAINNET]` or `[CODE_RED_TESTNET]`, and will be posted in the read-only Validator Announcement channel on [Discord](https://discord.gg/xsrHaCb). The same message may be repeated in other channels, to have higher outreach.
 
 
 >Got a question?
