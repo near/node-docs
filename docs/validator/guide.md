@@ -142,6 +142,8 @@ BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: appl
 cd ~/nearcore && target/release/neard init --chain-id="testnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES
 ```
 
+⚠️ Use `--home` argument if you want to change working directory from the default value of ~/.near. 
+
 If you have trouble downloading genesis.config, they can be manually downloaded from the following links as well:
 * MainNet: https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/genesis.json
 * TestNet: https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/genesis.json
@@ -149,6 +151,13 @@ If you have trouble downloading genesis.config, they can be manually downloaded 
 Set your `<full_pool_id>`, example: `xxx.poolv1.near`, where `xxx` is your pool_id.
 
 `validator_key.json` generated after the above command in `~/.near/` folder must be something like this:
+```
+{
+  "account_id": "your_pool_id.poolv1.testnet",
+  "public_key": "blahblah_public_key",
+  "secret_key": "blahblah_private_key"
+}
+```
 
 The `account_id` must match the staking pool contract ID, or you will not be able to sign/verify blocks.
 
@@ -248,14 +257,33 @@ Wait for approximately 3 hours and you are done, follow the next step to become 
 
 ##### Sync data with snapshot
 
-To sync data fast, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process will take a few hours, the expected data size will be around 580GB.
+To sync data fast, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process can take a few hours, the expected data size will be around 100GB.
 
-Run this to download snapshot and start the node (huge thanks FastNEAR for maintaining this):
+Run this to download snapshot (huge thanks FastNEAR for maintaining this):
 
 ```
-curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=mainnet RPC_TYPE=fast-rpc bash && sudo systemctl restart neard
+# MainNet
+
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=mainnet RPC_TYPE=fast-rpc bash
+
+# TestNet
+
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=testnet bash 
+
 ```
-The command will sync data and restart the neard!
+
+Once snapshot is downloaded, you can use the following commands to 'start' or 'restart' neard:
+
+```
+## Fresh start
+./target/release/neard --home ~/.near run
+
+## Restart
+sudo systemctl restart neard
+
+```
+
+
 
 If you need to make a change to service in the config.json file, the node also need to be reloaded:
 
