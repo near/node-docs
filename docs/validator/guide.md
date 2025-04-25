@@ -103,13 +103,15 @@ If you get an error, you can retry `near login` with **"Store the access key in 
 
 Time to think about your validator name.
 
-Your validator node will finish with a `poolv1.near` (MainNet) or `poolv1.testnet` (TestNet). 
+Your validator node will finish with pool factory name, `pool.near` (MainNet) or `pool.f863973.m0` (TestNet). 
+⚠️ poolv1.near is legacy MainNet poolfactory and should be avoided.
+
 For example:
-- If you want to have a validator pool named "panda", set `panda.pool.near` for MainNet, `panda.poolv1.testnet` for TestNet.
+- If you want to have a validator pool named "panda", set `panda.pool.near` for MainNet, `panda.pool.testnet` for TestNet.
 
 #### Reminder:
 - `<pool_id>` – your pool name, for example `panda`.
-- `<full_pool_id>` – `xxx.poolv1.near`, where `xxx` is your pool_id like `panda.pool.near`.
+- `<full_pool_id>` – `xxx.pool.near`, where `xxx` is your pool_id like `panda.pool.near`.
 - `<accountId>` or `accountId` – `xxx.near`, where `xxx` is your account name, for example `validator_near.near`.
 
 ```sh
@@ -148,12 +150,12 @@ If you have trouble downloading genesis.config, they can be manually downloaded 
 * MainNet: https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/genesis.json
 * TestNet: https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/genesis.json
 
-Set your `<full_pool_id>`, example: `xxx.poolv1.near`, where `xxx` is your pool_id.
+Set your `<full_pool_id>`, example: `xxx.pool.near`, where `xxx` is your pool_id.
 
 `validator_key.json` generated after the above command in `~/.near/` folder must be something like this:
 ```
 {
-  "account_id": "your_pool_id.poolv1.testnet",
+  "account_id": "your_pool_id.pool.f863973.m0",
   "public_key": "blahblah_public_key",
   "secret_key": "blahblah_private_key"
 }
@@ -254,7 +256,6 @@ after that, just restart the node (sudo systemctl restart neard).
 Wait for approximately 3 hours and you are done, follow the next step to become an active validator!
 
 
-
 ##### Sync data with snapshot
 
 To sync data fast, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process can take a few hours, the expected data size will be around 100GB.
@@ -305,7 +306,7 @@ To configure your node to sync from external storage, follow the [link](https://
 The new state sync bucket is `fast-state-parts` and it is maintained by FastNEAR.
 
 
-#### Becoming an active Validator
+### Becoming an active Validator
 In order to become a validator and enter the validator set to help secure the network and earn rewards, a minimum set of success criteria must be met:
 
  - The node must be fully synced
@@ -313,9 +314,15 @@ In order to become a validator and enter the validator set to help secure the ne
  - The contract must be initialized with the public_key in validator_key.json
  - The account_id must be set to the staking pool contract id  
  - There must be enough delegations to meet the minimum seat price. See the seat price here or just run this command     
+
 ```sh
+# MainNet
 near-validator validators network-config mainnet next
+
+# TestNet
+near-validator validators network-config testnet next
 ```
+
 - A proposal must be submitted by pinging the contract
 - Once a proposal is accepted a validator must wait 2-3 epoch to enter the validator set
 - Once in the validator set the validator must produce great than 90% of assigned blocks or your node will be kick out
@@ -332,8 +339,14 @@ Note: STAKING POOL CONTRACT WON'T HAVE WRITE ACCESS TO ALL SUB ACCOUNTS FUNDS OR
 Calls the staking pool factory, creates a new staking pool with the specified name, and deploys it to the indicated accountId.
 
 ```sh
-near contract call-function as-transaction poolv1.near create_staking_pool json-args '{"staking_pool_id": "<pool_id>", "owner_id": "<accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
+
+# MainNet
+near contract call-function as-transaction pool.near create_staking_pool json-args '{"staking_pool_id": "<pool_id>", "owner_id": "<accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
+
+# TestNet
+near contract call-function as-transaction pool.f863973.m0 create_staking_pool json-args '{"staking_pool_id": "<pool_id>", "owner_id": "<accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as <accountId> network-config testnet sign-with-keychain
 ``` 
+
 From the example above, you need to replace:
 
 **pool_id**: Staking pool name example "panda"  
@@ -345,14 +358,15 @@ Be sure to have at least 30 NEAR available, it is the minimum required for stora
 
 Final command will look something like this:
 ```sh
-near contract call-function as-transaction poolv1.near create_staking_pool json-args '{"staking_pool_id": "panda", "owner_id": "validator_near.near", "stake_public_key": "ed25519:xxx", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as validator_near.near network-config mainnet sign-with-keychain
+near contract call-function as-transaction pool.near create_staking_pool json-args '{"staking_pool_id": "panda", "owner_id": "validator_near.near", "stake_public_key": "ed25519:xxx", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as validator_near.near network-config mainnet sign-with-keychain
 ```  
 
 To change the pool parameters, such as changing the amount of commission charged to 1% in the example below, use this command:
 ```sh
 near contract call-function as-transaction <full_pool_id> update_reward_fee_fraction json-args '{"reward_fee_fraction": {"numerator": 1, "denominator": 100}}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <account_id> network-config mainnet sign-with-keychain
 ```
-Note: full_pool_id: `<pool_id>.poolv1.near` , it’s `panda.poolv1.near` in this case.
+
+Note: full_pool_id: `<pool_id>.pool.near` , it’s `panda.pool.near` in this case.
 
 If there is a "True" at the End. Your pool is created.
 
