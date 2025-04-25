@@ -379,21 +379,46 @@ Few useful commands you should know:
 
 Retrieve the owner ID of the staking pool
 ```sh
+# MainNet
 near contract call-function as-read-only <full_pool_id> get_owner_id json-args {} network-config mainnet now  
+
+# TestNet
+near contract call-function as-read-only <full_pool_id> get_owner_id json-args {} network-config testnet now  
 ```
 Issue this command to retrieve the public key the network has for your validator
 ```sh
-near contract call-function as-read-only <full_pool_id> get_staking_key json-args {} network-config mainnet now  
+# MainNet
+near contract call-function as-read-only <full_pool_id> get_staking_key json-args {} network-config mainnet now
+
+# TestNet
+near contract call-function as-read-only <full_pool_id> get_staking_key json-args {} network-config testnet now  
 ```  
   
 If the public key does not match you can update the staking key like this (replace the pubkey below with the key in your validator.json file)
 ```sh
-near contract call-function as-transaction <full_pool_id> update_staking_key json-args '{"stake_public_key": "<public key>"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain  
+# MainNet
+near contract call-function as-transaction <full_pool_id> update_staking_key json-args '{"stake_public_key": "<public key>"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
+
+# TestNet
+near contract call-function as-transaction <full_pool_id> update_staking_key json-args '{"stake_public_key": "<public key>"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config testnet sign-with-keychain   
 ```
 
-Working with Staking Pools
+### Working with Staking Pools
 
 NOTE: Your validator must be fully synced before issuing a proposal or depositing funds.
+
+#### Deposit stake to the pool
+While the staking pool is created, it may not be able to join validator set yet if it does not have enough stake.
+
+If you already have fund to start with, you can use the following command to deposit
+```sh
+
+# MainNet
+near call <staking_pool_id> deposit_and_stake --deposit <amount> --use-account <accountId> --gas=300000000000000 --network-id mainnet
+
+# TestNet
+near call <staking_pool_id> deposit_and_stake --deposit <amount> --use-account <accountId> --gas=300000000000000 --network-id testnet
+```
 
 #### Proposals and Pings   
 In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
@@ -401,6 +426,30 @@ In order to get a validator seat you must first submit a proposal with an approp
 To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract. You could set up a ping using a cron job with a ping script here.  
   
 Ping are done by Metapool too, you don't need anymore to use a script ping but you can. You need at least 1 ping to be visible for the first time.
+
+##### Ping once to make an initial proposal
+
+You can use the following command to make an initial proposal to join the validator set
+```sh
+
+# MainNet
+near call <staking_pool_id> ping '{}' --accountId <accountId> --gas=300000000000000 --network-id mainnet
+
+# Testnet
+near call <staking_pool_id> ping '{}' --accountId <accountId> --gas=300000000000000 --network-id testnet
+
+```
+
+Once you ping, use the following near cli command to see if your proposal is accepted:
+
+```sh
+# if you do not have near-validator installed, please refer to
+# https://docs.near.org/tools/near-cli#validator-extension for installation guide. 
+
+near-validator proposals
+```
+
+##### Cron-job to periodically ping to renew proposal
 
 Replace `<full_pool_id>` and `<account_id>` before execution:
 
