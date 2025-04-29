@@ -85,7 +85,11 @@ Add at least **31 NEAR** to this wallet:
 A full access key needs to be installed locally to be able to send transactions via NEAR-CLI.
 
 ```sh
-near login
+# MainNet
+near login --network-id mainnet
+
+# TestNet
+near login --network-id testnet
 ```
 
 **Note:** This command launches a web browser allowing for the authorization of a full access key to be copied locally.
@@ -104,7 +108,8 @@ If you get an error, you can retry `near login` with **"Store the access key in 
 Time to think about your validator name.
 
 Your validator node will finish with pool factory name, `pool.near` (MainNet) or `pool.f863973.m0` (TestNet). 
-⚠️ poolv1.near is legacy MainNet poolfactory and should be avoided.
+
+⚠️ `poolv1.near` is legacy MainNet pool factory and should be avoided.
 
 For example:
 - If you want to have a validator pool named "panda", set `panda.pool.near` for MainNet, `panda.pool.testnet` for TestNet.
