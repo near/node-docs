@@ -209,8 +209,8 @@ Description=NEARd Daemon Service
 [Service]
 Type=simple
 User=[USER] /!_ UPDATE HERE
-WorkingDirectory=/root/.near
-ExecStart=/root/nearcore/target/release/neard run
+WorkingDirectory=[PATH TO .NEAR]/.near /!_ UPDATE HERE
+ExecStart=[PATH TO NEARCORE]/nearcore/target/release/neard run /!_ UPDATE HERE
 Restart=on-failure
 RestartSec=30
 KillSignal=SIGINT
@@ -245,6 +245,7 @@ Unlike Header Sync, it requires downloading only a small subset of past block he
 To sync using Epoch Sync, update the `config.json` file with the latest boot nodes list from the NEAR network and then start the `neard` service, here is the command:
 
 ```
+# MainNet 
 BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
         "jsonrpc": "2.0",
         "method": "network_info",
@@ -254,6 +255,20 @@ BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: appl
           $list1[] as $active_peer | $list2[] |
           select(.peer_id == $active_peer.id) |
           "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+
+jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
+
+# TestNet
+BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+
 jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
 ```
 after that, just restart the node (sudo systemctl restart neard).
