@@ -18,7 +18,7 @@ If you are looking to learn how to compile and run a NEAR validator node nativel
 
 ## Prerequisites {#prerequisites}
 
-- [Rust](https://www.rust-lang.org/). If not already installed, please [follow these instructions](https://docs.near.org/docs/tutorials/contracts/intro-to-rust#3-step-rust-installation).
+- [Rust](https://www.rust-lang.org/).
 - [Git](https://git-scm.com/)
 - Installed developer tools:
   - MacOS
