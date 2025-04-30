@@ -69,7 +69,7 @@ During the building time, let's make a wallet.
 You can use any wallet supporting Near Protocol like Meteor, MyNearWallet or SenderWallet.
 
 - [MyNearWallet](https://app.mynearwallet.com/)
-- [MeteorWallet](https://wallet.meteorwallet.app/)
+- [MeteorWallet](https://meteorwallet.app/)
 
 ![wallet_creation](https://github.com/user-attachments/assets/da2685a4-11c5-455f-a5eb-9fff4d28c934)
 
@@ -545,7 +545,7 @@ The info will appear as shown on NearScope.
 You can get update notifications from:
 - **Discord:** [NEAR Protocol Discord](https://discord.gg/nearprotocol)
 - **Telegram:** [NEAR Validators Group](https://t.me/near_validators)
-- **Twitter (X):** [NEAR Chain Status](https://x.com/NEARChainStatus) *(Only for Mainnet)*
+- **Twitter (X):** @NEARChainStatus *(Only for Mainnet)*
 - **Email Subscription:** [NEAR Update Notifications](https://near.us14.list-manage.com/subscribe?u=faedf5dec8739fb92e05b4131&id=befd133f18)
 
 ---
