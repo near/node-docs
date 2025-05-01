@@ -651,7 +651,7 @@ Ensure your config file has `store.load_mem_tries_for_tracked_shards` set to `tr
 ---
 
 ### Useful Links
-- **NEAR Chain Status Twitter:** [@NEARChainStatus](https://x.com/NEARChainStatus)
+- **NEAR Chain Status Twitter:** @NEARChainStatus
 - **NEAR Staking:** [Near Staking Website](https://near-staking.com/)
 - **NEARBlocks Node Explorer:** [NearBlocks](https://nearblocks.io/node-explorer)
 - **NearScope:** [NearScope](https://nearscope.net/)
