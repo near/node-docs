@@ -79,5 +79,7 @@ Then run:
 
 ### Retrieve a copy of the latest RPC snapshot:
 
+⚠️ **FREE SNAPSHOT SERVICE BY FASTNEAR WILL BE DEPRECATGED STARTING JUNE 1ST, 2025. We strongly recommend all node operators to use [Epoch Sync](../intro/epoch_sync.md) when possible.**
+
 The latest daily snapshots are made available to the public by FastNear, and can be used to set up a validator node or RPC. 
 For detailed instructions, please refer to [HERE](https://docs.fastnear.com/docs/snapshots).
