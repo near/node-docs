@@ -1,3 +1,10 @@
+---
+id: validator-guide
+title: Validator Onboarding Guide
+sidebar_label: Validator Onboarding Guide
+sidebar_position: 11
+---
+
 ## Run a Node on Linux
 
 ### Recommended Hardware Specifications
