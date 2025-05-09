@@ -279,7 +279,7 @@ Wait for approximately 3 hours and you are done, follow the next step to become 
 ##### Sync data with snapshot
 ⚠️ **FREE SNAPSHOT SERVICE BY FASTNEAR WILL BE DEPRECATED STARTING JUNE 1ST, 2025. We strongly recommend all node operators to use epoch sync.**
 
-To sync data fast, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process can take a few hours, the expected data size will be around 100GB.
+To sync data fast, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process can take a few hours (usually less than 7 hours for MainNet, 1 hour for TestNet), the expected data size will be around 100GB.
 
 Run this to download snapshot (huge thanks FastNEAR for maintaining this):
 
@@ -489,7 +489,7 @@ EOF
 chmod +x /home/root/scripts/ping.sh && (crontab -l 2>/dev/null; echo "0 */8 * * * sh /home/root/scripts/ping.sh") | crontab -'
 ```
   
-This will ping you node every 8h
+This will ping your node every 8h
 
 List crontab to see it is running:
 ```sh
