@@ -6,6 +6,8 @@ sidebar_position: 4
 description: State Sync Configuration
 ---
 
+⚠️ **FREE SNAPSHOT SERVICE BY FASTNEAR WILL BE DEPRECATGED STARTING JUNE 1ST, 2025. We strongly recommend all node operators to use [Epoch Sync](../intro/epoch_sync.md) when possible.**
+
 # Overview
 
 See [State Sync from External Storage](https://github.com/near/nearcore/blob/master/docs/misc/state_sync_from_external_storage.md)

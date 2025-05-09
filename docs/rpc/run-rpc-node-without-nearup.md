@@ -115,10 +115,13 @@ This command will create the required directory structure and will generate `con
 
 ### 4. Get data backup {#4-get-data-backup}
 
+⚠️ **FREE SNAPSHOT SERVICE BY FASTNEAR WILL BE DEPRECATGED STARTING JUNE 1ST, 2025. We strongly recommend all node operators to use [Epoch Sync](../intro/epoch_sync.md) when possible.**
+
 The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
 
-The latest daily snapshots are made available to the public by FastNear, and can be used to set up a validator node or RPC. 
-For detailed instructions, please refer to [HERE](https://docs.fastnear.com/docs/snapshots).
+~~The latest daily snapshots are made available to the public by FastNear, and can be used to set up a validator node or RPC. 
+For detailed instructions, please refer to [HERE](https://docs.fastnear.com/docs/snapshots).~~
+While snapshot-based syncing was previously the recommended default, we now recommend Epoch Sync—a faster, more lightweight method that allows a node to catch up from genesis without downloading a large state snapshot.
 
 ### 5. Run the node {#5-run-the-node}
 To start your node simply run the following command:
@@ -193,10 +196,13 @@ This command will create the required directory structure by generating a `confi
 
 ### 4. Get data backup {#4-get-data-backup-1}
 
+⚠️ **FREE SNAPSHOT SERVICE BY FASTNEAR WILL BE DEPRECATGED STARTING JUNE 1ST, 2025. We strongly recommend all node operators to use [Epoch Sync](../intro/epoch_sync.md) when possible.**
+
 The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
 
-The latest daily snapshots are made available to the public by FastNear, and can be used to set up a validator node or RPC. 
-For detailed instructions, please refer to [HERE](https://docs.fastnear.com/docs/snapshots).
+~~The latest daily snapshots are made available to the public by FastNear, and can be used to set up a validator node or RPC. 
+For detailed instructions, please refer to [HERE](https://docs.fastnear.com/docs/snapshots).~~
+While snapshot-based syncing was previously the recommended default, we now recommend Epoch Sync—a faster, more lightweight method that allows a node to catch up from genesis without downloading a large state snapshot.
 
 ### 5. Run the node {#5-run-the-node}
 To start your node simply run the following command:

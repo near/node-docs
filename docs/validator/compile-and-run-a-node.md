@@ -218,28 +218,11 @@ For testnet, the default file should be replaced with one of the following, depe
 2. [Archival RPC Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/archival/config.json) stores all the info starting for genesis, can serve RPC queries for the entire history. Requires significant storage.
 3. [Validator Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/validator/config.json) is designed for the validators. Heavily optimized, does not store the full state, and cannot serve RPC queries.
 
-### 4. Get data backup {#get-data-backup}
+### 4. Sync to the chain tip {#epoch-sync}
 
-The node is ready to be started.  When started as-is, it will establish
-connection to the network and start downloading latest state.  This
-may take a while so an alternative is to download [Node Data Snapshots](/intro/node-data-snapshots)
-which will speed up the syncing.  The short of it is to install AWS
-CLI and run:
+The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
 
-```bash
-$ aws s3 --no-sign-request cp s3://near-protocol-public/backups/testnet/rpc/latest .
-$ latest=$(cat latest)
-$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/testnet/rpc/$latest ~/.near/data
-```
-
-> **Heads up**
-> An RPC node stores around 500GB of data on disk.  Furthermore, it
-> requires SSD to be able to keep up with network.  Make sure that you
-> have enough free space on a fast-enough disk.
-
-Note that you don’t have to perform this step if you prefer a fully
-decentralized experience when the node downloads data from the NEAR
-network.
+While snapshot-based syncing was previously the recommended default, we now recommend [Epoch Sync](../intro/epoch_sync.md) —a faster, more lightweight method that allows a node to catch up from genesis without downloading a large state snapshot.
 
 ### 5. Run the node {#run-the-node}
 To start your node simply run the following command:
@@ -467,28 +450,11 @@ For mainnet, the default file should be replaced with one of the following, depe
 2. [Archival RPC Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/archival/config.json) stores all the info starting for genesis, can serve RPC queries for the entire history. Requires significant storage.
 3. [Validator Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json) is designed for the validators. Heavily optimized, does not store the full state, and cannot serve RPC queries.
 
-### 4. Get data backup {#get-data-backup-1}
+### 4. Sync to the chain tip {#epoch-sync-1}
 
-The node is ready to be started. When started as-is, it will establish
-connection to the network and start downloading latest state.  This
-may take a while so an alternative is to download [Node Data Snapshots](/intro/node-data-snapshots)
-which will speed up the syncing.  The short of it is to install AWS
-CLI and run:
+The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
 
-```bash
-$ aws s3 --no-sign-request cp s3://near-protocol-public/backups/mainnet/rpc/latest .
-$ latest=$(cat latest)
-$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/mainnet/rpc/$latest ~/.near/data
-```
-
-> **Heads up**
-> An RPC node stores around 500GB of data on disk.  Furthermore, it
-> requires SSD to be able to keep up with network.  Make sure that you
-> have enough free space on a fast-enough disk.
-
-Note that you don’t have to perform this step if you prefer a fully
-decentralized experience when the node downloads data from the NEAR
-network.
+While snapshot-based syncing was previously the recommended default, we now recommend [Epoch Sync](../intro/epoch_sync.md) —a faster, more lightweight method that allows a node to catch up from genesis without downloading a large state snapshot.
 
 ### 5. Run the node {#run-the-node-1}
 To start your node simply run the following command:
