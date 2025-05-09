@@ -32,6 +32,7 @@ source $HOME/.cargo/env
 
 First get latest version available:
 
+##### MainNet
 ```sh
 Nearcore_Version=$(curl -s https://api.github.com/repos/near/nearcore/releases/latest | jq -r .tag_name)
 ```
@@ -45,12 +46,30 @@ echo 'export NEAR_ENV=mainnet' >> ~/.bashrc
 source ~/.bashrc
 ```
 
+##### TestNet
+```sh
+Nearcore_Version=$(curl -s https://api.github.com/repos/near/nearcore/releases | jq -r '[.[] | select(.prerelease == true)][0].tag_name')
+```
+
+Clone the nearcore repo, choose the latest stable branch for mainnet and build the nearcore from source:
+
+```sh
+cd ~ && git clone https://github.com/near/nearcore && cd nearcore/ && git checkout $Nearcore_Version
+make release
+echo 'export NEAR_ENV=testnet' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Wallet creation
+
+⚠️ **Make sure to create a wallet for correct target network (e.g MainNet)**
+
 During the building time, let's make a wallet.
 
-We recommend to use a partner wallet like Meteor, MyNearWallet or SenderWallet.
+You can use any wallet supporting Near Protocol like Meteor, MyNearWallet or SenderWallet.
 
 - [MyNearWallet](https://app.mynearwallet.com/)
-- [MeteorWallet](https://wallet.meteorwallet.app/)
+- [MeteorWallet](https://meteorwallet.app/)
 
 ![wallet_creation](https://github.com/user-attachments/assets/da2685a4-11c5-455f-a5eb-9fff4d28c934)
 
@@ -66,7 +85,11 @@ Add at least **31 NEAR** to this wallet:
 A full access key needs to be installed locally to be able to send transactions via NEAR-CLI.
 
 ```sh
-near login
+# MainNet
+near login --network-id mainnet
+
+# TestNet
+near login --network-id testnet
 ```
 
 **Note:** This command launches a web browser allowing for the authorization of a full access key to be copied locally.
@@ -84,18 +107,22 @@ If you get an error, you can retry `near login` with **"Store the access key in 
 
 Time to think about your validator name.
 
-Your validator node will finish with a `poolv1.near`. 
+Your validator node will finish with pool factory name, `pool.near` (MainNet) or `pool.f863973.m0` (TestNet). 
+
+⚠️ `poolv1.near` is legacy MainNet pool factory and should be avoided.
+
 For example:
-- If you want to have a validator pool named "panda", set `panda.poolv1.near`.
-- If you want to have a name "validator_near", your full pool name will be `validator_near.poolv1.near`.
+- If you want to have a validator pool named "panda", set `panda.pool.near` for MainNet, `panda.pool.testnet` for TestNet.
 
 #### Reminder:
 - `<pool_id>` – your pool name, for example `panda`.
-- `<full_pool_id>` – `xxx.poolv1.near`, where `xxx` is your pool_id like `panda.poolv1.near`.
+- `<full_pool_id>` – `xxx.pool.near`, where `xxx` is your pool_id like `panda.pool.near`.
 - `<accountId>` or `accountId` – `xxx.near`, where `xxx` is your account name, for example `validator_near.near`.
 
 ```sh
 # You can use any RPC provider for this command.
+
+# MainNet
 BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
         "jsonrpc": "2.0",
         "method": "network_info",
@@ -105,12 +132,39 @@ BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: appl
           $list1[] as $active_peer | $list2[] |
           select(.peer_id == $active_peer.id) |
           "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+
 cd ~/nearcore && target/release/neard init --chain-id="mainnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES
+
+# TestNet
+BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+
+cd ~/nearcore && target/release/neard init --chain-id="testnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES
 ```
 
-Set your `<full_pool_id>`, example: `xxx.poolv1.near`, where `xxx` is your pool_id.
+⚠️ Use `--home` argument if you want to change working directory from the default value of ~/.near. 
+
+If you have trouble downloading genesis.config, they can be manually downloaded from the following links as well:
+* MainNet: https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/genesis.json
+* TestNet: https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/genesis.json
+
+Set your `<full_pool_id>`, example: `xxx.pool.near`, where `xxx` is your pool_id.
 
 `validator_key.json` generated after the above command in `~/.near/` folder must be something like this:
+```
+{
+  "account_id": "your_pool_id.pool.f863973.m0",
+  "public_key": "blahblah_public_key",
+  "secret_key": "blahblah_private_key"
+}
+```
 
 The `account_id` must match the staking pool contract ID, or you will not be able to sign/verify blocks.
 
@@ -155,8 +209,8 @@ Description=NEARd Daemon Service
 [Service]
 Type=simple
 User=[USER] /!_ UPDATE HERE
-WorkingDirectory=/root/.near
-ExecStart=/root/nearcore/target/release/neard run
+WorkingDirectory=[PATH TO .NEAR]/.near /!_ UPDATE HERE
+ExecStart=[PATH TO NEARCORE]/nearcore/target/release/neard run /!_ UPDATE HERE
 Restart=on-failure
 RestartSec=30
 KillSignal=SIGINT
@@ -191,6 +245,7 @@ Unlike Header Sync, it requires downloading only a small subset of past block he
 To sync using Epoch Sync, update the `config.json` file with the latest boot nodes list from the NEAR network and then start the `neard` service, here is the command:
 
 ```
+# MainNet 
 BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
         "jsonrpc": "2.0",
         "method": "network_info",
@@ -200,6 +255,20 @@ BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: appl
           $list1[] as $active_peer | $list2[] |
           select(.peer_id == $active_peer.id) |
           "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+
+jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
+
+# TestNet
+BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+
 jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
 ```
 after that, just restart the node (sudo systemctl restart neard).
@@ -207,17 +276,36 @@ after that, just restart the node (sudo systemctl restart neard).
 Wait for approximately 3 hours and you are done, follow the next step to become an active validator!
 
 
-
 ##### Sync data with snapshot
+⚠️ **FREE SNAPSHOT SERVICE BY FASTNEAR WILL BE DEPRECATED STARTING JUNE 1ST, 2025. We strongly recommend all node operators to use epoch sync.**
 
-To sync data fast, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process will take a few hours, the expected data size will be around 580GB.
+To sync data fast, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process can take a few hours (usually less than 7 hours for MainNet, 1 hour for TestNet), the expected data size will be around 100GB.
 
-Run this to download snapshot and start the node (huge thanks FastNEAR for maintaining this):
+Run this to download snapshot (huge thanks FastNEAR for maintaining this):
 
 ```
-curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=mainnet RPC_TYPE=fast-rpc bash && sudo systemctl restart neard
+# MainNet
+
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=mainnet RPC_TYPE=fast-rpc bash
+
+# TestNet
+
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=testnet bash 
+
 ```
-The command will sync data and restart the neard!
+
+Once snapshot is downloaded, you can use the following commands to 'start' or 'restart' neard:
+
+```
+## Fresh start
+./target/release/neard --home ~/.near run
+
+## Restart
+sudo systemctl restart neard
+
+```
+
+
 
 If you need to make a change to service in the config.json file, the node also need to be reloaded:
 
@@ -239,7 +327,7 @@ To configure your node to sync from external storage, follow the [link](https://
 The new state sync bucket is `fast-state-parts` and it is maintained by FastNEAR.
 
 
-#### Becoming an active Validator
+### Becoming an active Validator
 In order to become a validator and enter the validator set to help secure the network and earn rewards, a minimum set of success criteria must be met:
 
  - The node must be fully synced
@@ -247,9 +335,15 @@ In order to become a validator and enter the validator set to help secure the ne
  - The contract must be initialized with the public_key in validator_key.json
  - The account_id must be set to the staking pool contract id  
  - There must be enough delegations to meet the minimum seat price. See the seat price here or just run this command     
+
 ```sh
+# MainNet
 near-validator validators network-config mainnet next
+
+# TestNet
+near-validator validators network-config testnet next
 ```
+
 - A proposal must be submitted by pinging the contract
 - Once a proposal is accepted a validator must wait 2-3 epoch to enter the validator set
 - Once in the validator set the validator must produce great than 90% of assigned blocks or your node will be kick out
@@ -266,8 +360,14 @@ Note: STAKING POOL CONTRACT WON'T HAVE WRITE ACCESS TO ALL SUB ACCOUNTS FUNDS OR
 Calls the staking pool factory, creates a new staking pool with the specified name, and deploys it to the indicated accountId.
 
 ```sh
-near contract call-function as-transaction poolv1.near create_staking_pool json-args '{"staking_pool_id": "<pool_id>", "owner_id": "<accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
+
+# MainNet
+near contract call-function as-transaction pool.near create_staking_pool json-args '{"staking_pool_id": "<pool_id>", "owner_id": "<accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
+
+# TestNet
+near contract call-function as-transaction pool.f863973.m0 create_staking_pool json-args '{"staking_pool_id": "<pool_id>", "owner_id": "<accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as <accountId> network-config testnet sign-with-keychain
 ``` 
+
 From the example above, you need to replace:
 
 **pool_id**: Staking pool name example "panda"  
@@ -279,14 +379,15 @@ Be sure to have at least 30 NEAR available, it is the minimum required for stora
 
 Final command will look something like this:
 ```sh
-near contract call-function as-transaction poolv1.near create_staking_pool json-args '{"staking_pool_id": "panda", "owner_id": "validator_near.near", "stake_public_key": "ed25519:xxx", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as validator_near.near network-config mainnet sign-with-keychain
+near contract call-function as-transaction pool.near create_staking_pool json-args '{"staking_pool_id": "panda", "owner_id": "validator_near.near", "stake_public_key": "ed25519:xxx", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as validator_near.near network-config mainnet sign-with-keychain
 ```  
 
 To change the pool parameters, such as changing the amount of commission charged to 1% in the example below, use this command:
 ```sh
 near contract call-function as-transaction <full_pool_id> update_reward_fee_fraction json-args '{"reward_fee_fraction": {"numerator": 1, "denominator": 100}}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <account_id> network-config mainnet sign-with-keychain
 ```
-Note: full_pool_id: `<pool_id>.poolv1.near` , it’s `panda.poolv1.near` in this case.
+
+Note: full_pool_id: `<pool_id>.pool.near` , it’s `panda.pool.near` in this case.
 
 If there is a "True" at the End. Your pool is created.
 
@@ -299,21 +400,46 @@ Few useful commands you should know:
 
 Retrieve the owner ID of the staking pool
 ```sh
+# MainNet
 near contract call-function as-read-only <full_pool_id> get_owner_id json-args {} network-config mainnet now  
+
+# TestNet
+near contract call-function as-read-only <full_pool_id> get_owner_id json-args {} network-config testnet now  
 ```
 Issue this command to retrieve the public key the network has for your validator
 ```sh
-near contract call-function as-read-only <full_pool_id> get_staking_key json-args {} network-config mainnet now  
+# MainNet
+near contract call-function as-read-only <full_pool_id> get_staking_key json-args {} network-config mainnet now
+
+# TestNet
+near contract call-function as-read-only <full_pool_id> get_staking_key json-args {} network-config testnet now  
 ```  
   
 If the public key does not match you can update the staking key like this (replace the pubkey below with the key in your validator.json file)
 ```sh
-near contract call-function as-transaction <full_pool_id> update_staking_key json-args '{"stake_public_key": "<public key>"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain  
+# MainNet
+near contract call-function as-transaction <full_pool_id> update_staking_key json-args '{"stake_public_key": "<public key>"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config mainnet sign-with-keychain
+
+# TestNet
+near contract call-function as-transaction <full_pool_id> update_staking_key json-args '{"stake_public_key": "<public key>"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as <accountId> network-config testnet sign-with-keychain   
 ```
 
-Working with Staking Pools
+### Working with Staking Pools
 
 NOTE: Your validator must be fully synced before issuing a proposal or depositing funds.
+
+#### Deposit stake to the pool
+While the staking pool is created, it may not be able to join validator set yet if it does not have enough stake.
+
+If you already have fund to start with, you can use the following command to deposit
+```sh
+
+# MainNet
+near call <staking_pool_id> deposit_and_stake --deposit <amount> --use-account <accountId> --gas=300000000000000 --network-id mainnet
+
+# TestNet
+near call <staking_pool_id> deposit_and_stake --deposit <amount> --use-account <accountId> --gas=300000000000000 --network-id testnet
+```
 
 #### Proposals and Pings   
 In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
@@ -321,6 +447,30 @@ In order to get a validator seat you must first submit a proposal with an approp
 To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract. You could set up a ping using a cron job with a ping script here.  
   
 Ping are done by Metapool too, you don't need anymore to use a script ping but you can. You need at least 1 ping to be visible for the first time.
+
+##### Ping once to make an initial proposal
+
+You can use the following command to make an initial proposal to join the validator set
+```sh
+
+# MainNet
+near call <staking_pool_id> ping '{}' --accountId <accountId> --gas=300000000000000 --network-id mainnet
+
+# Testnet
+near call <staking_pool_id> ping '{}' --accountId <accountId> --gas=300000000000000 --network-id testnet
+
+```
+
+Once you ping, use the following near cli command to see if your proposal is accepted:
+
+```sh
+# if you do not have near-validator installed, please refer to
+# https://docs.near.org/tools/near-cli#validator-extension for installation guide. 
+
+near-validator proposals
+```
+
+##### Cron-job to periodically ping to renew proposal
 
 Replace `<full_pool_id>` and `<account_id>` before execution:
 
@@ -339,7 +489,7 @@ EOF
 chmod +x /home/root/scripts/ping.sh && (crontab -l 2>/dev/null; echo "0 */8 * * * sh /home/root/scripts/ping.sh") | crontab -'
 ```
   
-This will ping you node every 8h
+This will ping your node every 8h
 
 List crontab to see it is running:
 ```sh
@@ -395,7 +545,7 @@ The info will appear as shown on NearScope.
 You can get update notifications from:
 - **Discord:** [NEAR Protocol Discord](https://discord.gg/nearprotocol)
 - **Telegram:** [NEAR Validators Group](https://t.me/near_validators)
-- **Twitter (X):** [NEAR Chain Status](https://x.com/NEARChainStatus) *(Only for Mainnet)*
+- **Twitter (X):** @NEARChainStatus *(Only for Mainnet)*
 - **Email Subscription:** [NEAR Update Notifications](https://near.us14.list-manage.com/subscribe?u=faedf5dec8739fb92e05b4131&id=befd133f18)
 
 ---
@@ -501,7 +651,7 @@ Ensure your config file has `store.load_mem_tries_for_tracked_shards` set to `tr
 ---
 
 ### Useful Links
-- **NEAR Chain Status Twitter:** [@NEARChainStatus](https://x.com/NEARChainStatus)
+- **NEAR Chain Status Twitter:** @NEARChainStatus
 - **NEAR Staking:** [Near Staking Website](https://near-staking.com/)
 - **NEARBlocks Node Explorer:** [NearBlocks](https://nearblocks.io/node-explorer)
 - **NearScope:** [NearScope](https://nearscope.net/)

@@ -17,7 +17,7 @@ The next upgrade to increase the number of mainnet validators will introduce Chu
 
 ***How do I join NEAR as a validator on the Mainnet? What steps do I need to take?***
 
-1. Find out more about how to become a validator, head to https://near.org/validators/
+1. Find out more about how to become a validator, head to https://near-nodes.io/validator
 2. Join the [Open Shards Alliance Server](https://discord.com/invite/t9Kgbvf) to find out more on how to run nodes and participate on the guildnet.
 
 ***What are the future plans for NEAR Protocol?***
