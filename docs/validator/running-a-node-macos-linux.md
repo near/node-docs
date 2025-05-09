@@ -113,7 +113,7 @@ docker logs -f nearup
 
 Alternatively, you can build and run a node without Docker by compiling `neard` locally and pointing `nearup` to the compiled binaries. Steps in this section provide details of how to do this.
 
-If [Rust](https://www.rust-lang.org/) isn't already installed, please [follow these instructions](https://docs.near.org/docs/tutorials/contracts/intro-to-rust#3-step-rust-installation).
+Make sure [Rust](https://www.rust-lang.org/) is already installed.
 
 For Mac OS, make sure you have developer tools installed and then use `brew` to install extra tools:
 
