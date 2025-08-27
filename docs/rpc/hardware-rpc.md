@@ -22,16 +22,16 @@ The default is 5, with a minimum of 3. Increasing it requires more SSD storage a
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent  |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI |
 | RAM            | 32GB DDR4                                       |
-| Storage        | 3TB NVMe SSD                                    |
+| Storage        | 4TB NVMe SSD                                    |
 
 ## Minimal Hardware Specifications {#minimal-hardware-specifications}
 
-| Hardware       | Minimal Specifications                          |
-| -------------- |-------------------------------------------------|
-| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent  |
-| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI |
-| RAM            | 24GB DDR4                                       |
-| Storage        | 2.5TB NVMe SSD                                  |
+| Hardware       | Minimal Specifications                                           |
+| -------------- |------------------------------------------------------------------|
+| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent                   |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                  |
+| RAM            | 16GB DDR4                                                        |
+| Storage        | 2.5TB SATA3-class SSD supporting at least 15k IOPS and 800 MiBps |
 
 ## Cost Estimation {#cost-estimation}
 
@@ -51,17 +51,17 @@ Estimated monthly costs depending on cloud provider:
 | -------------- |-------------------------------------------------|
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent  |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI |
-| RAM            | 32GB DDR4                                       |
-| Storage        | 1TB NVMe SSD                                    |
+| RAM            | 16GB DDR4                                       |
+| Storage        | 1.5TB NVMe SSD                                  |
 
 ## Minimal Hardware Specifications {#minimal-hardware-specifications-testnet}
 
-| Hardware       | Minimal Specifications                          |
-| -------------- |-------------------------------------------------|
-| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent  |
-| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI |
-| RAM            | 24GB DDR4                                       |
-| Storage        | 1TB NVMe SSD                                    |
+| Hardware       | Minimal Specifications                                         |
+| -------------- |----------------------------------------------------------------|
+| CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent                 |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                |
+| RAM            | 8GB DDR4                                                       |
+| Storage        | 1TB SATA3-class SSD supporting at least 15k IOPS and 800 MiBps |
 
 ## Cost Estimation {#cost-estimation-testnet}
 
