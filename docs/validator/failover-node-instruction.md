@@ -36,14 +36,14 @@ This is the traditional [recovery plan](https://near-nodes.io/troubleshooting/co
 #### Setup for the failover node while it is on standby
 
 In `config.json`
-* Set `tracked_shards` to `[0]`
+* Set `tracked_shards_config` to `"AllShards"`
 * Set `store.load_mem_tries_for_tracked_shards` to `false`
 
 #### Procedure
 
 * Copy `validator_key.json` to the failover node.
 * In `config.json` file of the failover node:
-  * Set `tracked_shards` to `[]`
+  * Set `tracked_shards_config` to `"NoShards"`
   * Set `store.load_mem_tries_for_tracked_shards` to `true`
 * **Note**: You don’t need to swap the `node_key.json` file on the failover node. The network identifies nodes by their key and IP address, so changing the IP address might prevent successful syncing.
 * Stop the primary validator node.
@@ -66,8 +66,7 @@ This method allows you to quickly transfer the validator key to the failover nod
 #### Setup for the failover node while it is on standby
 
 * In `config.json`
-  * Add `“tracked_shadow_validator”: “<validator_id>”` (where `<validator_id>` is the pool ID of the validator).
-  * Set `tracked_shards` to `[]`.
+  * Set `tracked_shards_config` to `{ "ShadowValidator": "<validator_id>" }` (where `<validator_id>` is the pool ID of the validator).
   * Set `store.load_mem_tries_for_tracked_shards` to `true`.
 * **Note**: The failover node must be dedicated to a single validator and cannot be used as an RPC node during failover. Since mem_trie doesn’t work well with RPC nodes, the failover node won’t be able to perform RPC functions.
 
@@ -75,7 +74,7 @@ This method allows you to quickly transfer the validator key to the failover nod
 
 With the changes made to the `config.json` file and the validator key hot swap procedure, the failover node can quickly take over validator responsibilities.
 * Copy `validator_key.json` to the failover node.
-* [Optional] Remove `“tracked_shadow_validator”: “<validator_id>”` from `config.json` file of the failover node.
+* [Optional] Set `tracked_shards_config` to `"NoShards"` in `config.json` file of the failover node.
 * **Note**: You don’t need to swap the `node_key.json` file on the failover node. The network identifies nodes by their key and IP address, so changing the key might prevent successful syncing.
 * Stop the primary node.
 * Send a `SIGHUP` signal to the failover node (without restarting it).
