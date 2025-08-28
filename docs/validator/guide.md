@@ -9,7 +9,7 @@ sidebar_position: 11
 
 ### Recommended Hardware Specifications
 
-Please refer to [Hardware Requirements for Validator Node](/validator/hardware-validator).
+Please refer to [Hardware Requirements for Validator Node](/docs/validator/hardware-validator.md).
 
 ### Node installation
 
