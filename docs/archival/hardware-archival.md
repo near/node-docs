@@ -26,7 +26,7 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | -------------- |-----------------------------------------------------------------|
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support |
 | RAM            | 24GB DDR4                                                       |
-| Hot Storage    | 3 Terabyte SSD                                                  |
+| Hot Storage    | 1.5 Terabyte SSD                                                  |
 | Cold Storage   | 85 Terabyte NON-SSD Persistent Disks                            |
 
 ## Cost Estimation {#cost-estimation}

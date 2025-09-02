@@ -19,7 +19,7 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
 | RAM            | 48GB DDR4                                                    |
-| Storage        | 4TB NVMe SSD                                                 |
+| Storage        | 3TB NVMe SSD                                                 |
 
 ### Chunk validators
 
@@ -27,28 +27,28 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | -------------- |--------------------------------------------------------------|
 | CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
-| RAM            | 32GB DDR4                                                    |
-| Storage        | 4TB NVMe SSD                                                 |
+| RAM            | 16GB DDR4                                                    |
+| Storage        | 2TB NVMe SSD                                                 |
 
 ## Minimal Hardware Specifications {#minimal-hardware-specifications}
 
 ### Chunk/Block Producers
 
-| Hardware       | Minimal Specifications                                       |
-| -------------- |--------------------------------------------------------------|
-| CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
-| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
-| RAM            | 48GB DDR4                                                    |
-| Storage        | 2.5TB NVMe SSD                                                 |
+| Hardware       | Minimal Specifications                                        |
+| -------------- |---------------------------------------------------------------|
+| CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores  |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI               |
+| RAM            | 48GB DDR4                                                     |
+| Storage        | 2TB SATA3-class SSD supporting 15k IOPS and 800 MiBps or more |
 
 ### Chunk validators
 
-| Hardware       | Minimal Specifications                                       |
-| -------------- |--------------------------------------------------------------|
-| CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
-| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
-| RAM            | 24GB DDR4                                                    |
-| Storage        | 2.5TB NVMe SSD                                                 |
+| Hardware       | Minimal Specifications                                          |
+| -------------- |-----------------------------------------------------------------|
+| CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores    |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                 |
+| RAM            | 8GB DDR4                                                        |
+| Storage        | 1TB SATA3-class SSD supporting 15k IOPS and 800 MiBps or more   |
 
 ## Cost Estimation {#cost-estimation}
 
@@ -66,21 +66,21 @@ Estimated monthly costs depending on cloud provider:
 
 ### Chunk/Block Producers
 
-| Hardware       | Recommended Specifications                                   |
-| -------------- |--------------------------------------------------------------|
-| CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
-| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
-| RAM            | 32GB DDR4                                                    |
-| Storage        | 1.5TB NVMe SSD                                               |
+| Hardware       | Recommended Specifications                                    |
+| -------------- |---------------------------------------------------------------|
+| CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores  |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI               |
+| RAM            | 32GB DDR4                                                     |
+| Storage        | 1TB SATA3-class SSD supporting 15k IOPS and 800 MiBps or more |
 
 ### Chunk validators
 
-| Hardware       | Recommended Specifications                                   |
-| -------------- |--------------------------------------------------------------|
-| CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
-| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
-| RAM            | 32GB DDR4                                                    |
-| Storage        | 1TB NVMe SSD                                                 |
+| Hardware       | Recommended Specifications                                      |
+| -------------- |-----------------------------------------------------------------|
+| CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores    |
+| CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                 |
+| RAM            | 16GB DDR4                                                       |
+| Storage        | 512GB SATA3-class SSD supporting 15k IOPS and 800 MiBps or more |
 
 ## Minimal Hardware Specifications {#minimal-hardware-specifications}
 
@@ -90,7 +90,7 @@ Estimated monthly costs depending on cloud provider:
 | -------------- |--------------------------------------------------------------|
 | CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
-| RAM            | 24GB DDR4                                                    |
+| RAM            | 32GB DDR4                                                    |
 | Storage        | 1.5TB NVMe SSD                                               |
 
 ### Chunk validators
@@ -99,7 +99,7 @@ Estimated monthly costs depending on cloud provider:
 | -------------- |--------------------------------------------------------------|
 | CPU            | x86_64 (Intel, AMD) processor with at least 8 physical cores |
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI              |
-| RAM            | 24GB DDR4                                                    |
+| RAM            | 8GB DDR4                                                     |
 | Storage        | 1.5TB NVMe SSD                                               |
 
 ## Cost Estimation {#cost-estimation}
