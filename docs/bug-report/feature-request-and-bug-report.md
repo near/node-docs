@@ -44,7 +44,9 @@ Before reporting, collect the following:
 - **Debug Information**: See next section.
 
 #### Step 2: Collect Debug Information
-For comprehensive debugging, collect detailed system information:
+To enable effective troubleshooting, gather comprehensive system diagnostics:
+The commands below will compile system data, logs, and configuration files into a designated directory. This diagnostic package can be provided to the NEAR team to facilitate faster issue identification and resolution.
+
 
 **Setup Debug Collection:**
 
@@ -82,8 +84,7 @@ cat > $NEAR_HOME/log_config.json << EOF
 EOF
 
 # If neard is running, signal it to pick up new log config
-ps -ef | grep [n]eard
-kill -s SIGHUP <process_id>
+sudo kill -s SIGHUP $(pidof neard)
 
 # Collect relevant logs around the time the issue occurred.
 ```
