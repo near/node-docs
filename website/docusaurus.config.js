@@ -97,7 +97,7 @@ const config = {
             position: 'left',
           },
           {
-            href: 'https://docs.near.org/',
+            href: 'https://near.github.io/nearcore/',
             label: 'Dev Docs',
             position: 'left',
           },
