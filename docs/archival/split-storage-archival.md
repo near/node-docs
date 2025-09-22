@@ -2,7 +2,7 @@
 id: split-storage-archival
 title: Split Storage for NEAR Archival Nodes
 sidebar_label: Split Storage
-sidebar_position: 4
+sidebar_position: 2
 description: Split Storage for NEAR Archival Nodes
 ---
 
