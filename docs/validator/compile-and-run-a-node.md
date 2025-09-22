@@ -317,7 +317,7 @@ $ sed -i -e 's/private_key/secret_key/g' ~/.near/validator_key.json
 To create a staking pool on the network, we need to call the create_staking_pool contract with required parameters and deploy it to the indicated accountId:
 
 ```bash
-$ near call pool.f863973.m0 create_staking_pool '{"staking_pool_id": "<pool_name>", "owner_id": "<pool_owner_accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": <fee>, "denominator": 100}}' --accountId="<accountId>" --amount=30 --gas=300000000000000
+$ near call pool.f863973.m0 create_staking_pool '{"staking_pool_id": "<pool_name>", "owner_id": "<pool_owner_accountId>.testnet", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": <fee>, "denominator": 100}}' --accountId="<accountId>.testnet" --amount=30 --gas=300000000000000
 ```
 
 From the command above, you need to replace:
@@ -358,7 +358,7 @@ To note, a ping also updates the staking balances for your delegators. A ping sh
 
 Deposit token to a pool (can be done using any account, not necessary the one created/used in steps above):
 ```bash
-$ near call <staking_pool_id> deposit_and_stake --amount <amount> --accountId <accountId> --gas=300000000000000
+$ near call <staking_pool_id> deposit_and_stake --amount <amount> --accountId <accountId>.testnet --gas=300000000000000
 ```
 
 #### Ping
@@ -366,7 +366,7 @@ A ping issues a new proposal and updates the staking balances for your delegator
 
 Command:
 ```bash
-$ near call <staking_pool_id> ping '{}' --accountId <accountId> --gas=300000000000000
+$ near call <staking_pool_id> ping '{}' --accountId <accountId>.testnet --gas=300000000000000
 ```
 
 Once above is completed, verify your validator proposal status:
@@ -549,7 +549,7 @@ $ sed -i -e 's/private_key/secret_key/g' ~/.near/validator_key.json
 To create a staking pool on the network, we need to call the create_staking_pool contract with required parameters and deploy it to the indicated accountId:
 
 ```bash
-$ near call poolv1.near create_staking_pool '{"staking_pool_id": "<pool_name>", "owner_id": "<pool_owner_accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": <fee>, "denominator": 100}}' --accountId="<accountId>" --amount=30 --gas=300000000000000
+$ near call poolv1.near create_staking_pool '{"staking_pool_id": "<pool_name>", "owner_id": "<pool_owner_accountId>.mainnet", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": <fee>, "denominator": 100}}' --accountId="<accountId>.mainnet" --amount=30 --gas=300000000000000
 ```
 
 From the command above, you need to replace:
@@ -590,7 +590,7 @@ To note, a ping also updates the staking balances for your delegators. A ping sh
 
 Deposit token to a pool (can be done using any account, not necessary the one created/used in steps above):
 ```
-$ near call <staking_pool_id> deposit_and_stake --amount <amount> --accountId <accountId> --gas=300000000000000
+$ near call <staking_pool_id> deposit_and_stake --amount <amount> --accountId <accountId>.mainnet --gas=300000000000000
 ```
 
 #### Ping
@@ -598,7 +598,7 @@ A ping issues a new proposal and updates the staking balances for your delegator
 
 Command:
 ```bash
-$ near call <staking_pool_id> ping '{}' --accountId <accountId> --gas=300000000000000
+$ near call <staking_pool_id> ping '{}' --accountId <accountId>.mainnet --gas=300000000000000
 ```
 
 Once above is completed, verify your validator proposal status:
