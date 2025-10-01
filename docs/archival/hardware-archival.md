@@ -18,7 +18,7 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | CPU Features   | CMPXCHG16B, POPCNT, SSE4.1, SSE4.2, AVX, SHA-NI                 |
 | RAM            | 32GB DDR4                                                       |
 | Hot Storage    | 3 Terabyte SSD                                                  |
-| Cold Storage   | 90 Terabyte  NON-SSD Persistent Disks                           |
+| Cold Storage   | 115 Terabyte  NON-SSD Persistent Disks                           |
 
 ## Minimal Hardware Specifications {#minimal-hardware-specifications}
 
@@ -27,7 +27,7 @@ This page covers the minimum and recommended hardware requirements for engaging 
 | CPU            | 8-Core (16-Thread) Intel i7/Xeon or equivalent with AVX support |
 | RAM            | 24GB DDR4                                                       |
 | Hot Storage    | 1.5 Terabyte SSD                                                  |
-| Cold Storage   | 85 Terabyte NON-SSD Persistent Disks                            |
+| Cold Storage   | 105 Terabyte NON-SSD Persistent Disks                            |
 
 ## Cost Estimation {#cost-estimation}
 
