@@ -2,7 +2,7 @@
 id: split-storage-archival
 title: Split Storage for NEAR Archival Nodes
 sidebar_label: Split Storage
-sidebar_position: 4
+sidebar_position: 2
 description: Split Storage for NEAR Archival Nodes
 ---
 
@@ -19,14 +19,14 @@ With the 1.35.0 release we are rolling out split storage, a new option for stora
 In split storage mode, the Near Client only works with a smaller hot database to produce blocks, which results in increased performance. Cold database is not accessed for reads during normal block production and is only read when historical data is specifically requested. Thus, we recommend keeping the cold database on cheaper and slower drives such as an HDD and only optimize speed for the hot database, which is about 10 times smaller.
 
 Split storage is disabled by default, and can be enabled with a config change and going through a migration process that requires manual steps. We have several choices for the migration:
-* Use Pagoda-provided S3 snapshots of nodes that have split-storge configured.
+* Use snapshots (e.g. FASTNEAR snapshot) of nodes that have split-storge configured.
 * Do a manual migration using S3 snapshots of the existing RPC single database
 * Do a manual migration using your own buddy RPC node
 
 | Migration option                                    | Pros                            | Cons                                                   |
 | --------------------------------------------------- | ------------------------------- | ------------------------------------------------------ |
-| Pagoda-provided S3 snapshots of split-storage nodes | Fastest. Little to no downtime. | Requires trust  in migration performed by Pagoda nodes |
-| Manual migration + S3 RPC snapshots                 | No need for extra node. Cold storage is initialized in a trustless way. |  Requires trust in Pagoda RPC snapshots. The node will be out of sync at the end of the migration and will need to block sync several epochs. Migration takes days and you cannot restart your node during that time. |
+| Snapshots of split-storage nodes | Fastest. Little to no downtime. | Requires trust in Snapshot provider |
+| Manual migration + S3 RPC snapshots                 | No need for extra node. Cold storage is initialized in a trustless way. |  Requires trust in RPC snapshot provider. The node will be out of sync at the end of the migration and will need to block sync several epochs. Migration takes days and you cannot restart your node during that time. |
 | Manual migration + your own node                    | Trustless. Little to no downtime | Requires an extra RPC node with bigger storage. Migration takes days and you cannot restart your node during that time. |
 
 ## Important config fields {#config}
@@ -66,57 +66,9 @@ Example:
 }
 ```
 
-## Using Pagoda-provided S3/CloudFrontsplit-storage snapshots {#S3 migration}
+## Using Snaphots {#S3 migration}
 
-Prerequisite:
-
-Recommended download client [`rclone`](https://rclone.org).
-This tool is present in many Linux distributions. There is also a version for Windows.
-And its main merit is multithread.
-You can [read about it on](https://rclone.org)
-** rclone version needs to be v1.66.0 or higher
-
-First, install rclone:
-```
-$ sudo -v ; curl https://rclone.org/install.sh | sudo bash
-```
-Next, prepare config, so you don't need to specify all the parameters interactively:
-```
-mkdir -p ~/.config/rclone
-touch ~/.config/rclone/rclone.conf
-```
-
-, and paste exactly the following config into `rclone.conf`:
-```
-[near_cf]
-type = s3
-provider = AWS
-download_url = https://dcf58hz8pnro2.cloudfront.net/
-acl = public-read
-server_side_encryption = AES256
-region = ca-central-1
-
-```
-
-1. Find latest snapshot
-```bash
-chain=testnet/mainnet
-rclone copy --no-check-certificate near_cf://near-protocol-public/backups/${chain:?}/archive/latest_split_storage ./
-latest=$(cat latest_split_storage)
-latest=$(cat latest_split_storage)
-```
-2. Download cold and hot databases
-```bash
-NEAR_HOME=/home/ubuntu/.near
-rclone copy --no-check-certificate --progress --transfers=6 --checkers=6 \
-  near_cf://near-protocol-public/backups/${chain:?}/archive/${latest:?} $NEAR_HOME
-```
-This will download cold database to `$NEAR_HOME/cold-data`, and hot database to `$NEAR_HOME/hot-data`
-3. Make changes to your config.json
-```bash
-cat <<< $(jq '.save_trie_changes = true | .cold_store = .store | .cold_store.path = "cold-data" | .store.path = "hot-data" | .split_storage.enable_split_storage_view_client = true' $NEAR_HOME/config.json) > $NEAR_HOME/config.json
-```
-4. Restart the node
+FASTNEAR is now provider of Archival node snapshot. Please refer to their documentation [HERE](https://docs.fastnear.com/docs/snapshots/mainnet#archival-mainnet-snapshot)
 
 ### If your node is out of sync after restarting from the latest snapshot {#syncing node}
 Downloading the cold database can take a long time (days). In this time your database can become very far behind the chain.
