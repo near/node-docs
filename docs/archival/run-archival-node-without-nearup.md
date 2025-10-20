@@ -100,7 +100,8 @@ The NEAR node requires a working directory with a couple of configuration files.
 $ ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config archival
 ```
 
-> You can specify trusted boot nodes that you'd like to use by pass in a flag during init: `--boot-nodes ed25519:4k9csx6zMiXy4waUvRMPTkEtAS2RFKLVScocR5HwN53P@34.73.25.182:24567,ed25519:4keFArc3M4SE1debUQWi3F1jiuFZSWThgVuA2Ja2p3Jv@34.94.158.10:24567,ed25519:D2t1KTLJuwKDhbcD9tMXcXaydMNykA99Cedz7SkJkdj2@35.234.138.23:24567,ed25519:CAzhtaUPrxCuwJoFzceebiThD9wBofzqqEMCiupZ4M3E@34.94.177.51:24567`
+> You can specify trusted boot nodes that you'd like to use by passing the `--boot-nodes` flag during `init`.
+To find a set of active boot nodes, follow these instructions for [testnet](/intro/node-epoch-sync#testnet).
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
@@ -194,7 +195,7 @@ $ ./target/release/neard --home ~/.near init --chain-id mainnet --download-genes
 ```
 
 > You can specify trusted boot nodes that you'd like to use by passing the `--boot-nodes` flag during `init`.
-To find a set of active boot nodes, follow these instructions for [mainnet](/intro/node-epoch-sync#mainnet) or [testnet](/intro/node-epoch-sync#testnet)
+To find a set of active boot nodes, follow these instructions for [mainnet](/intro/node-epoch-sync#mainnet).
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
