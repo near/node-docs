@@ -4,6 +4,12 @@
       "pattern": "^https://near-node.zendesk.com"
     },
     {
+      "pattern": "^https://meteorwallet.app"
+    },
+    {
+      "pattern": "^https://nearblocks.io"
+    },
+    {
       "pattern": "^https://twitter.com"
     }
   ],
