@@ -106,6 +106,7 @@ To find a set of active boot nodes, follow these instructions for [testet](/intr
 This command will create the required directory structure and will generate `config.json`, `node_key.json`, and `genesis.json` for `testnet` network.
 - `config.json` - Configuration parameters which are responsive for how the node will work. This file should contain the following fields critical for RPC nodes:
   - `"tracked_shards": [0]` - to track all shards.
+  - `"pollin_interval": 200ms` - to specify the time in ms to poll the transaction status at the node.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
 - `data/` -  A folder in which a NEAR node will write it's state.
