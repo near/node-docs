@@ -68,8 +68,6 @@ Cause 2: Block Height Mismatch
 
 Solution: There is an issue with peers. The node has banned all the peers for a period of time, and is related to the peers not being properly terminated: https://github.com/near/nearcore/issues/5340. For the node operator, search in the log to see there is a thread panic.  If there’s panic, then store your DB from a snapshot. If there is no panic, restart your node.
 
-Please report all mailbox related issues using Zendesk and add your log: https://near-node.zendesk.com/hc/en-us/requests/new.
-
 
 ***My node shows "Mailbox closed" when the node is running.***
 
