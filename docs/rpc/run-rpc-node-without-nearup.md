@@ -26,7 +26,7 @@ Running a RPC node is very similar to running a [validator node](/validator/runn
 
 - [Rust](https://www.rust-lang.org/). If not already installed, please [follow these instructions](https://doc.rust-lang.org/book/ch01-01-installation.html).
 - [Git](https://git-scm.com/)
-- Installed developer tools:
+- Developer tools:
   - MacOS
     ```bash
     $ brew install cmake protobuf clang llvm awscli
@@ -47,7 +47,7 @@ When building your NEAR node you will have two branch options to choose from dep
 - [`Latest stable release`](https://github.com/near/nearcore/tags) : _(**Stable**)_
   - Use this if you want to run a NEAR node for *mainnet*. For *mainnet*, please use the latest stable release. This version is used by mainnet validators and other nodes and is fully compatible with the current state of *mainnet*.
 - [`Latest release candidates`](https://github.com/near/nearcore/tags) : _(**Release Candidates**)_
-  - Use this if you want to run a NEAR node for *tesnet*. For *testnet*, we first release a RC version and then later make that release stable. For testnet, please run the latest RC version.
+  - Use this if you want to run a NEAR node for *testnet*. For *testnet*, we first release a RC version and then later make that release stable. For testnet, please run the latest RC version.
 
 
 ## `testnet`
@@ -99,7 +99,7 @@ $ ./target/release/neard --home ~/.near init --chain-id testnet --download-genes
 ```
 
 > You can specify trusted boot nodes that you'd like to use by passing the `--boot-nodes` flag during `init`.
-To find a set of active boot nodes, follow these instructions for [testet](/intro/node-epoch-sync#testnet).
+To find a set of active boot nodes, follow these instructions for [testnet](/intro/node-epoch-sync#testnet).
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
