@@ -75,13 +75,15 @@ During the building time, let's make a wallet.
 
 You can use any wallet supporting Near Protocol like Meteor, MyNearWallet or SenderWallet.
 
-- [MyNearWallet](https://app.mynearwallet.com/)
+
 - [MeteorWallet](https://meteorwallet.app/)
+- [Intear Wallet](https://wallet.intear.tech/)
+- [MyNearWallet](https://app.mynearwallet.com/)
 
 ![wallet_creation](https://github.com/user-attachments/assets/da2685a4-11c5-455f-a5eb-9fff4d28c934)
 
 Add at least **31 NEAR** to this wallet:
-- **30 NEAR** will be used for wallet creation
+- **30 NEAR** will be used for validator creation
 - **1 NEAR** will be used for transaction fees
 
 ⚠️ This **30 NEAR** can't be recovered if you decide to stop your validator.
@@ -658,9 +660,11 @@ Ensure your config file has `store.load_mem_tries_for_tracked_shards` set to `tr
 ---
 
 ### Useful Links
-- **NEAR Chain Status Twitter:** @NEARChainStatus
+- **NEAR Chain Status Twitter:** [@NEARChainStatus](https://x.com/NEARChainStatus)
 - **NEAR Staking:** [Near Staking Website](https://near-staking.com/)
+- **PikeSpeak Validator Analytics**: [Validator Analytics](https://pikespeak.ai/validators/analytics)
 - **NEARBlocks Node Explorer:** [NearBlocks](https://nearblocks.io/node-explorer)
+- **NEAR Catalog Node Stats:** [Node Stats](https://nodestats.nearcatalog.xyz/)
 - **NearScope:** [NearScope](https://nearscope.net/)
 
 ---
