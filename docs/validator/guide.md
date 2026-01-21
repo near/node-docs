@@ -375,14 +375,13 @@ near contract call-function as-transaction pool.near create_staking_pool json-ar
 near contract call-function as-transaction pool.f863973.m0 create_staking_pool json-args '{"staking_pool_id": "<pool_id>", "owner_id": "<accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as <accountId> network-config testnet sign-with-keychain
 ``` 
 
-From the example above, you need to replace:
+From the example above, you need assign values to:
 
-**pool_id**: Staking pool name example "panda"  
+**staking_pool_id**: Staking pool name example "panda"  
 **owner_id**: The NEAR account that will manage the staking pool. Usually your main NEAR account.  
-**public_key**: The public key in your validator_key.json file.  
-**5**: The fee the pool will charge (e.g. in this case 5 over 100 is 5% of fees), usually validators take 5% fee, if you set the fee so high, no one will stake to your node 😉   
-**accountId**: The NEAR account deploying the staking pool.  
-Be sure to have at least 30 NEAR available, it is the minimum required for storage.
+**stake_public_key**: The public key in your validator_key.json file.  
+**reward_fee_fraction**: The fee the pool will charge (e.g. in this case 5 over 100 is 5% of fees). Usually validators take 5% fee, if you set the fee too high, no one will stake to your node 😉
+**sign-as**: The NEAR account deploying the staking pool. Be sure to have at least 30 NEAR available, it is the minimum required for storage.
 
 Final command will look something like this:
 ```sh
@@ -449,9 +448,9 @@ near call <staking_pool_id> deposit_and_stake --deposit <amount> --use-account <
 ```
 
 #### Proposals and Pings   
-In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
+In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal you will use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
 
-To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract. You could set up a ping using a cron job with a ping script here.  
+To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract. You could set up a ping using a cron job with a ping script (see below).  
   
 Ping are done by Metapool too, you don't need anymore to use a script ping but you can. You need at least 1 ping to be visible for the first time.
 
