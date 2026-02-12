@@ -10,11 +10,11 @@ You can run three different types of node - Validator Node, RPC Node, and Archiv
 
 ### Validator Node {#validator-node}
 
-Validator nodes are the operators of the NEAR blockchain and are essential to the health of the network. Validator nodes participate in the consensus and produce blocks and/or chunks. You can see a real-time view of NEAR network validator nodes on the [NEAR Explorer](https://explorer.near.org/nodes/validators).
+Validator nodes are the operators of the NEAR blockchain and are essential to the health of the network. Validator nodes participate in the consensus and produce blocks and/or chunks. You can see a real-time view of NEAR network validator nodes on the [NEAR Explorer](https://nearblocks.io/node-explorer).
 
 ### RPC Node {#rpc-node}
 
-RPC nodes are RPC service providers that provide public RPC endpoints for developers to use. The NEAR Foundation currently maintains a public RPC endpoint `http://rpc.mainnet.near.org/` that is free for everyone to use. However, any participants are encouraged to run their own RPC node and offer RPC services through [an Open Source & Public Goods grant from the NEAR Foundation](https://near.org/blog/refining-near-foundations-grant-approach/). For more information, please check out Community section in the documentation and reach out in the Validator Channels on [Discord](https://discord.gg/ZMPr3VB) and on [Telegram](https://t.me/near_validators).
+RPC nodes are RPC service providers that provide public RPC endpoints for developers to use. See https://docs.near.org/api/rpc/providers for a list of public rpc nodes. However, any participants are encouraged to run their own RPC node and offer RPC services through [an Open Source & Public Goods grant from the NEAR Foundation](https://near.org/blog/refining-near-foundations-grant-approach/). For more information, please check out Community section in the documentation and reach out in the Validator Channels on [Discord](https://discord.gg/ZMPr3VB) and on [Telegram](https://t.me/near_validators).
 
 ### Archival Node {#archival-node}
 
