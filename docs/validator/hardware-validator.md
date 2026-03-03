@@ -62,6 +62,10 @@ Estimated monthly costs depending on cloud provider:
 | GCP            | n2-standard-8    | $280 CPU + $240 storage |
 | Azure          | Standard_D8s_v5  | $180 CPU + $200 storage |
 
+| Bare Metal     | CPU              | Linux                   |
+| -------------- |------------------|-------------------------|
+| CherryServers  | Ryzen 7700       | $265 CPU + storage      | 
+
 # Testnet
 
 ## Recommended Hardware Specifications {#recommended-hardware-specifications}
@@ -113,6 +117,10 @@ Estimated monthly costs depending on cloud provider:
 | AWS            | m5a.2xlarge      | $160 CPU + $80 storage  |
 | GCP            | n2-standard-8    | $280 CPU + $120 storage |
 | Azure          | Standard_D8s_v5  | $180 CPU + $100 storage |
+
+| Bare Metal     | CPU              | Linux                   |
+| -------------- |------------------|-------------------------|
+| CherryServers  | Ryzen 7700       | $226 CPU + storage      | 
 
 <blockquote class="info">
 <strong>Resources for Cost Estimation</strong><br /><br />
