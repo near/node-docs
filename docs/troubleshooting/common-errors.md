@@ -52,6 +52,20 @@ Cause: Potentially use a wrong nearcore release.
 
 Solution: Fix the nearcore release: https://github.com/near/nearcore/releases, and please also check the details on the node setup.
 
+***My node is stuck downloading state and all state sync requests time out.***
+
+Cause 1: Inbound port 24567 is blocked by a firewall.
+
+State sync uses direct TCP connections where peers connect back to your node on port 24567 to deliver data. If inbound connections on this port are blocked, all requests will time out.
+
+Solution: Open inbound TCP port 24567 in your firewall and cloud security group settings.
+
+Cause 2: Your node uses different IP addresses for inbound and outbound traffic.
+
+Your node auto-discovers its public address from outbound connections and announces it to peers. If your network uses a different IP for inbound traffic (e.g. due to NAT or multiple interfaces), peers will fail to connect back.
+
+Solution: Make sure your node uses the same IP for inbound and outbound traffic. Restart the node after fixing your network configuration.
+
 ***My node is stuck on a block.***
 
 Cause: This usually occurs in the beginning of an epoch, where the block processing time may increase.
