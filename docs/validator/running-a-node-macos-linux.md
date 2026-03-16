@@ -6,7 +6,7 @@ sidebar_position: 5
 description: How to run a NEAR node on Linux and MacOS, with or without using Docker
 ---
 
-*If this is the first time for you to setup a validator node, head to our [Validator Bootcamp 🚀](/validator/validator-bootcamp). Please head to [Run a node](/validator/compile-and-run-a-node) for instructions on how to setup a RPC node with neard.*
+*If this is the first time for you to setup a validator node, head to our [Validator Bootcamp 🚀](/validator/validator-bootcamp). Please head to [Run a node](/validator/compile-and-run-a-node) for instructions on how to setup a validator node with neard.*
 
 This doc is written for developers, sysadmins, DevOps, or curious people who want to know how to run a NEAR node on Linux and MacOS.
 
