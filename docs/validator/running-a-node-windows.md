@@ -96,7 +96,7 @@ This documentation may require additional edits. Please keep this in mind while 
 
     For detailed instructions on initializing and running the node (including mainnet), see [Run a Validator Node](/validator/compile-and-run-a-node).
 
-You might be asked for a validator ID; if you do not want to validate, simply press enter. For validation, please follow the [Validator Bootcamp](/validator/validator-bootcamp).
+To run this node as a validator, you must configure your validator keys in the `--home` directory (for example by placing `validator_key.json` there) and follow the steps in the [Validator Bootcamp](/validator/validator-bootcamp).
 
 >Got a question?
 <a href="https://stackoverflow.com/questions/tagged/nearprotocol">
