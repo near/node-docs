@@ -1,23 +1,23 @@
 ---
-id: run-rpc-node-without-nearup
+id: run-rpc-node
 title: Run an RPC Node
 sidebar_label: Run a Node 🚀
 sidebar_position: 2
-description: How to run an RPC Node without nearup
+description: How to run an RPC Node
 ---
 
 The following instructions are applicable across localnet, testnet, and mainnet.
 
 If you are looking to learn how to compile and run a NEAR RPC node natively for one of the following networks, this guide is for you.
 
-- [`testnet`](/rpc/run-rpc-node-without-nearup#testnet)
-- [`mainnet`](/rpc/run-rpc-node-without-nearup#mainnet)
+- [`testnet`](/rpc/run-rpc-node#testnet)
+- [`mainnet`](/rpc/run-rpc-node#mainnet)
 
 
 <blockquote class="info">
 <strong>Heads up</strong><br /><br />
 
-Running a RPC node is very similar to running a [validator node](/validator/running-a-node) as both types of node use the same `nearcore` release. The main difference for running a validator node is requiring `validator_key.json` to be used by the validator node to support its work of validating blocks and chunks on the network.
+Running a RPC node is very similar to running a [validator node](/validator/compile-and-run-a-node) as both types of node use the same `nearcore` release. The main difference for running a validator node is requiring `validator_key.json` to be used by the validator node to support its work of validating blocks and chunks on the network.
 
 </blockquote>
 

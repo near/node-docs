@@ -1,9 +1,9 @@
 ---
-id: run-archival-node-without-nearup
+id: run-archival-node
 title: Run an Archival Node
 sidebar_label: Run a Node 🚀
 sidebar_position: 2
-description: How to run an Archival Node without nearup
+description: How to run an Archival Node
 ---
 ## This page is DEPRECATED in favor of split storage archival.  Please Use [Run a Split Storage Archival](/archival/split-storage-archival)
 
@@ -11,14 +11,14 @@ The following instructions are applicable across localnet, testnet, and mainnet.
 
 If you are looking to learn how to compile and run a NEAR Archival node natively for one of the following networks, this guide is for you.
 
-- [`testnet`](/archival/run-archival-node-without-nearup#testnet)
-- [`mainnet`](/archival/run-archival-node-without-nearup#mainnet)
+- [`testnet`](/archival/run-archival-node#testnet)
+- [`mainnet`](/archival/run-archival-node#mainnet)
 
 
 <blockquote class="info">
 <strong>Heads up</strong><br /><br />
 
-Running an archival node is very similar to running a [validator node](/validator/running-a-node) as both types of node use the same `nearcore` release. The main difference for running an archival node is a modification to the `config.json` by changing `archive` to `true`. See below for more details.
+Running an archival node is very similar to running a [validator node](/validator/compile-and-run-a-node) as both types of node use the same `nearcore` release. The main difference for running an archival node is a modification to the `config.json` by changing `archive` to `true`. See below for more details.
 
 </blockquote>
 

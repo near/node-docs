@@ -299,24 +299,6 @@ The node is now running you can see log outputs in your console. Your node shoul
 ----
 
 
-#### Using NearUp
-
-You can set up a node using neard on Mainnet and Testnet. On Guildnet, you have the option to use NearUp to set the node. However, NearUp is not recommended or supported for Mainnet. We recommend that you use neard consistently on Guildnet, Testnet, and Mainnet.
-
-However, if you choose to use NearUp, NearUp will download the necessary binaries and files to get up and running. You just need to provide the network to run and the staking pool id.
-
-* Install NearUp:
-
-```
-pip3 install --user nearup
-```
-* Install latest NearUp Version:
-
-```
-pip3 install --user --upgrade nearup
-```
-
-
 ####  Create a wallet
 - MainNet: https://wallet.near.org/
 - TestNet: https://wallet.testnet.near.org/
@@ -377,14 +359,6 @@ You can also run this command to set the Near guildnet Environment persistent:
 echo 'export NEAR_ENV=guildnet' >> ~/.bashrc
 ```
 
-* Running command is:
-
-```
-nearup run $NEAR_ENV --account-id <staking pool id>
-```
-Where AccountId is xx.stake.guildnet, xx is your pool name for example bootcamp.stake.guildnet
-
-
 For Testnet
 
 * Download the latest genesis, config files:
@@ -413,15 +387,6 @@ export NEAR_ENV=testnet
 ```
 echo 'export NEAR_ENV=testnet' >> ~/.bashrc
 ```
-* Running command is:
-
-```
-nearup run $NEAR_ENV --account-id <staking pool id>
-```
-Where AccountId is xx.pool.f863973.m0, xx is your pool name for example bootcamp.pool.f863973.m0
-
-On the first run, NEARUp will ask you to enter a staking pool id, provide the staking pool id set up previously in the form {pool id}.{staking pool factory}
-
 > **Note: This is the Chicken and the Egg.
 > You have not created the staking pool, but need to provide the name.**
 
@@ -940,12 +905,7 @@ near call <staking_pool_id> resume_staking '{}' --accountId <accountId>
 
 ## LESSON 5 - MONITORING
 ### Log Files
-The log file is stored either in the ~/.nearup/logs directory or in systemd depending on your setup.
-
-NEARUp Command:
-```
-nearup logs --follow
-```
+The log file is stored in systemd depending on your setup.
 
 Systemd Command:
 ```
@@ -1379,7 +1339,7 @@ Used to sign and validate blocks.
 Common Issues:
 
 1. The validator key used to initialize the staking contract is not the one listed in validator_key.json
-2. The account Id submitted when NEARUp was initialized is not the same as the one in validator_key.json
+2. The account Id used when the node was initialized is not the same as the one in validator_key.json
 
 
 
@@ -1395,7 +1355,7 @@ Wait until 4 epochs until you have been kicked from the validator set. Delete th
 3. Start the node
 ```
 #### Starting the node when another instance is running
-On occasion, a process will get disconnected from the shell or NEARUp. The common error seen when trying to start the node will be:
+On occasion, a process will get disconnected from the shell. The common error seen when trying to start the node will be:
 ```
 Err value: Os { code: 98, kind: AddrInUse, message: "Address already in use" }',
 ```
