@@ -2,7 +2,7 @@
 id: running-a-node
 title: Run a Node on Linux and MacOS
 sidebar_label: Run a Node (Linux and MacOS)
-sidebar_position: 3
+sidebar_position: 5
 description: How to run a NEAR node on Linux and MacOS, with or without using Docker
 ---
 
