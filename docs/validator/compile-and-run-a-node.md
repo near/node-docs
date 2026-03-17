@@ -106,12 +106,6 @@ takes approximately 25 minutes). Note that compilation will need over
 with processes being killed, you might want to try reducing number of
 parallel jobs, for example: `CARGO_BUILD_JOBS=8 make neard`.
 
-By the way, if you’re familiar with Cargo, you could wonder why not
-run `cargo build -p neard --release` instead.  While this will produce
-a binary, the result will be a less optimized version.  On technical
-level, this is because building via `make neard` enables link-time
-optimisation which is disabled by default. The binary path is `target/release/neard`.
-
 
 For `localnet`, you also have the option to build in nightly mode (which is experimental and is used for cutting-edge testing). When you compile, use the following command:
 ```bash
@@ -179,12 +173,6 @@ takes approximately 25 minutes). Note that compilation will need over
 1 GB of memory per virtual core the machine has. If the build fails
 with processes being killed, you might want to try reducing number of
 parallel jobs, for example: `CARGO_BUILD_JOBS=8 make neard`.
-
-By the way, if you’re familiar with Cargo, you could wonder why not
-run `cargo build -p neard --release` instead.  While this will produce
-a binary, the result will be a less optimized version.  On technical
-level, this is because building via `make neard` enables link-time
-optimisation which is disabled by default.
 
 The binary path is `target/release/neard`
 
@@ -414,12 +402,6 @@ takes approximately 25 minutes). Note that compilation will need over
 1 GB of memory per virtual core the machine has. If the build fails
 with processes being killed, you might want to try reducing number of
 parallel jobs, for example: `CARGO_BUILD_JOBS=8 make neard`.
-
-By the way, if you’re familiar with Cargo, you could wonder why not
-run `cargo build -p neard --release` instead.  While this will produce
-a binary, the result will be a less optimized version.  On technical
-level, this is because building via `make neard` enables link-time
-optimisation which is disabled by default.
 
 The binary path is `target/release/neard`
 
