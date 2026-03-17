@@ -2,7 +2,7 @@
 id: state-sync
 title: State Sync
 sidebar_label: State Sync Configuration
-sidebar_position: 4
+sidebar_position: 3
 description: State Sync Configuration
 ---
 
