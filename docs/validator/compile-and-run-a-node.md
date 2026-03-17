@@ -106,6 +106,7 @@ takes approximately 25 minutes). Note that compilation will need over
 with processes being killed, you might want to try reducing number of
 parallel jobs, for example: `CARGO_BUILD_JOBS=8 make neard`.
 
+The binary path is `target/release/neard`.
 
 For `localnet`, you also have the option to build in nightly mode (which is experimental and is used for cutting-edge testing). When you compile, use the following command:
 ```bash
