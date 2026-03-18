@@ -86,7 +86,7 @@ This documentation may require additional edits. Please keep this in mind while 
 12. This created a nearcore directory, change into that one and build a node:
     ```sh
     cd nearcore
-    make neard
+    make release
     ```
 13. Initialize the working directory and run the node:
     ```sh
