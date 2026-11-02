@@ -48,7 +48,7 @@ When building your NEAR node you will have two branch options to choose from dep
 - [`Latest stable release`](https://github.com/near/nearcore/tags) : _(**Stable**)_
   - Use this if you want to run a NEAR node for *mainnet*. For *mainnet*, please use the latest stable release. This version is used by mainnet validators and other nodes and is fully compatible with the current state of *mainnet*.
 - [`Latest release candidates`](https://github.com/near/nearcore/tags) : _(**Release Candidates**)_
-  - Use this if you want to run a NEAR node for *tesnet*. For *testnet*, we first release a RC version and then later make that release stable. For testnet, please run the latest RC version.
+  - Use this if you want to run a NEAR node for *testnet*. For *testnet*, we first release a RC version and then later make that release stable. For testnet, run the version that the public testnet RPC node runs. Step 1 below shows how to find it. This is usually the latest RC version.
 
 
 ## `testnet` {#testnet}
@@ -65,7 +65,7 @@ $ git fetch origin --tags
 
 Checkout to the branch you need if not `master` (default). Latest release is recommended. Please check the [releases page on GitHub](https://github.com/near/nearcore/releases).
 
-Testnet usually runs a newer release candidate than mainnet. An older release cannot follow the testnet protocol version. The following command reads the version that the public testnet RPC node runs. It needs `jq`:
+Testnet usually runs a newer release candidate than mainnet. The following command reads the version that the public testnet RPC node runs:
 
 ```bash
 $ NEAR_RELEASE_VERSION=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" \
@@ -80,8 +80,6 @@ In the `nearcore` folder, check out that version and build it:
 ```bash
 $ git checkout "tags/${NEAR_RELEASE_VERSION:?}" && make release
 ```
-
-The build runs only if the checkout succeeds. Without the `&&`, a failed checkout would leave `master` checked out after a fresh clone, and `make` would build it.
 
 This will start the compilation process. It will take some time
 depending on your machine power (e.g. i9 8-core CPU, 32 GB RAM, SSD
@@ -169,8 +167,6 @@ In the `nearcore` folder, check out that version and build it:
 ```bash
 $ git checkout "tags/${NEAR_RELEASE_VERSION:?}" && make release
 ```
-
-The build runs only if the checkout succeeds. Without the `&&`, a failed checkout would leave `master` checked out after a fresh clone, and `make` would build it.
 
 This will start the compilation process. It will take some time
 depending on your machine power (e.g. i9 8-core CPU, 32 GB RAM, SSD
