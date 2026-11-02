@@ -59,7 +59,7 @@ curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params
 
 The node misses its blocks, chunks and endorsements while it is stopped. If the node still runs with the old key when the new epoch starts, it stops at the first block of that epoch. In that case, replace `validator_key.json` with the new key file and start the node again.
 
-Instead of steps 4 and 5, you can swap the key without a restart. Replace `validator_key.json` near the end of the epoch, and send SIGHUP to neard (`kill -HUP <neard pid>`). The node logs `hot loading validator key`. Send SIGHUP after `next_validators` shows the new key and before the next epoch starts.
+Instead of steps 4 and 5, you can swap the key without a restart. Replace `validator_key.json` near the end of the epoch, and send SIGHUP to neard (`kill -HUP <neard pid>`). The node logs `hot loading validator key`. Send SIGHUP after `next_validators` shows the new key and before the next epoch starts. The node misses its blocks, chunks and endorsements from the swap until the new epoch starts.
 
 **Nodes** should not need to reset their node keys.
 
