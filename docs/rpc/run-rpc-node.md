@@ -47,7 +47,7 @@ When building your NEAR node you will have two branch options to choose from dep
 - [`Latest stable release`](https://github.com/near/nearcore/tags) : _(**Stable**)_
   - Use this if you want to run a NEAR node for *mainnet*. For *mainnet*, please use the latest stable release. This version is used by mainnet validators and other nodes and is fully compatible with the current state of *mainnet*.
 - [`Latest release candidates`](https://github.com/near/nearcore/tags) : _(**Release Candidates**)_
-  - Use this if you want to run a NEAR node for *testnet*. For *testnet*, we first release a RC version and then later make that release stable. For testnet, please run the latest RC version.
+  - Use this if you want to run a NEAR node for *testnet*. For *testnet*, we first release a RC version and then later make that release stable. For testnet, run the version that the public testnet RPC node runs. Step 1 below shows how to find it. This is usually the latest RC version.
 
 
 ## `testnet`
@@ -64,7 +64,7 @@ $ git fetch origin --tags
 
 Checkout to the branch you need if not `master` (default). Latest release is recommended. Please check the [releases page on GitHub](https://github.com/near/nearcore/releases).
 
-Testnet usually runs a newer release candidate than mainnet. An older release cannot follow the testnet protocol version. The following command reads the version that the public testnet RPC node runs. It needs `jq`:
+Testnet usually runs a newer release candidate than mainnet. The following command reads the version that the public testnet RPC node runs:
 
 ```bash
 $ NEAR_RELEASE_VERSION=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" \
@@ -80,8 +80,6 @@ In the `nearcore` folder, check out that version and build it:
 $ git checkout "tags/${NEAR_RELEASE_VERSION:?}" && make release
 ```
 
-The build runs only if the checkout succeeds. Without the `&&`, a failed checkout would leave `master` checked out after a fresh clone, and `make` would build it.
-
 This will start the compilation process. It will take some time
 depending on your machine power (e.g. i9 8-core CPU, 32 GB RAM, SSD
 takes approximately 25 minutes). Note that compilation will need over
@@ -93,7 +91,7 @@ The binary path is `target/release/neard`
 
 ### 3. Initialize working directory {#3-initialize-working-directory}
 
-The NEAR node requires a working directory with a couple of configuration files. It also needs boot nodes to find its first peers. The reference RPC `config.json` has no boot nodes, so you need to pass them to `neard init`. The following command asks a testnet RPC node for the validators it is connected to. It needs `jq`. You can use any RPC provider for this command:
+The NEAR node requires a working directory with a couple of configuration files. It also needs boot nodes to find its first peers. The reference RPC `config.json` has no boot nodes, so you need to pass them to `neard init`. The following command asks a testnet RPC node for the validators it is connected to. You can use any RPC provider for this command:
 
 ```bash
 $ BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
@@ -141,7 +139,9 @@ $ jq -r '.network.boot_nodes' ~/.near/config.json
 
 The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync#testnet).
 
-When the node starts with an empty `data` folder, it syncs with the network using [Epoch Sync](../intro/epoch_sync.md). Epoch sync downloads only a small set of past block headers instead of all of them. It runs automatically and needs no other config change.
+A node that is more than two epochs behind the network syncs using [Epoch Sync](../intro/epoch_sync.md). A new node with an empty `data` folder is always that far behind. Epoch sync downloads only a small set of past block headers instead of all of them. It runs automatically and needs no other config change. Then the node downloads the current state of every shard it tracks from its peers. For an RPC node that tracks all shards, this is the full state of the network.
+
+If you start a node on an existing `data` folder that is more than two epochs behind, the node deletes that folder and syncs again with epoch sync.
 
 ### 5. Run the node {#5-run-the-node}
 To start your node simply run the following command:
@@ -184,8 +184,6 @@ In the `nearcore` folder, check out that version and build it:
 $ git checkout "tags/${NEAR_RELEASE_VERSION:?}" && make release
 ```
 
-The build runs only if the checkout succeeds. Without the `&&`, a failed checkout would leave `master` checked out after a fresh clone, and `make` would build it.
-
 This will start the compilation process. It will take some time
 depending on your machine power (e.g. i9 8-core CPU, 32 GB RAM, SSD
 takes approximately 25 minutes). Note that compilation will need over
@@ -197,7 +195,7 @@ The binary path is `target/release/neard`
 
 ### 3. Initialize working directory {#3-initialize-working-directory-1}
 
-The NEAR node requires a working directory with a couple of configuration files. It also needs boot nodes to find its first peers. The reference RPC `config.json` has no boot nodes, so you need to pass them to `neard init`. The following command asks a mainnet RPC node for the validators it is connected to. It needs `jq`. You can use any RPC provider for this command:
+The NEAR node requires a working directory with a couple of configuration files. It also needs boot nodes to find its first peers. The reference RPC `config.json` has no boot nodes, so you need to pass them to `neard init`. The following command asks a mainnet RPC node for the validators it is connected to. You can use any RPC provider for this command:
 
 ```bash
 $ BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
@@ -239,7 +237,9 @@ $ jq -r '.network.boot_nodes' ~/.near/config.json
 
 The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync#mainnet).
 
-When the node starts with an empty `data` folder, it syncs with the network using [Epoch Sync](../intro/epoch_sync.md). Epoch sync downloads only a small set of past block headers instead of all of them. It runs automatically and needs no other config change.
+A node that is more than two epochs behind the network syncs using [Epoch Sync](../intro/epoch_sync.md). A new node with an empty `data` folder is always that far behind. Epoch sync downloads only a small set of past block headers instead of all of them. It runs automatically and needs no other config change. Then the node downloads the current state of every shard it tracks from its peers. For an RPC node that tracks all shards, this is the full state of the network.
+
+If you start a node on an existing `data` folder that is more than two epochs behind, the node deletes that folder and syncs again with epoch sync.
 
 ### 5. Run the node {#5-run-the-node}
 To start your node simply run the following command:
@@ -284,7 +284,7 @@ For each `shard_id`, divide the `_sum` value by the `_count` value. The result i
 
 ### Enable memtrie for one shard
 
-List the shards that need a memtrie in `store.load_mem_tries_for_shards`. Each entry is a shard UID in the form `s<shard id>.v<shard layout version>`. The shard layout version is `3` on mainnet and testnet. For example, to load a memtrie only for shard 8, set these two fields in the `store` section of `config.json`:
+List the shards that need a memtrie in `store.load_mem_tries_for_shards`. Each entry is a shard UID in the form `s<shard id>.v<shard layout version>`. The shard layout version is `3` on mainnet and testnet, but the shard IDs differ between the two networks. To load a memtrie only for shard 8 on mainnet, set these two fields in the `store` section of `config.json`:
 
 ```json
 "load_mem_tries_for_tracked_shards": false,
@@ -293,6 +293,6 @@ List the shards that need a memtrie in `store.load_mem_tries_for_shards`. Each e
 
 Then restart the node. The node loads the memtrie at startup.
 
-- The node only loads memtries for shards that it tracks. Entries for other shards are ignored.
+- The node only loads memtries for shards that it tracks. Entries for other shards, and shard UIDs that do not exist, are ignored without an error. To confirm, find the `loading tries to memory for shards` line in the startup log. Its `shard_uids_to_load` field lists the shards that get a memtrie.
 - If `load_mem_tries_for_tracked_shards` is `true`, the node loads a memtrie for every tracked shard. The `load_mem_tries_for_shards` list then makes no difference.
 - Shard IDs change when a shard is split. After a resharding, find the current shard IDs in the `shard_layout` field of the `EXPERIMENTAL_protocol_config` RPC method. Then update the list.

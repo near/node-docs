@@ -114,7 +114,7 @@ Solution: Be fully synced, Wait 2 epochs and then ping again.
 
 Cause: This issue happens frequently due to the config.json in the backup node isn’t set up properly.
 
-Solution: Set up the backup as described in [Failover node instruction](/validator/failover-node-instruction). The primary validator must use `"tracked_shards_config": "NoShards"`. On mainnet and testnet, a validator that tracks all shards stops at startup. A standby backup can use `"AllShards"`. Switch it to `"NoShards"` before you start it with the validator key. Another option is to run the backup with `{ "ShadowValidator": "<validator_id>" }` and move the key with a SIGHUP, as the failover page describes. Do not add the old `"tracked_shards"` field. A `config.json` that has both fields fails validation, and the node does not start.
+Solution: Set up the backup as described in [Failover node instruction](/validator/failover-node-instruction). The primary validator must use `"tracked_shards_config": "NoShards"`. On mainnet and testnet, a validator that tracks all shards stops at startup. A standby backup can use `"AllShards"`. Before you start it with the validator key, switch it to `"NoShards"` and set `store.load_mem_tries_for_tracked_shards` to `true`. Another option is to run the backup with `{ "ShadowValidator": "<validator_id>" }` and move the key with a SIGHUP, as the failover page describes. Do not add the old `"tracked_shards"` field. A `config.json` that has both fields fails validation, and the node does not start.
 
 
 ***My node sends many request and has memory usage spike.***
