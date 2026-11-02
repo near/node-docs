@@ -39,8 +39,8 @@ Since nearcore 2.12.0, a synced node also compares the key in its `validator_key
 To reset a validator key:
 
 1. Create a new ed25519 key pair for the same account id. Save it in a new file with the same fields as `validator_key.json`: `account_id`, `public_key` and `secret_key`. Do not replace the `validator_key.json` that the node uses yet.
-2. Register the new public key on chain. For a staking pool, the pool owner calls the pool's `update_staking_key` method with the new public key.
-3. Keep the old key in `validator_key.json` until the new key is active. Call the `validators` RPC method and check its `next_validators` list. When the list shows the new public key for your account, the new key becomes active when the next epoch starts. The next epoch starts near the height `epoch_start_height` + `epoch_length`. `epoch_start_height` is in the same `validators` response. `epoch_length` is in the response of the `EXPERIMENTAL_protocol_config` RPC method.
+2. Register the new public key on chain. For a staking pool, the pool owner calls the pool's `update_staking_key` method with the new public key. A validator without a pool sends a stake transaction with the new key and its current stake. The new key then shows in `current_proposals` of the `validators` response.
+3. Keep the old key in `validator_key.json` until the new key is active. Call the `validators` RPC method and check its `next_validators` list. When the list shows the new public key for your account, the new key becomes active when the next epoch starts. The next epoch starts near the height `epoch_start_height` + `epoch_length`. `epoch_start_height` is in the same `validators` response. `epoch_length` is in the response of the `EXPERIMENTAL_protocol_config` RPC method, with `{"finality": "final"}` as `params`.
 4. Shortly before that epoch starts, stop the node and replace `validator_key.json` with the new key file.
 5. Start the node after the new epoch has started and the new key is active. Check this with the `validators` RPC method. Its `current_validators` list must show the new public key for your account. Your node is stopped, so send this request to any synced RPC node. If you start the node before the new key is active, the node compares the new key with the old registered key and stops.
 
@@ -58,6 +58,8 @@ curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params
 ```
 
 The node misses its blocks, chunks and endorsements while it is stopped. If the node still runs with the old key when the new epoch starts, it stops at the first block of that epoch. In that case, replace `validator_key.json` with the new key file and start the node again.
+
+Instead of steps 4 and 5, you can swap the key without a restart. Replace `validator_key.json` near the end of the epoch, and send SIGHUP to neard (`kill -HUP <neard pid>`). The node logs `hot loading validator key`. Send SIGHUP after `next_validators` shows the new key and before the next epoch starts.
 
 **Nodes** should not need to reset their node keys.
 
