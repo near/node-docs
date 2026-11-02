@@ -393,46 +393,13 @@ echo 'export NEAR_ENV=testnet' >> ~/.bashrc
 ####  Check the validator_key.json
 * Run the following command:
 
-For Guildnet
-```
-cat ~/.near/guildnet/validator_key.json
-```
-
-For Testnet
 ```
 cat ~/.near/testnet/validator_key.json
 ```
 
+> Note: If the file exists, keep it. Its `account_id` must be your full staking pool account, such as `xx.pool.f863973.m0`. Use its `public_key` as the `stake_public_key` when you create the staking pool.
 
 > Note: If a validator_key.json is not present, follow these steps to create one
-
-Create a validator_key.json for Guildnet
-
-*   Generate the Key file:
-
-```
-near generate-key <pool_id>
-```
-* Copy the file generated to Guildnet folder:
-
-Make sure to replace YOUR_WALLET by your accountId
-```
-cp ~/.near-credentials/guildnet/<YOUR_WALLET>.json ~/.near/guildnet/validator_key.json
-```
-* Edit “account_id” => `xx.stake.guildnet`, where xx is your PoolName
-
-* Change `private_key` to `secret_key`
-
-> Note: The account_id must match the staking pool contract name or you will not be able to sign blocks.\
-
-File content must be in the following pattern:
-```
-{
-  "account_id": "xx.stake.guildnet",
-  "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
-  "secret_key": "ed25519:****"
-}
-```
 
 Create a `validator_key.json` for Testnet
 
@@ -441,10 +408,9 @@ Create a `validator_key.json` for Testnet
 ```
 near generate-key <pool_id>
 ```
-* Copy the file generated to Testnet folder:
-Make sure to replace YOUR_WALLET by your accountId
+* Copy the generated file to `~/.near/testnet/validator_key.json`. With `NEAR_ENV=testnet`, `near generate-key` saves the key in `~/.near-credentials/testnet/<pool_id>.json`.
 ```
-cp ~/.near-credentials/testnet/YOUR_WALLET.json ~/.near/testnet/validator_key.json
+cp ~/.near-credentials/testnet/<pool_id>.json ~/.near/testnet/validator_key.json
 ```
 * Edit “account_id” => xx.pool.f863973.m0, where xx is your PoolName
 * Change `private_key` to `secret_key`
@@ -454,11 +420,12 @@ cp ~/.near-credentials/testnet/YOUR_WALLET.json ~/.near/testnet/validator_key.js
 File content must be in the following pattern:
 ```
 {
-  "account_id": "xx.stake.guildnet",
+  "account_id": "xx.pool.f863973.m0",
   "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
   "secret_key": "ed25519:****"
 }
 ```
+* Use the `public_key` of this file as the `stake_public_key` when you create the staking pool.
 
 
 #### Step 8 – Check all files were generated
@@ -1461,18 +1428,24 @@ You will need to set up a standard node (without a validator key) and a differen
 
 The [Failover/backup node instruction](/validator/failover-node-instruction) page describes two ways to set up the backup node and fail over. The steps below follow its first option. In that option, the backup node restarts to take over. That page also gives the `store.load_mem_tries_for_tracked_shards` setting for each step.
 
-While the backup node is on standby, it tracks all shards. Set this in its `config.json`:
+While the backup node is on standby, it tracks all shards without memtries. Set this in its `config.json`:
 
 ```
 "tracked_shards_config": "AllShards",
+```
+
+and in its `store` section:
+
+```
+"load_mem_tries_for_tracked_shards": false,
 ```
 
 Use `tracked_shards_config`, not the deprecated `tracked_shards` key. A `config.json` written by `neard init` already has `tracked_shards_config`. The node does not start when both keys are set.
 
 ### Failing Over
 1. Copy `validator_key.json` to the backup node.
-2. In the backup node's `config.json`, set `tracked_shards_config` to `"NoShards"`. On mainnet and testnet, a node with the key of a current validator stops at startup if it tracks all shards.
+2. In the backup node's `config.json`, set `tracked_shards_config` to `"NoShards"` and `store.load_mem_tries_for_tracked_shards` to `true`. On mainnet and testnet, a node with the key of a current validator stops at startup if it tracks all shards.
 3. Stop the primary node.
 4. Restart the backup node.
 
-You do not need to copy `node_key.json`. To fail back to the primary node, stop the backup node and remove `validator_key.json` from it. Then start the primary node. The failover/backup node instruction page notes that a node that has run as a validator and tracked a single shard cannot go back to tracking all shards.
+You do not need to copy `node_key.json`. To fail back to the primary node, stop the backup node and remove `validator_key.json` from it. Then start the primary node. The failover/backup node instruction page notes that a node that has run as a validator and tracked a single shard cannot go back to tracking all shards. To make it a standby again, resync its data.
