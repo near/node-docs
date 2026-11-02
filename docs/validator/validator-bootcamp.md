@@ -1295,7 +1295,7 @@ Used to communicate with other peers and is primarily responsible for syncing th
 ```
 Common Issue:
 
-In a failure situation, both the node_key and validator_key must be copied over
+In a failure situation, copy the validator_key to the backup node. You do not need to copy the node_key. See LESSON 7 - NODE FAILOVER.
 
 ##### Validator Key:
 
