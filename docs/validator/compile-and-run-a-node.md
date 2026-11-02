@@ -63,7 +63,7 @@ When building your NEAR node you will have two branch options to choose from dep
 - [`Latest stable release`](https://github.com/near/nearcore/tags) : _(**Stable**)_
   - Use this if you want to run a NEAR node for *mainnet*. For *mainnet*, please use the latest stable release. This version is used by mainnet validators and other nodes and is fully compatible with the current state of *mainnet*.
 - [`Latest release candidates`](https://github.com/near/nearcore/tags) : _(**Release Candidates**)_
-  - Use this if you want to run a NEAR node for *testnet*. For *testnet*, we first release a RC version and then later make that release stable. For testnet, run the version that the public testnet RPC node runs. Step 1 below shows how to find it. This is usually the latest RC version.
+  - Use this if you want to run a NEAR node for *testnet*. For *testnet*, we first release a RC version and then later make that release stable. For testnet, run the version that the public testnet RPC node runs. Step 1 of the [`testnet`](#testnet) section shows how to find it.
 
 #### (Optional) Enable debug logging {#optional-enable-debug-logging}
 
