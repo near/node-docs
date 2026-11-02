@@ -50,10 +50,6 @@ cd nearcore
 git checkout "tags/${NEAR_RELEASE_VERSION:?}" && make neard
 ```
 
-The build runs only if the checkout succeeds.  Without the `&&`, a
-failed checkout would leave `master` checked out after a fresh clone,
-and `make` would build it.
-
 `make neard` builds with the release profile, which already enables
 full optimization.  The executable is at `./target/release/neard`.
 
