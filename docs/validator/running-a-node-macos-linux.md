@@ -120,7 +120,3 @@ wget -c <link-above> -O - | tar -xC ~/.near/data
 ```
 
 Where `<chain-id>` corresponds to `testnet` or `mainnet`.
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>

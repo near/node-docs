@@ -132,7 +132,3 @@ Prior to version 1.30, the feature was configured by `use_db_migration_snapshot`
 and `db_migration_snapshot_path` options.  They are are now deprecated and if
 the node detects that they are set, it will fail a migration with message
 explaining how to migrate to new options.
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>

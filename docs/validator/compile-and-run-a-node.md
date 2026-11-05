@@ -590,8 +590,3 @@ Once above is completed, verify your validator proposal status:
 $ near proposals
 ```
 Your validator pool should have **"Proposal(Accepted)"** status
-
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>

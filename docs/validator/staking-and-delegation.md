@@ -101,8 +101,3 @@ If a staking pool hasn't had an action applied to it recently, it may show an ol
 ```
 near call <stakingPoolId> ping '{}' --accountId <accountId> --gas=300000000000000
 ```
-
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>

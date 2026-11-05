@@ -29,8 +29,3 @@ There are a few different networks to potentially run a node. Each network opera
 * [`mainnet`](https://docs.near.org/concepts/basics/networks#mainnet)
 * [`testnet`](https://docs.near.org/concepts/basics/networks#testnet)
 * [`localnet`](https://docs.near.org/concepts/basics/networks#localnet)
-
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>

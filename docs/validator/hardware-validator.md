@@ -129,7 +129,3 @@ We cannot guarantee the prices mentioned above as they may change at any moment.
 - Azure — https://azure.microsoft.com/en-us/pricing/calculator
 
 </blockquote>
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>
