@@ -16,7 +16,7 @@ This page presents the Split Storage option for NEAR Archival nodes.
 
 With the 1.35.0 release we are rolling out split storage, a new option for storage management that is mainly targeted at archival nodes.. Split storage allows nodes to reduce storage costs and improve block production performance by splitting local storage into two separate areas: a hot and a cold database .  The hot database is smaller in size and stores all of the data from the most recent epochs. The cold database is larger, and it stores all historical data for older epochs. Hot and cold databases can be independently placed on separate hardware storage, allowing configurations such as using hot storage on a fast NVMe drive, and placing cold storage on a cheaper HDD drive.
 
-In split storage mode, the Near Client only works with a smaller hot database to produce blocks, which results in increased performance. Cold database is not accessed for reads during normal block production and is only read when historical data is specifically requested. Thus, we recommend keeping the cold database on cheaper and slower drives such as an HDD and only optimize speed for the hot database, which is about 10 times smaller.
+In split storage mode, the Near Client only works with a smaller hot database to produce blocks, which results in increased performance. Cold database is not accessed for reads during normal block production and is only read when historical data is specifically requested. Thus, we recommend keeping the cold database on cheaper and slower drives such as an HDD and only optimize speed for the hot database, which is significantly smaller.
 
 Split storage is disabled by default, and can be enabled with a config change and going through a migration process that requires manual steps. We have several choices for the migration:
 * Use snapshots (e.g. FASTNEAR snapshot) of nodes that have split-storge configured.
@@ -66,7 +66,7 @@ Example:
 }
 ```
 
-## Using Snaphots {#S3 migration}
+## Using Snapshots {#S3 migration}
 
 FASTNEAR is now provider of Archival node snapshot. Please refer to their documentation [HERE](https://docs.fastnear.com/docs/snapshots/mainnet#archival-mainnet-snapshot)
 
