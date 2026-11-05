@@ -314,8 +314,8 @@ near-validator validators network-config testnet next
 ```
 
 - A proposal must be submitted by pinging the contract
-- Once a proposal is accepted a validator must wait 2-3 epoch to enter the validator set
-- Once in the validator set the validator must produce great than 90% of assigned blocks or your node will be kick out
+- Proposals made during an epoch are used at the end of that epoch to select the validators for the epoch after the next one. If your pool is selected, it becomes active one to two epochs after the proposal, depending on when in the epoch the proposal was made.
+- Once in the validator set, a validator must produce at least 80% of its expected blocks and at least 80% of its expected chunks in each epoch. A validator that has no blocks or chunks to produce (a chunk validator only) must send at least 70% of its expected chunk endorsements. A validator below a threshold is kicked out. It keeps its seat for the next epoch and loses it in the epoch after that.
 
 Check the running status of the validator node. If "Validator" is showing up, your pool is selected in the current validators list.
 
@@ -410,7 +410,7 @@ near call <staking_pool_id> deposit_and_stake --deposit <amount> --use-account <
 ```
 
 #### Proposals and Pings   
-In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal you will use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
+In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. If you send a proposal now and it is accepted, you get the seat at the start of the epoch after the next one. A validator that is already in the validator set stays a candidate in later epochs without a new proposal. It must not be kicked out, and its stake must stay above the seat price. To send a proposal you will use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
 
 To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract. You could set up a ping using a cron job with a ping script (see below).  
   

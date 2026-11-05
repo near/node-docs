@@ -101,21 +101,34 @@ ssh`](https://docs.microsoft.com/en-gb/cli/azure/ssh?view=azure-cli-latest).
 Once connected to the instance, follow [the steps listed
 above](#compiling-and-running-a-node-without-docker).
 
-## Starting a node from backup {#starting-a-node-from-backup}
-Using data backups allows you to sync your node quickly by using public tar backup files. There are two types of backups for available for both `testnet` and `mainnet`:
-- regular
-- archival
-
-### Archive links {#archive-links}
-
-Download the latest snapshots from [Node Data Snapshots](/intro/node-data-snapshots).
-
-Starting node using `neard` backup data:
+## Starting a node with epoch sync {#starting-a-node-from-backup}
+A new node syncs with [Epoch Sync](/intro/node-epoch-sync), so it does not need a data backup. It needs boot nodes to find its first peers. The following commands ask an RPC node of your network for the validators it is connected to. Then they pass the list to `neard init`. They need `jq`:
 
 ```bash
-./neard init --chain-id <chain-id> --download-genesis
-mkdir ~/.near/data
-wget -c <link-above> -O - | tar -xC ~/.near/data
+BOOT_NODES=$(curl -s -X POST https://rpc.<chain-id>.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+echo "${BOOT_NODES:?}"
+./neard init --chain-id <chain-id> --download-genesis --boot-nodes "${BOOT_NODES:?}"
+```
+
+Check that `network.boot_nodes` in `config.json` is not empty:
+
+```bash
+jq -r '.network.boot_nodes' ~/.near/config.json
+```
+
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync). Running `neard init` again does not add them, because it does not change an existing `config.json`.
+
+Then start the node with an empty `data` folder:
+
+```bash
 ./neard run
 ```
 

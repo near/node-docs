@@ -541,7 +541,7 @@ cd ~/.near
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/genesis.json
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json
 ```
-* Download the latest snapshot from [the snapshot page](/intro/node-data-snapshots).
+* The node syncs with [Epoch Sync](/intro/node-epoch-sync) when it starts with an empty `data` folder, so it does not need a snapshot.
 
 * Initialize NEAR:
 ```
