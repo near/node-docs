@@ -9,38 +9,14 @@ description: Node Epoch Sync
 Epoch Sync enables a node to sync from genesis without relying on snapshots.
 Unlike Header Sync, which requires downloading the entire history of block headers, Epoch Sync downloads only a minimal subset necessary for state reconstruction.
 
-To sync using Epoch Sync, update your `config.json` file with the latest list of NEAR boot nodes, then start the neard service.
-You can use the following command as-is or treat it as a boilerplate:
+Epoch Sync runs automatically when a non-archival node starts more than two epochs behind the network. Boot nodes help it find peers; they are also used by other sync methods.
 
-### MainNet 
+If your node cannot find peers, [update its existing configuration](/intro/boot-nodes#update-an-existing-configuration) with fresh boot nodes for the correct network, then start or restart the `neard` service.
 
-```
-BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+### MainNet
 
-jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
-```
+Follow the [boot node instructions](/intro/boot-nodes#fetch-boot-nodes) with `CHAIN_ID=mainnet`, then [update your existing config](/intro/boot-nodes#update-an-existing-configuration).
 
 ### TestNet
 
-```
-BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-
-jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
-```
-
+Follow the [boot node instructions](/intro/boot-nodes#fetch-boot-nodes) with `CHAIN_ID=testnet`, then [update your existing config](/intro/boot-nodes#update-an-existing-configuration).

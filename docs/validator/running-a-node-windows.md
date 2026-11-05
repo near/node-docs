@@ -2,29 +2,18 @@
 id: running-a-node-windows
 title: Run a Node on Windows
 sidebar_label: Run a Node (Windows)
-sidebar_position: 4
-description: How to run a NEAR node using `nearup` on Windows
+sidebar_position: 6
+description: How to run a NEAR node on Windows
 ---
 
-*If this is the first time for you to setup a validator node, head to our [Validator Bootcamp 🚀](/validator/validator-bootcamp). We encourage you to set up your node with Neard instead of Nearup as Nearup is not used on Mainnet. Please head to [Run a node](/validator/compile-and-run-a-node) for instructions on how to setup a RPC node with Neard.*
+*If this is the first time for you to setup a validator node, head to our [Validator Bootcamp 🚀](/validator/validator-bootcamp). Please head to [Run a node](/rpc/run-rpc-node) for instructions on how to setup a RPC node with neard.*
 
-This doc is written for developers, sysadmins, DevOps, or curious people who want to know how to run a NEAR node using `nearup` on Windows.
+This doc is written for developers, sysadmins, DevOps, or curious people who want to know how to run a NEAR node on Windows.
 
 
 <blockquote class="warning">
 <strong>Heads up</strong><br /><br />
 This documentation may require additional edits. Please keep this in mind while running the following commands.
-</blockquote>
-
-
-## `nearup` Installation {#nearup-installation}
-You can install `nearup` by following the instructions at https://github.com/near-guildnet/nearup.
-
-<blockquote class="info">
-<strong>Heads up</strong><br /><br />
-
-The README for `nearup` (linked above) may be **all you need to get a node up and running** in `testnet` and `localnet`. `nearup` is exclusively used to launch NEAR `testnet` and `localnet` nodes. `nearup` is not used to launch `mainnet` nodes. See [Deploy Node on Mainnet](deploy-on-mainnet.md) for running a node on `mainnet`.
-
 </blockquote>
 
 
@@ -85,36 +74,35 @@ The README for `nearup` (linked above) may be **all you need to get a node up an
     Great! All set to get the node up and running!
 11. Clone the github nearcore
 
-    First we need to check a version which is currently working in `testnet`:
+    First we need to check the version that `testnet` currently runs:
     ```sh
-    curl -s https://rpc.testnet.near.org/status | jq .version
+    curl -s https://rpc.testnet.near.org/status | jq -r .version.version
     ```
-    You’ll get something like this: "1.13.0-rc.2". "1.13.0" is a branch which we need to clone to build our node for `testnet`.
+    This prints the version that testnet runs. Testnet usually runs a release candidate, whose version ends in `-rc.` and a number. Each version is a git tag in the nearcore repository. Clone that tag, replacing `<version>` with the value you got:
 
     ```sh
-    git clone --branch 1.13.0 https://github.com/near/nearcore.git
+    git clone --branch <version> https://github.com/near/nearcore.git
     ```
-12. This created a nearcore directory, change into that one and build a noce:
+12. This created a nearcore directory, change into that one and build a node:
     ```sh
     cd nearcore
     make neard
     ```
-13. Install nearup
+13. Initialize the working directory and run the node. The node needs boot nodes to find its first peers. The reference RPC `config.json` has no boot nodes. Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) with `CHAIN_ID=testnet` in your WSL shell to set `BOOT_NODES`. Return here and continue in the same shell:
     ```sh
-    pip3 install --user nearup
-    export PATH="$HOME/.local/bin:$PATH"
+    ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config rpc --boot-nodes "${BOOT_NODES:?}"
     ```
-14. Final: And now run the `testnet`:
+    Check that `network.boot_nodes` in `config.json` is not empty:
     ```sh
-    nearup run testnet --binary-path ~/nearcore/target/release/neard
+    jq -r '.network.boot_nodes' ~/.near/config.json
     ```
-    To be sure node is running you can check logs
+    The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration). Running `neard init` again does not add them, because it does not change an existing `config.json`.
+
+    Then run the node:
     ```sh
-    nearup logs --follow
+    ./target/release/neard --home ~/.near run
     ```
 
-You might be asked for a validator ID; if you do not want to validate, simply press enter. For validation, please follow the [Validator Bootcamp](/validator/validator-bootcamp).
+    For detailed instructions on initializing and running the node (including mainnet), see [Run a Validator Node](/validator/compile-and-run-a-node).
 
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>
+To run this node as a validator, you must configure your validator keys in the `--home` directory (for example by placing `validator_key.json` there) and follow the steps in the [Validator Bootcamp](/validator/validator-bootcamp).

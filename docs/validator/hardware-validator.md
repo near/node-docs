@@ -12,6 +12,8 @@ This page covers the minimum and recommended hardware requirements for engaging 
 
 ## Recommended Hardware Specifications {#recommended-hardware-specifications}
 
+**[NOTE]** Validators should consider provisioning at least 8 GiB of additional RAM headroom beyond baseline usage, or alternatively configure sufficient swap space. This buffer helps absorb transient memory spikes and reduces the risk of unexpected OOM termination.
+
 ### Chunk/Block Producers
 
 | Hardware       | Recommended Specifications                                   |
@@ -127,7 +129,3 @@ We cannot guarantee the prices mentioned above as they may change at any moment.
 - Azure — https://azure.microsoft.com/en-us/pricing/calculator
 
 </blockquote>
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>

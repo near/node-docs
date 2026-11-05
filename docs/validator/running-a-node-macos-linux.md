@@ -2,130 +2,37 @@
 id: running-a-node
 title: Run a Node on Linux and MacOS
 sidebar_label: Run a Node (Linux and MacOS)
-sidebar_position: 3
-description: How to run a NEAR node using nearup on Linux and MacOS, with or without using Docker
+sidebar_position: 5
+description: How to run a NEAR node on Linux and MacOS, with or without using Docker
 ---
 
-*If this is the first time for you to setup a validator node, head to our [Validator Bootcamp 🚀](/validator/validator-bootcamp). We encourage you to set up your node with Neard instead of Nearup as Nearup is not used on Mainnet. Please head to [Run a node](/validator/compile-and-run-a-node) for instructions on how to setup a RPC node with Neard.*
+*If this is the first time for you to setup a validator node, head to our [Validator Bootcamp 🚀](/validator/validator-bootcamp). Please head to [Run a node](/validator/compile-and-run-a-node) for instructions on how to setup a validator node with neard.*
 
-This doc is written for developers, sysadmins, DevOps, or curious people who want to know how to run a NEAR node using `nearup` on Linux and MacOS, with or without using Docker.
-
-
-## `nearup` Installation {#nearup-installation}
-You can install `nearup` by following the instructions at https://github.com/near-guildnet/nearup.
-
-<blockquote class="info">
-<strong>Heads up</strong><br /><br />
-
-The README for `nearup` (linked above) may be **all you need to get a node up and running** in `testnet` and `localnet`. `nearup` is exclusively used to launch NEAR `testnet` and `localnet` nodes. `nearup` is not used to launch `mainnet` nodes.  See [Deploy Node on Mainnet](deploy-on-mainnet.md) for running a node on `mainnet`.
-
-</blockquote>
-
-The steps in the rest of this document will require `nearup`
+This doc is written for developers, sysadmins, DevOps, or curious people who want to know how to run a NEAR node on Linux and MacOS.
 
 
 ## Running a Node using Docker {#running-a-node-using-docker}
 
-### Install Docker {#install-docker}
-
-By default we use Docker to run the client.
-
-Follow these instructions to install Docker on your machine:
-
-* [MacOS](https://docs.docker.com/docker-for-mac/install/)
-* [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-
-### Running `nearup` with Docker {#running-nearup-with-docker}
-
-<blockquote class="warning">
-Note: `nearup` and `neard` are running inside the container. You have to mount the ~/.near folder to ensure you don't lose your data which should live on the host.
-</blockquote>
-
-Once `nearup` and Docker are installed (by following instructions in previous section), run:
-
-```sh
-docker run -v $HOME/.near:/root/.near -p 3030:3030 --name nearup nearup/nearprotocol run testnet
-```
-
-
-_(If you prefer to use `localnet` then just replace `testnet` with `localnet` in the command above)_
-
-
-You might be asked for a validator ID; if you do not want to validate, simply press enter. For validation, please follow the [Validator Bootcamp](/validator/validator-bootcamp).
-
-```text
-Enter your account ID (leave empty if not going to be a validator):
-```
-
-
-#### Running in detached mode {#running-in-detached-mode}
-
-To run `nearup` in docker's detached (non-blocking) mode, you can add `-d` to the `docker run` command,
-
-```
-docker run -v $HOME/.near:/root/.near -p 3030:3030 -d --name nearup nearup/nearprotocol run testnet
-```
-
-#### Execute `nearup` commands in container {#execute-nearup-commands-in-container}
-
-To execute other `nearup` commands like `logs`, `stop`, `run`, you can use `docker exec`,
-
-```
-docker exec nearup nearup logs
-docker exec nearup nearup stop
-docker exec nearup nearup run {testnet/localnet}
-```
-
-(The container is running in a busy wait loop, so the container won't die.)
-
-#### `nearup` logs {#nearup-logs}
-
-To get the `neard` logs run:
-
-```
-docker exec nearup nearup logs
-```
-
-or,
-
-```
-docker exec nearup nearup logs --follow
-```
-
-To get the `nearup` logs run:
-
-```
-docker logs -f nearup
-```
-
-![text-alt](/images/docker-logs.png)
-
-
-| Legend   |                                                            |
-| :------- | :--------------------------------------------------------- |
-| `# 7153` | BlockHeight                                                |
-| `V/1`    | `V` (validator) or  `—`  (regular node) / Total Validators |
-| `0/0/40` | connected peers / up to date peers / max peers             |
-
+For running a node using Docker, please refer to the [Docker setup guide](docker-setup.md).
 
 
 ## Compiling and Running a Node without Docker {#compiling-and-running-a-node-without-docker}
 
-Alternatively, you can build and run a node without Docker by compiling `neard` locally and pointing `nearup` to the compiled binaries. Steps in this section provide details of how to do this.
+You can build and run a node without Docker by compiling `neard` locally. Steps in this section provide details of how to do this.
 
 As a prerequisite, [Rust](https://www.rust-lang.org/) needs to be installed on your machine.
 
 For Mac OS, make sure you have developer tools installed and then use `brew` to install extra tools:
 
 ```text
-brew install cmake protobuf clang llvm
+brew install cmake protobuf clang llvm jq
 ```
 
 For Linux, install these dependencies:
 
 ```text
 sudo apt update
-sudo apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python docker.io protobuf-compiler libssl-dev pkg-config clang llvm
+sudo apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python docker.io protobuf-compiler libssl-dev pkg-config clang llvm jq
 ```
 
 Then clone the repo:
@@ -161,21 +68,34 @@ If your machine is behind a firewall or NAT, make sure port 24567 is
 open and forwarded to the machine where the node is going to be
 running.
 
-Finally, execute:
+Finally, initialize the working directory and start the node.  The
+node needs boot nodes to find its first peers.  The reference RPC
+`config.json` has no boot nodes. Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) with `CHAIN_ID=testnet` to set `BOOT_NODES`, then return here and continue in the same shell:
 
 ```bash
-nearup run testnet --binary-path path/to/nearcore/target/release
+./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config rpc --boot-nodes "${BOOT_NODES:?}"
 ```
 
-If you want to run `localnet` instead of `testnet`, then replace
-`testnet` with `localnet` in the command above.  (If you’re running
-`localnet` you don’t need to open port 24567).
+Check that `network.boot_nodes` in `config.json` is not empty:
 
-You might be asked for a validator ID; if you do not want to validate, simply press enter. For validation, please follow the [Validator Bootcamp](/validator/validator-bootcamp).
-
-```text
-Enter your account ID (leave empty if not going to be a validator):
+```bash
+jq -r '.network.boot_nodes' ~/.near/config.json
 ```
+
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration). Running `neard init` again does not add them, because it does not change an existing `config.json`.
+
+Then start the node:
+
+```bash
+./target/release/neard --home ~/.near run
+```
+
+If you want to run `localnet` instead of `testnet`, you do not need
+boot nodes.  Run `./target/release/neard --home ~/.near init --chain-id localnet`
+instead, then start the node.  (If you're running `localnet` you don't
+need to open port 24567).
+
+For validation, please follow the [Validator Bootcamp](/validator/validator-bootcamp).
 
 ## Running a Node on the Cloud {#running-a-node-on-the-cloud}
 
@@ -197,63 +117,25 @@ ssh`](https://docs.microsoft.com/en-gb/cli/azure/ssh?view=azure-cli-latest).
 Once connected to the instance, follow [the steps listed
 above](#compiling-and-running-a-node-without-docker).
 
-## Success Message {#success-message}
-
-Once you have followed the steps for running a node with Docker or of Compiling without Docker, you should see messages similar to as shown below:
-
-
-```text
-Using local binary at path/to/nearcore/target/release
-Our genesis version is up to date
-Starting NEAR client...
-Node is running!
-To check logs call: `nearup logs` or `nearup logs --follow`
-```
-
-or
-
-```text
-Using local binary at path/to/nearcore/target/release
-Our genesis version is up to date
-Stake for user 'stakingpool.youraccount.testnet' with 'ed25519:6ftve9gm5dKL7xnFNbKDNxZXkiYL2cheTQtcEmmLLaW'
-Starting NEAR client...
-Node is running!
-To check logs call: `nearup logs` or `nearup logs --follow`
-```
-
-## Starting a node from backup {#starting-a-node-from-backup}
-Using data backups allows you to sync your node quickly by using public tar backup files. There are two types of backups for available for both `testnet` and `mainnet`:
-- regular
-- archival
-
-### Archive links {#archive-links}
-
-Download the latest snapshots from [Node Data Snapshots](/intro/node-data-snapshots).
-
-Starting node using `neard` backup data
+## Starting a node with epoch sync {#starting-a-node-from-backup}
+A new node syncs with [Epoch Sync](/intro/node-epoch-sync), so it does not need a data backup. Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) with `CHAIN_ID` set to your network (`mainnet` or `testnet`). Return here and continue in the same shell, replacing `<chain-id>` with that network:
 
 ```bash
-./neard init --chain-id <chain-id> --download-genesis
-mkdir ~/.near/data
-wget -c <link-above> -O - | tar -xC ~/.near/data
+./neard init --chain-id <chain-id> --download-genesis --boot-nodes "${BOOT_NODES:?}"
+```
+
+Check that `network.boot_nodes` in `config.json` is not empty:
+
+```bash
+jq -r '.network.boot_nodes' ~/.near/config.json
+```
+
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration). Running `neard init` again does not add them, because it does not change an existing `config.json`.
+
+Then start the node with an empty `data` folder:
+
+```bash
 ./neard run
 ```
 
-Starting node using `nearup` backup data:
-
-```bash
-nearup run <chain-id> && sleep 30 && nearup stop
-dir=$HOME/.near/<chain-id>/data
-rm -r -- "$dir"  # clean up old DB files to avoid corruption
-mkdir -- "$dir"
-wget -c <link-above> -O - | tar -xC "$dir"
-nearup run <chain-id>
-```
-
-In both examples, `<chain-id>` corresponds to `testnet` or `mainnet`.
-
-**Note:** Default location for `neard` data is `~/.near/data`. `nearup` stores data by default in `~/.near/<chain-id>/data.`
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>
+Where `<chain-id>` corresponds to `testnet` or `mainnet`.

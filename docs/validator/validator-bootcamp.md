@@ -135,7 +135,7 @@ A proposal by a validator indicates they would like to enter the validator set, 
 
 Command:
 ```
-near proposals
+near validators proposals
 ```
 
 ##### Validators Current
@@ -181,11 +181,11 @@ For Chunk-Only Producers (an upcoming role on NEAR), please see the hardware req
 Before you start, you may want to confirm that your machine has the right CPU features. For more hardware specific information, please take a look of the [Hardware requirement](hardware-validator.md).
 
 ```
-lscpu | grep -P '(?=.*avx )(?=.*sse4.2 )(?=.*cx16 )(?=.*popcnt )' > /dev/null \
-  && echo "Supported" \
-  || echo "Not supported"
+for f in ssse3 sse4_1 sse4_2 popcnt avx fma bmi1 bmi2 abm movbe pclmulqdq; do
+  grep -qw "$f" /proc/cpuinfo || echo "Missing: $f"
+done
 ```
-> Supported
+If the command prints nothing, the CPU has every instruction that the neard release build needs. Linux lists the LZCNT instruction as the `abm` flag.
 
 Next, let's make sure the Debian machine is up-to-date.
 ```
@@ -194,7 +194,7 @@ sudo apt update && sudo apt upgrade -y
 
 #### Install developer tools:
 ```
-sudo apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python docker.io protobuf-compiler libssl-dev pkg-config clang llvm cargo
+sudo apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python docker.io protobuf-compiler libssl-dev pkg-config clang llvm cargo jq
 ```
 ####  Install Python pip:
 
@@ -266,7 +266,8 @@ This command will create the directory structure and will generate `config.json`
 
 - `config.json` - Configuration parameters which are responsive for how the node will work. The config.json contains needed information for a node to run on the network, how to communicate with peers, and how to reach consensus. Although some options are configurable. In general validators have opted to use the default config.json provided.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain. The genesis.json file is a snapshot of the network state at a point in time. In contacts accounts, balances, active validators, and other information about the network. On MainNet, it is the state of what the network looked like at launch. On testnet or guildnet, it can include a more intermediate state if the network was hard-forked at one point.
-- `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
+- `node_key.json` -  The node's network key. Peers use it to identify the node. It is not the validator key.
+- `validator_key.json` - The key and account that the node validates with. Its `account_id` must be your staking pool account. `neard init` creates it only when you pass `--account-id`.
 - `data/` -  A folder in which a NEAR node will write it's state.
 
 ### Replace the `config.json`
@@ -276,14 +277,13 @@ rm ~/.near/config.json
 wget -O ~/.near/config.json https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/<network>/validator/config.json
 ```
 
-### Get data backup
+### Add boot nodes
 
-The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
+The reference validator `config.json` has no boot nodes. Follow [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration), choosing `CHAIN_ID=testnet` or `CHAIN_ID=mainnet` to match `<network>`. Use `CONFIG_PATH=~/.near/config.json` for this setup.
 
-The latest daily snapshots are made available to the public by FastNear, and can be used to set up a validator node. 
-For detailed instructions, please refer to [this guide](https://docs.fastnear.com/docs/snapshots).
+### Sync with the network
 
-NOTE: Make sure you have enough disk space to unpack inside the data folder.
+The node is ready to be started. When it starts with an empty `data` folder, it syncs with the network using [Epoch Sync](/intro/node-epoch-sync). It does not need a snapshot.
 
 ### Run the node
 To start your node simply run the following command:
@@ -297,24 +297,6 @@ cd nearcore
 The node is now running you can see log outputs in your console. Your node should be find peers, download headers to 100%, and then download blocks.
 
 ----
-
-
-#### Using NearUp
-
-You can set up a node using neard on Mainnet and Testnet. On Guildnet, you have the option to use NearUp to set the node. However, NearUp is not recommended or supported for Mainnet. We recommend that you use neard consistently on Guildnet, Testnet, and Mainnet.
-
-However, if you choose to use NearUp, NearUp will download the necessary binaries and files to get up and running. You just need to provide the network to run and the staking pool id.
-
-* Install NearUp:
-
-```
-pip3 install --user nearup
-```
-* Install latest NearUp Version:
-
-```
-pip3 install --user --upgrade nearup
-```
 
 
 ####  Create a wallet
@@ -377,14 +359,6 @@ You can also run this command to set the Near guildnet Environment persistent:
 echo 'export NEAR_ENV=guildnet' >> ~/.bashrc
 ```
 
-* Running command is:
-
-```
-nearup run $NEAR_ENV --account-id <staking pool id>
-```
-Where AccountId is xx.stake.guildnet, xx is your pool name for example bootcamp.stake.guildnet
-
-
 For Testnet
 
 * Download the latest genesis, config files:
@@ -395,13 +369,7 @@ wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deplo
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/genesis.json
 ```
 
-* Download the latest snapshot:
-
-```
-mkdir ~/.near/testnet/data
-cd ~/.near/testnet
-wget -c https://near-protocol-public.s3.amazonaws.com/backups/testnet/rpc/data.tar -O - | tar -xf -
-```
+* Add boot nodes using [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration) with `CHAIN_ID=testnet` and `CONFIG_PATH=~/.near/testnet/config.json`. The node syncs with [Epoch Sync](/intro/node-epoch-sync), so it does not need a snapshot.
 
 * Launch this command so set the Near testnet Environment:
 
@@ -413,61 +381,19 @@ export NEAR_ENV=testnet
 ```
 echo 'export NEAR_ENV=testnet' >> ~/.bashrc
 ```
-* Running command is:
-
-```
-nearup run $NEAR_ENV --account-id <staking pool id>
-```
-Where AccountId is xx.pool.f863973.m0, xx is your pool name for example bootcamp.pool.f863973.m0
-
-On the first run, NEARUp will ask you to enter a staking pool id, provide the staking pool id set up previously in the form {pool id}.{staking pool factory}
-
 > **Note: This is the Chicken and the Egg.
 > You have not created the staking pool, but need to provide the name.**
 
 ####  Check the validator_key.json
 * Run the following command:
 
-For Guildnet
-```
-cat ~/.near/guildnet/validator_key.json
-```
-
-For Testnet
 ```
 cat ~/.near/testnet/validator_key.json
 ```
 
+> Note: If the file exists, keep it. Its `account_id` must be your full staking pool account, such as `xx.pool.f863973.m0`. Use its `public_key` as the `stake_public_key` when you create the staking pool.
 
 > Note: If a validator_key.json is not present, follow these steps to create one
-
-Create a validator_key.json for Guildnet
-
-*   Generate the Key file:
-
-```
-near generate-key <pool_id>
-```
-* Copy the file generated to Guildnet folder:
-
-Make sure to replace YOUR_WALLET by your accountId
-```
-cp ~/.near-credentials/guildnet/<YOUR_WALLET>.json ~/.near/guildnet/validator_key.json
-```
-* Edit “account_id” => `xx.stake.guildnet`, where xx is your PoolName
-
-* Change `private_key` to `secret_key`
-
-> Note: The account_id must match the staking pool contract name or you will not be able to sign blocks.\
-
-File content must be in the following pattern:
-```
-{
-  "account_id": "xx.stake.guildnet",
-  "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
-  "secret_key": "ed25519:****"
-}
-```
 
 Create a `validator_key.json` for Testnet
 
@@ -476,10 +402,9 @@ Create a `validator_key.json` for Testnet
 ```
 near generate-key <pool_id>
 ```
-* Copy the file generated to Testnet folder:
-Make sure to replace YOUR_WALLET by your accountId
+* Copy the generated file to `~/.near/testnet/validator_key.json`. With `NEAR_ENV=testnet`, `near generate-key` saves the key in `~/.near-credentials/testnet/<pool_id>.json`.
 ```
-cp ~/.near-credentials/testnet/YOUR_WALLET.json ~/.near/testnet/validator_key.json
+cp ~/.near-credentials/testnet/<pool_id>.json ~/.near/testnet/validator_key.json
 ```
 * Edit “account_id” => xx.pool.f863973.m0, where xx is your PoolName
 * Change `private_key` to `secret_key`
@@ -489,11 +414,12 @@ cp ~/.near-credentials/testnet/YOUR_WALLET.json ~/.near/testnet/validator_key.js
 File content must be in the following pattern:
 ```
 {
-  "account_id": "xx.stake.guildnet",
+  "account_id": "xx.pool.f863973.m0",
   "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
   "secret_key": "ed25519:****"
 }
 ```
+* Use the `public_key` of this file as the `stake_public_key` when you create the staking pool.
 
 
 #### Step 8 – Check all files were generated
@@ -521,7 +447,7 @@ sudo apt update && sudo apt upgrade -y
 ```
 * Install Python
 ```
-sudo apt install python3 git curl
+sudo apt install python3 git curl jq
 ```
 * Install Building env
 ```
@@ -542,14 +468,13 @@ source $HOME/.cargo/env
 ```
 git clone https://github.com/nearprotocol/nearcore.git
 ```
-* Set environment to the latest release tag. For the latest release tag, please check here: https://github.com/near/nearcore/releases.  Note: RC tags are for Testnet only.
+* Set environment to the latest release tag. For the latest release tag, please check here: https://github.com/near/nearcore/releases.  Note: RC tags are for Testnet only. The following command reads the latest stable release:
 ```
-export NEAR_RELEASE_VERSION=1.26.1
+export NEAR_RELEASE_VERSION=$(curl -s https://api.github.com/repos/near/nearcore/releases/latest | grep '"tag_name"' | cut -d '"' -f 4)
 ```
 ```
 cd nearcore
-git checkout $NEAR_RELEASE_VERSION
-make release
+git checkout "tags/${NEAR_RELEASE_VERSION:?}" && make release
 ```
 * Install Nodejs and NPM
 ```
@@ -602,27 +527,40 @@ near login
 ![img](/images/5.png)
 
 #### Step 4 – Initialize & Start the Node
-* Download the latest genesis, config files:
+* Download the latest genesis and config files:
 ```
 mkdir ~/.near
 cd ~/.near
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/genesis.json
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json
 ```
-* Download the latest snapshot from [the snapshot page](/intro/node-data-snapshots).
+
+* Add boot nodes using [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration) with `CHAIN_ID=mainnet` and `CONFIG_PATH=~/.near/config.json`.
+
+* The node syncs with [Epoch Sync](/intro/node-epoch-sync) when it starts with an empty `data` folder, so it does not need a snapshot.
 
 * Initialize NEAR:
 ```
-target/release/neard init --chain-id="mainnet" --account-id=<staking pool id>
+target/release/neard init --chain-id="mainnet" --account-id=<pool_id>.poolv1.near
 ```
-##### Create `validator_key.json`
+##### Check `validator_key.json`
+`neard init --account-id=<pool_id>.poolv1.near` in the previous step created `~/.near/validator_key.json` with a new key. This is the file that neard reads. Keep this key, and show its public key:
+```
+grep public_key ~/.near/validator_key.json
+```
+> Note: The `account_id` in this file must be your full staking pool account, such as `xx.poolv1.near`. `neard init` writes the value of `--account-id` there. If you passed only the pool name, edit `account_id` before you start the node.
+
+> Note: Use this `public_key` as the `stake_public_key` when you create the staking pool. If the two keys differ, the node stops with a "validator key mismatch" error once the pool is in the validator set.
+
+##### Optional: use a different key
+Follow these steps only if you want to use a different key than the one that `neard init` created. They replace `~/.near/validator_key.json`.
 * Generate the Key file:
 ```
 near generate-key <pool_id>
 ```
-* Copy the file generated to Mainnet folder.Make sure to replace YOUR_WALLET by your accountId
+* Copy the generated file to `~/.near/validator_key.json`. With `NEAR_ENV=mainnet`, `near generate-key` saves the key in `~/.near-credentials/mainnet/<pool_id>.json`.
 ```
-cp ~/.near-credentials/YOUR_WALLET.json ~/.near/mainnet/validator_key.json
+cp ~/.near-credentials/mainnet/<pool_id>.json ~/.near/validator_key.json
 ```
 * Edit “account_id” => xx.poolv1.near, where xx is your PoolName
 * Change “private_key” to “secret_key”
@@ -633,19 +571,9 @@ cp ~/.near-credentials/YOUR_WALLET.json ~/.near/mainnet/validator_key.json
 >   "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
 >   "secret_key": "ed25519:****"
 > }
-```
-near generate-key <your_accountId>
-vi ~/.near/{your_accountId}.json
-```
-Rename "private_key" to "secret_key", then move the file to ~/.near.
+* Use the `public_key` of this file as the `stake_public_key` when you create the staking pool.
 
-```
-mv the file to ~/.near
-```
-Update "account_id" to be the staking_pool_id
-
-> Note: The account_id must match the staking pool contract name or you will not be able to sign blocks.
-
+##### Start the node
 * Start the Node
 ```
 target/release/neard run
@@ -725,8 +653,8 @@ In order to become a validator and enter the validator set, a minimum set of suc
 * The account_id must be set to the staking pool contract id
 * There must be enough delegations to meet the minimum seat price. See the seat price [here](https://explorer.testnet.near.org/nodes/validators).
 * A proposal must be submitted by pinging the contract
-* Once a proposal is accepted a validator must wait 2-3 epoch to enter the validator set
-* Once in the validator set the validator must produce great than 90% of assigned blocks
+* A proposal sent during an epoch is used to select the validators of the epoch after the next one. If it is accepted, the validator joins at the start of that epoch. So it waits between one and two epochs.
+* Once in the validator set, the validator must produce at least 80% of its expected blocks and at least 80% of its expected chunks. A validator that only validates chunks must send at least 70% of its expected chunk endorsements. A validator below these thresholds is kicked out of the validator set.
 
 Check running status of validator node. If “Validator” is showing up, your pool is selected in the current validators list.
 
@@ -853,7 +781,7 @@ near call {pool_id}.{staking_pool_factory} update_staking_key '{"stake_public_ke
 
 ### Proposals
 
-In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
+In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. If you send a proposal now and it is accepted, you get the seat at the start of the epoch after the next one. A validator that is already in the validator set stays a candidate in later epochs without a new proposal. It must not be kicked out, and its stake must stay above the seat price. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
 
 To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract. You could set up a ping using a cron job.
 
@@ -940,12 +868,7 @@ near call <staking_pool_id> resume_staking '{}' --accountId <accountId>
 
 ## LESSON 5 - MONITORING
 ### Log Files
-The log file is stored either in the ~/.nearup/logs directory or in systemd depending on your setup.
-
-NEARUp Command:
-```
-nearup logs --follow
-```
+The log file is stored in systemd depending on your setup.
 
 Systemd Command:
 ```
@@ -1355,7 +1278,7 @@ In this lesson you will learn about:
 NEAR uses cryptographic keys to secure accounts and validators, each key has a public and matching private key pair.
 
 Find more detailed information about NEAR and keys:
-https://docs.near.org/concepts/basics/account#access-keys
+https://docs.near.org/protocol/accounts-contracts/access-keys
 
 #### Validator Keys:
 To manage and sign transactions a node_key and validator_key.
@@ -1368,7 +1291,7 @@ Used to communicate with other peers and is primarily responsible for syncing th
 ```
 Common Issue:
 
-In a failure situation, both the node_key and validator_key must be copied over
+In a failure situation, copy the validator_key to the backup node. You do not need to copy the node_key. See LESSON 7 - NODE FAILOVER.
 
 ##### Validator Key:
 
@@ -1379,7 +1302,7 @@ Used to sign and validate blocks.
 Common Issues:
 
 1. The validator key used to initialize the staking contract is not the one listed in validator_key.json
-2. The account Id submitted when NEARUp was initialized is not the same as the one in validator_key.json
+2. The account Id used when the node was initialized is not the same as the one in validator_key.json
 
 
 
@@ -1395,7 +1318,7 @@ Wait until 4 epochs until you have been kicked from the validator set. Delete th
 3. Start the node
 ```
 #### Starting the node when another instance is running
-On occasion, a process will get disconnected from the shell or NEARUp. The common error seen when trying to start the node will be:
+On occasion, a process will get disconnected from the shell. The common error seen when trying to start the node will be:
 ```
 Err value: Os { code: 98, kind: AddrInUse, message: "Address already in use" }',
 ```
@@ -1422,19 +1345,33 @@ You can check that your validator proposal was accepted by checking
 near proposals
 ```
 #### Not producing blocks
-Your validator is producing zero blocks in near validators current.
+Your validator shows zero produced blocks in `near validators current`, while its expected blocks are above zero.
 
-This is due the staking pool contract and the validator_key.json have different public keys or the account_id in validator_key.json not being the staking pool contract id.
+On mainnet, only validators that hold one of the 100 block producer seats are expected to produce blocks. Other validators only validate chunks. For them, zero blocks and zero chunks is normal. Check `num_produced_endorsements` against `num_expected_endorsements` in the `validators` RPC response instead.
 
-**Get the staking pool key**
+`validator_key.json` must contain your staking pool id as `account_id`. It must also contain the public key that is registered for your pool in the current epoch. If the `account_id` is in the current validator set but the public key differs from the registered key, neard stops with an error that starts with `validator key mismatch for <account>`. The node checks this once per epoch after it is synced. If the `account_id` is not in the current validator set, the node does not act as a validator and produces nothing.
+
+Two keys matter here. The key that is active for your pool in the current epoch must be in `validator_key.json`. The key stored in the staking pool contract is the key that the pool uses in its next stake proposal. The two keys are normally the same.
+
+**Get the key that is active in the current epoch**
 ```
-near view <POOL_ID> get_staking_key '{}'
+curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params": [null]}' -H 'Content-Type: application/json' http://localhost:3030/ | jq -r '.result.current_validators[] | select(.account_id == "<POOL_ID>") | .public_key'
 ```
+If neard has stopped, send this request to any synced RPC node instead of `localhost`.
+
 **Get the key in validator_key.json**
 ```
 cat ~/.near/<network>/validator_key.json | grep public_key
 ```
-> Note: Both keys must match. If they do not update the staking pool key and wait 2 epochs before pinging.
+> Note: These two keys must match. Otherwise the node stops with the error above.
+
+**Get the key stored in the staking pool contract**
+```
+near view <POOL_ID> get_staking_key '{}'
+```
+> Note: When you call `update_staking_key`, the contract stores the new key at once. The new key becomes active two epochs later. During those two epochs, the contract key and the active key differ, which is expected. Keep the active key in `validator_key.json` until the new key becomes active.
+
+To rotate the key on purpose, follow the steps in [Can Keys be Changed?](/intro/keys#can-keys-be-changed). The command that registers the new key in the pool is:
 
 **Update staking pool key**
 ```
@@ -1450,7 +1387,7 @@ vi ~/.near/<network>/validator_key.json
 > Note: if it does now match the staking pool id upate it and restart your node.
 
 #### Not producing enough blocks or chunks
-Missing blocks or chunks is the primary reason a validator is kicked from the validator pool. You can check the number of blocks expected/missed via NEAR-Cli and RPC.
+A validator is kicked out of the validator set when it produces too few blocks, chunks, or chunk endorsements. On mainnet, block and chunk producers are kicked out below 80% of their expected blocks or chunks. Validators with no expected blocks and no expected chunks (chunk validators only) are kicked out below 70% of their expected chunk endorsements, with reason `NotEnoughChunkEndorsements`. You can check the expected and produced numbers via NEAR-Cli and RPC. For endorsements, compare `num_produced_endorsements` with `num_expected_endorsements`.
 
 **NEAR-CLI**
 
@@ -1472,7 +1409,7 @@ Be sure that you are using the correct environment each time you run NEAR-Cli
 export NEAR_ENV=<mainnet,testnet,guildnet>
 ```
 #### Incompatible CPU without AVX support
-One cause of missed blocks and nodes falling out of sync is running on a CPU without AVX support. AVX support is required, but not always used depending on the complexity of the transaction.
+neard needs the CPU instructions listed in the CPU check under Prerequisites in Lesson 3. On a CPU without them, neard crashes with an illegal instruction error.
 
 #### Not running on SSD drives
 NEAR Requires a 1 second block time and HDD disks are just not fast enough. SDD drives are required and SSD NVME drives are recommended.
@@ -1481,7 +1418,7 @@ NEAR Requires a 1 second block time and HDD disks are just not fast enough. SDD 
 NEAR requires a 1 second block time, so any latency from your internet provider can cause you to miss blocks.
 
 #### Inability to gain enough peers for consensus
-If you are unable to gain any peers a restart can help. In some rare cases the boot_nodes in config.json can be empty.
+If you are unable to gain any peers a restart can help. The node also has no peers to start from when `network.boot_nodes` in `config.json` is empty. The reference `config.json` files have no boot nodes.
 
 Logs like that :
 ```
@@ -1489,9 +1426,11 @@ INFO stats: #42376888 Waiting for peers 0/0/40 peers ⬇ 0 B/s ⬆ 0 B/s 0.00 bp
 ```
 
 **Resolution**
-Download the latest config.json file and restart:
-- For Testnet: `https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/validator/config.json`
-- For Mainnet: `https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json`
+Check the boot nodes in the node's `config.json`. With the default home directory, run:
+```
+jq -r '.network.boot_nodes' ~/.near/config.json
+```
+If it prints an empty line, add boot nodes as described in [Add boot nodes](#add-boot-nodes), and restart the node. Downloading the reference `config.json` again does not help, because it has no boot nodes.
 
 
 ## LESSON 7 - NODE FAILOVER
@@ -1499,24 +1438,26 @@ It is an unspoken requirement to maintain a secondary node in a different locati
 
 You will need to set up a standard node (without a validator key) and a different node_key. The node will be set up using the normal process see Setup a Validator Node.
 
-Note: The backup node must track the same shard in the config.json as the primary node, to be used as a failover node. Please confirm the backp node has the the same `config.json` as the primary node.
+The [Failover/backup node instruction](/validator/failover-node-instruction) page describes two ways to set up the backup node and fail over. The steps below follow its first option. In that option, the backup node restarts to take over. That page also gives the `store.load_mem_tries_for_tracked_shards` setting for each step.
+
+While the backup node is on standby, it tracks all shards without memtries. Set this in its `config.json`:
 
 ```
-"tracked_shards":[0],
+"tracked_shards_config": "AllShards",
 ```
+
+and in its `store` section:
+
+```
+"load_mem_tries_for_tracked_shards": false,
+```
+
+Use `tracked_shards_config`, not the deprecated `tracked_shards` key. A `config.json` written by `neard init` already has `tracked_shards_config`. The node does not start when both keys are set.
 
 ### Failing Over
-To failover you must copy the node_key.json and the validatory_key.json to the secondary node and restart.
-```
-1. Copy over node_key.json
-2. Copy over validator_key.json
-4. Stop the node primary node
-3. Stop the secondary node
-4. Restart the secondary node
-```
-When failing back over to the primary simply move the secondary node_key.json into place and restart the services in reverse order.
+1. Copy `validator_key.json` to the backup node.
+2. In the backup node's `config.json`, set `tracked_shards_config` to `"NoShards"` and `store.load_mem_tries_for_tracked_shards` to `true`. On mainnet and testnet, a node with the key of a current validator stops at startup if it tracks all shards.
+3. Stop the primary node.
+4. Restart the backup node.
 
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>
+You do not need to copy `node_key.json`. To fail back to the primary node, stop the backup node and remove `validator_key.json` from it. Then start the primary node. The failover/backup node instruction page notes that a node that has run as a validator and tracked a single shard cannot go back to tracking all shards. To make it a standby again, resync its data.

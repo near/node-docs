@@ -123,34 +123,14 @@ For example:
 - `<full_pool_id>` – `xxx.pool.near`, where `xxx` is your pool_id like `panda.pool.near`.
 - `<accountId>` or `accountId` – `xxx.near`, where `xxx` is your account name, for example `validator_near.near`.
 
+Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) for your target network to set `BOOT_NODES`. Return here and run only the matching initialization command in the same shell:
+
 ```sh
-# You can use any RPC provider for this command.
+# MainNet (fetch with CHAIN_ID=mainnet)
+cd ~/nearcore && target/release/neard init --chain-id="mainnet" --account-id=<full_pool_id> --download-genesis --download-config validator --boot-nodes "${BOOT_NODES:?}"
 
-# MainNet
-BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-
-cd ~/nearcore && target/release/neard init --chain-id="mainnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES
-
-# TestNet
-BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-
-cd ~/nearcore && target/release/neard init --chain-id="testnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES
+# TestNet (fetch with CHAIN_ID=testnet)
+cd ~/nearcore && target/release/neard init --chain-id="testnet" --account-id=<full_pool_id> --download-genesis --download-config validator --boot-nodes "${BOOT_NODES:?}"
 ```
 
 ⚠️ Use `--home` argument if you want to change working directory from the default value of ~/.near. 
@@ -231,14 +211,13 @@ systemctl enable neard'
 
 Syncing consists of two main steps:
 
-1. **Syncing headers** – achieved in one of three ways:
-   - **[Epoch Sync](#epoch-sync)**: the recommended, decentralized approach. This solution results in the smallest database size, as the node will only contain compacted block headers.
-   - **[Using a snapshot](#sync-data-with-snapshot)**: a centralized solution.
-   - **Fallback**: If neither option is used, the node defaults to Header Sync, which can be extremely slow.
+1. **Syncing headers**: a node uses [Epoch Sync](#epoch-sync), a decentralized approach. This results in the smallest database size, as the node only keeps compacted block headers. A node that is more than two epochs behind the network uses epoch sync automatically. No config change is needed.
 
-2. **Syncing blocks** – involves downloading the blockchain state at the start of the latest epoch and then processing the remaining blocks to fully sync with the chain. State sync, the process of downloading the state, can be done in two ways:
-   - **Decentralized state sync**: the default method, which pulls data directly from peers.
-   - **[Centralized state sync](#state-sync-from-external-storage)**: uses cloud-based storage as a fallback when configured in `config.json`.
+   Only archival nodes sync all headers and blocks from genesis.
+
+2. **Syncing blocks**: involves downloading the blockchain state at the start of the latest epoch and then processing the remaining blocks to fully sync with the chain. State sync, the process of downloading the state, pulls the data directly from peers. This is the only method, and it needs no configuration.
+
+   If `config.json` sets `state_sync.sync` to `ExternalStorage`, nearcore 2.13.0 and later refuse to start. Remove the `state_sync.sync` block before you start the node.
 
 
 
@@ -246,69 +225,9 @@ Syncing consists of two main steps:
 
 Epoch Sync enables a node to sync from genesis without relying on snapshots.
 Unlike Header Sync, it requires downloading only a small subset of past block headers rather than all of them.
-To sync using Epoch Sync, update the `config.json` file with the latest boot nodes list from the NEAR network and then start the `neard` service, here is the command:
-
-```
-# MainNet 
-BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-
-jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
-
-# TestNet
-BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-
-jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
-```
-after that, just restart the node (sudo systemctl restart neard).
+Epoch sync runs automatically when you start a node with an empty data folder. To help it find peers, [refresh the boot nodes in your existing config](/intro/boot-nodes#update-an-existing-configuration), choosing `CHAIN_ID=mainnet` or `CHAIN_ID=testnet` to match your node. Then start or restart the `neard` service.
 
 Wait for approximately 3 hours and you are done, follow the next step to become an active validator!
-
-
-##### Sync data with snapshot
-⚠️ **FREE SNAPSHOT SERVICE BY FASTNEAR WILL BE DEPRECATED STARTING JUNE 1ST, 2025. We strongly recommend all node operators to use epoch sync.**
-
-To sync data fast, we can download the snapshot of recent NEAR epochs instead of waiting for node sync with other peers, this process can take a few hours (usually less than 7 hours for MainNet, 1 hour for TestNet), the expected data size will be around 100GB.
-
-Run this to download snapshot (huge thanks FastNEAR for maintaining this):
-
-```
-# MainNet
-
-curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=mainnet RPC_TYPE=fast-rpc bash
-
-# TestNet
-
-curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=testnet bash 
-
-```
-
-Once snapshot is downloaded, you can use the following commands to 'start' or 'restart' neard:
-
-```
-## Fresh start
-./target/release/neard --home ~/.near run
-
-## Restart
-sudo systemctl restart neard
-
-```
-
 
 
 If you need to make a change to service in the config.json file, the node also need to be reloaded:
@@ -324,12 +243,6 @@ journalctl -n 100 -f -u neard | ccze -A
 
 
 Check the running status of the validator node. If you see something like the image above, it means the node is fully synced, and you are ready to become an active validator!
-
-##### State sync from external storage
-
-To configure your node to sync from external storage, follow the [link](https://github.com/near/nearcore/blob/master/docs/misc/state_sync_from_external_storage.md).
-The new state sync bucket is `fast-state-parts` and it is maintained by FastNEAR.
-
 
 ### Becoming an active Validator
 In order to become a validator and enter the validator set to help secure the network and earn rewards, a minimum set of success criteria must be met:
@@ -349,8 +262,8 @@ near-validator validators network-config testnet next
 ```
 
 - A proposal must be submitted by pinging the contract
-- Once a proposal is accepted a validator must wait 2-3 epoch to enter the validator set
-- Once in the validator set the validator must produce great than 90% of assigned blocks or your node will be kick out
+- Proposals made during an epoch are used at the end of that epoch to select the validators for the epoch after the next one. If your pool is selected, it becomes active one to two epochs after the proposal, depending on when in the epoch the proposal was made.
+- Once in the validator set, a validator must produce at least 80% of its expected blocks and at least 80% of its expected chunks in each epoch. A validator that has no blocks or chunks to produce (a chunk validator only) must send at least 70% of its expected chunk endorsements. A validator below a threshold is kicked out. It keeps its seat for the next epoch and loses it in the epoch after that.
 
 Check the running status of the validator node. If "Validator" is showing up, your pool is selected in the current validators list.
 
@@ -372,14 +285,13 @@ near contract call-function as-transaction pool.near create_staking_pool json-ar
 near contract call-function as-transaction pool.f863973.m0 create_staking_pool json-args '{"staking_pool_id": "<pool_id>", "owner_id": "<accountId>", "stake_public_key": "<public_key>", "reward_fee_fraction": {"numerator": 5, "denominator": 100}}' prepaid-gas '300.0 Tgas' attached-deposit '30 NEAR' sign-as <accountId> network-config testnet sign-with-keychain
 ``` 
 
-From the example above, you need to replace:
+From the example above, you need assign values to:
 
-**pool_id**: Staking pool name example "panda"  
+**staking_pool_id**: Staking pool name example "panda"  
 **owner_id**: The NEAR account that will manage the staking pool. Usually your main NEAR account.  
-**public_key**: The public key in your validator_key.json file.  
-**5**: The fee the pool will charge (e.g. in this case 5 over 100 is 5% of fees), usually validators take 5% fee, if you set the fee so high, no one will stake to your node 😉   
-**accountId**: The NEAR account deploying the staking pool.  
-Be sure to have at least 30 NEAR available, it is the minimum required for storage.
+**stake_public_key**: The public key in your validator_key.json file.  
+**reward_fee_fraction**: The fee the pool will charge (e.g. in this case 5 over 100 is 5% of fees). Usually validators take 5% fee, if you set the fee too high, no one will stake to your node 😉
+**sign-as**: The NEAR account deploying the staking pool. Be sure to have at least 30 NEAR available, it is the minimum required for storage.
 
 Final command will look something like this:
 ```sh
@@ -446,9 +358,9 @@ near call <staking_pool_id> deposit_and_stake --deposit <amount> --use-account <
 ```
 
 #### Proposals and Pings   
-In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
+In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. If you send a proposal now and it is accepted, you get the seat at the start of the epoch after the next one. A validator that is already in the validator set stays a candidate in later epochs without a new proposal. It must not be kicked out, and its stake must stay above the seat price. To send a proposal you will use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
 
-To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract. You could set up a ping using a cron job with a ping script here.  
+To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract. You could set up a ping using a cron job with a ping script (see below).  
   
 Ping are done by Metapool too, you don't need anymore to use a script ping but you can. You need at least 1 ping to be visible for the first time.
 
@@ -607,19 +519,7 @@ near-validator staking view-stake <full_pool_id> network-config mainnet now
 ### Troubleshooting
 
 #### No Peers
-If you have no peers, run this script:
-```  
-BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
-````
+If you have no peers, [refresh the boot nodes in your existing config](/intro/boot-nodes#update-an-existing-configuration) for your node's network, then restart `neard`.
 
 #### Weird Error When Running a Command
 
