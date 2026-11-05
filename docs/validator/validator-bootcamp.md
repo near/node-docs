@@ -181,11 +181,11 @@ For Chunk-Only Producers (an upcoming role on NEAR), please see the hardware req
 Before you start, you may want to confirm that your machine has the right CPU features. For more hardware specific information, please take a look of the [Hardware requirement](hardware-validator.md).
 
 ```
-lscpu | grep -P '(?=.*avx )(?=.*sse4.2 )(?=.*cx16 )(?=.*popcnt )' > /dev/null \
-  && echo "Supported" \
-  || echo "Not supported"
+for f in ssse3 sse4_1 sse4_2 popcnt avx fma bmi1 bmi2 abm movbe pclmulqdq; do
+  grep -qw "$f" /proc/cpuinfo || echo "Missing: $f"
+done
 ```
-> Supported
+If the command prints nothing, the CPU has every instruction that the neard release build needs. Linux lists the LZCNT instruction as the `abm` flag.
 
 Next, let's make sure the Debian machine is up-to-date.
 ```
@@ -266,7 +266,8 @@ This command will create the directory structure and will generate `config.json`
 
 - `config.json` - Configuration parameters which are responsive for how the node will work. The config.json contains needed information for a node to run on the network, how to communicate with peers, and how to reach consensus. Although some options are configurable. In general validators have opted to use the default config.json provided.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain. The genesis.json file is a snapshot of the network state at a point in time. In contacts accounts, balances, active validators, and other information about the network. On MainNet, it is the state of what the network looked like at launch. On testnet or guildnet, it can include a more intermediate state if the network was hard-forked at one point.
-- `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
+- `node_key.json` -  The node's network key. Peers use it to identify the node. It is not the validator key.
+- `validator_key.json` - The key and account that the node validates with. Its `account_id` must be your staking pool account. `neard init` creates it only when you pass `--account-id`.
 - `data/` -  A folder in which a NEAR node will write it's state.
 
 ### Replace the `config.json`
@@ -474,14 +475,13 @@ source $HOME/.cargo/env
 ```
 git clone https://github.com/nearprotocol/nearcore.git
 ```
-* Set environment to the latest release tag. For the latest release tag, please check here: https://github.com/near/nearcore/releases.  Note: RC tags are for Testnet only.
+* Set environment to the latest release tag. For the latest release tag, please check here: https://github.com/near/nearcore/releases.  Note: RC tags are for Testnet only. The following command reads the latest stable release:
 ```
-export NEAR_RELEASE_VERSION=1.26.1
+export NEAR_RELEASE_VERSION=$(curl -s https://api.github.com/repos/near/nearcore/releases/latest | grep '"tag_name"' | cut -d '"' -f 4)
 ```
 ```
 cd nearcore
-git checkout $NEAR_RELEASE_VERSION
-make release
+git checkout "tags/${NEAR_RELEASE_VERSION:?}" && make release
 ```
 * Install Nodejs and NPM
 ```
@@ -657,8 +657,8 @@ In order to become a validator and enter the validator set, a minimum set of suc
 * The account_id must be set to the staking pool contract id
 * There must be enough delegations to meet the minimum seat price. See the seat price [here](https://explorer.testnet.near.org/nodes/validators).
 * A proposal must be submitted by pinging the contract
-* Once a proposal is accepted a validator must wait 2-3 epoch to enter the validator set
-* Once in the validator set the validator must produce great than 90% of assigned blocks
+* A proposal sent during an epoch is used to select the validators of the epoch after the next one. If it is accepted, the validator joins at the start of that epoch. So it waits between one and two epochs.
+* Once in the validator set, the validator must produce at least 80% of its expected blocks and at least 80% of its expected chunks. A validator that only validates chunks must send at least 70% of its expected chunk endorsements. A validator below these thresholds is kicked out of the validator set.
 
 Check running status of validator node. If “Validator” is showing up, your pool is selected in the current validators list.
 
@@ -785,7 +785,7 @@ near call {pool_id}.{staking_pool_factory} update_staking_key '{"stake_public_ke
 
 ### Proposals
 
-In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. Meaning if you send a proposal now, if approved, you would get the seat in 3 epochs. You should submit a proposal every epoch to ensure your seat. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
+In order to get a validator seat you must first submit a proposal with an appropriate amount of stake. Proposals are sent for epoch +2. If you send a proposal now and it is accepted, you get the seat at the start of the epoch after the next one. A validator that is already in the validator set stays a candidate in later epochs without a new proposal. It must not be kicked out, and its stake must stay above the seat price. To send a proposal we use the ping command. A proposal is also sent if a stake or unstake command is sent to the staking pool contract.
 
 To note, a ping also updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current on the pool contract. You could set up a ping using a cron job.
 
@@ -1349,19 +1349,33 @@ You can check that your validator proposal was accepted by checking
 near proposals
 ```
 #### Not producing blocks
-Your validator is producing zero blocks in near validators current.
+Your validator shows zero produced blocks in `near validators current`, while its expected blocks are above zero.
 
-This is due the staking pool contract and the validator_key.json have different public keys or the account_id in validator_key.json not being the staking pool contract id.
+On mainnet, only validators that hold one of the 100 block producer seats are expected to produce blocks. Other validators only validate chunks. For them, zero blocks and zero chunks is normal. Check `num_produced_endorsements` against `num_expected_endorsements` in the `validators` RPC response instead.
 
-**Get the staking pool key**
+`validator_key.json` must contain your staking pool id as `account_id`. It must also contain the public key that is registered for your pool in the current epoch. If the `account_id` is in the current validator set but the public key differs from the registered key, neard stops with an error that starts with `validator key mismatch for <account>`. The node checks this once per epoch after it is synced. If the `account_id` is not in the current validator set, the node does not act as a validator and produces nothing.
+
+Two keys matter here. The key that is active for your pool in the current epoch must be in `validator_key.json`. The key stored in the staking pool contract is the key that the pool uses in its next stake proposal. The two keys are normally the same.
+
+**Get the key that is active in the current epoch**
 ```
-near view <POOL_ID> get_staking_key '{}'
+curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params": [null]}' -H 'Content-Type: application/json' http://localhost:3030/ | jq -r '.result.current_validators[] | select(.account_id == "<POOL_ID>") | .public_key'
 ```
+If neard has stopped, send this request to any synced RPC node instead of `localhost`.
+
 **Get the key in validator_key.json**
 ```
 cat ~/.near/<network>/validator_key.json | grep public_key
 ```
-> Note: Both keys must match. If they do not update the staking pool key and wait 2 epochs before pinging.
+> Note: These two keys must match. Otherwise the node stops with the error above.
+
+**Get the key stored in the staking pool contract**
+```
+near view <POOL_ID> get_staking_key '{}'
+```
+> Note: When you call `update_staking_key`, the contract stores the new key at once. The new key becomes active two epochs later. During those two epochs, the contract key and the active key differ, which is expected. Keep the active key in `validator_key.json` until the new key becomes active.
+
+To rotate the key on purpose, follow the steps in [Can Keys be Changed?](/intro/keys#can-keys-be-changed). The command that registers the new key in the pool is:
 
 **Update staking pool key**
 ```
@@ -1377,7 +1391,7 @@ vi ~/.near/<network>/validator_key.json
 > Note: if it does now match the staking pool id upate it and restart your node.
 
 #### Not producing enough blocks or chunks
-Missing blocks or chunks is the primary reason a validator is kicked from the validator pool. You can check the number of blocks expected/missed via NEAR-Cli and RPC.
+A validator is kicked out of the validator set when it produces too few blocks, chunks, or chunk endorsements. On mainnet, block and chunk producers are kicked out below 80% of their expected blocks or chunks. Validators with no expected blocks and no expected chunks (chunk validators only) are kicked out below 70% of their expected chunk endorsements, with reason `NotEnoughChunkEndorsements`. You can check the expected and produced numbers via NEAR-Cli and RPC. For endorsements, compare `num_produced_endorsements` with `num_expected_endorsements`.
 
 **NEAR-CLI**
 
@@ -1399,7 +1413,7 @@ Be sure that you are using the correct environment each time you run NEAR-Cli
 export NEAR_ENV=<mainnet,testnet,guildnet>
 ```
 #### Incompatible CPU without AVX support
-One cause of missed blocks and nodes falling out of sync is running on a CPU without AVX support. AVX support is required, but not always used depending on the complexity of the transaction.
+neard needs the CPU instructions listed in the CPU check under Prerequisites in Lesson 3. On a CPU without them, neard crashes with an illegal instruction error.
 
 #### Not running on SSD drives
 NEAR Requires a 1 second block time and HDD disks are just not fast enough. SDD drives are required and SSD NVME drives are recommended.
