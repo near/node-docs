@@ -1446,7 +1446,7 @@ Be sure that you are using the correct environment each time you run NEAR-Cli
 export NEAR_ENV=<mainnet,testnet,guildnet>
 ```
 #### Incompatible CPU without AVX support
-neard needs the CPU instructions listed in the CPU check under Prerequisites at the top of this page. On a CPU without them, neard crashes with an illegal instruction error.
+neard needs the CPU instructions listed in the CPU check under Prerequisites in Lesson 3. On a CPU without them, neard crashes with an illegal instruction error.
 
 #### Not running on SSD drives
 NEAR Requires a 1 second block time and HDD disks are just not fast enough. SDD drives are required and SSD NVME drives are recommended.
