@@ -33,7 +33,7 @@ Watch the `near_resharding_status` metric. It has one series per parent shard:
 | `4` | Resharding trie state |
 | `5` | Done |
 | `-1` | Failed |
-| `-2` | Cancelled |
+| `-2` | Canceled |
 
 The metrics `near_resharding_start_timestamp_seconds` and `near_resharding_total_duration_seconds` show when a split started and how long it took.
 
