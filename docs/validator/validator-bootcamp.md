@@ -279,21 +279,7 @@ wget -O ~/.near/config.json https://s3-us-west-1.amazonaws.com/build.nearprotoco
 
 ### Add boot nodes
 
-The node needs boot nodes to find its first peers. The reference validator `config.json` has no boot nodes. The following commands ask an RPC node for the validators it is connected to. Then they write the list to `config.json`. They need `jq`. Replace `<network>` with `testnet` or `mainnet`:
-
-```
-BOOT_NODES=$(curl -s -X POST https://rpc.<network>.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-echo "${BOOT_NODES:?}"
-jq --arg boot_nodes "${BOOT_NODES:?}" '.network.boot_nodes = $boot_nodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.tmp ~/.near/config.json
-```
+The reference validator `config.json` has no boot nodes. Follow [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration), choosing `CHAIN_ID=testnet` or `CHAIN_ID=mainnet` to match `<network>`. Use `CONFIG_PATH=~/.near/config.json` for this setup.
 
 ### Sync with the network
 
@@ -383,22 +369,7 @@ wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deplo
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/genesis.json
 ```
 
-* Add boot nodes to the config. The node needs boot nodes to find its first peers. The reference validator `config.json` has none. The `BOOT_NODES` command asks a testnet RPC node for the validators it is connected to. It needs `jq`. The node syncs with [Epoch Sync](/intro/node-epoch-sync), so it does not need a snapshot.
-
-```
-cd ~/.near/testnet
-BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-echo "${BOOT_NODES:?}"
-jq --arg boot_nodes "${BOOT_NODES:?}" '.network.boot_nodes = $boot_nodes' config.json > config.tmp && mv config.tmp config.json
-```
+* Add boot nodes using [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration) with `CHAIN_ID=testnet` and `CONFIG_PATH=~/.near/testnet/config.json`. The node syncs with [Epoch Sync](/intro/node-epoch-sync), so it does not need a snapshot.
 
 * Launch this command so set the Near testnet Environment:
 
@@ -556,24 +527,16 @@ near login
 ![img](/images/5.png)
 
 #### Step 4 – Initialize & Start the Node
-* Download the latest genesis and config files, and add boot nodes to the config. The node needs boot nodes to find its first peers. The reference validator `config.json` has none. The `BOOT_NODES` command asks a mainnet RPC node for the validators it is connected to. It needs `jq`:
+* Download the latest genesis and config files:
 ```
 mkdir ~/.near
 cd ~/.near
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/genesis.json
 wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json
-BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-echo "${BOOT_NODES:?}"
-jq --arg boot_nodes "${BOOT_NODES:?}" '.network.boot_nodes = $boot_nodes' config.json > config.tmp && mv config.tmp config.json
 ```
+
+* Add boot nodes using [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration) with `CHAIN_ID=mainnet` and `CONFIG_PATH=~/.near/config.json`.
+
 * The node syncs with [Epoch Sync](/intro/node-epoch-sync) when it starts with an empty `data` folder, so it does not need a snapshot.
 
 * Initialize NEAR:

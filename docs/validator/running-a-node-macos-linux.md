@@ -70,21 +70,9 @@ running.
 
 Finally, initialize the working directory and start the node.  The
 node needs boot nodes to find its first peers.  The reference RPC
-`config.json` has no boot nodes.  The following commands ask a testnet
-RPC node for the validators it is connected to.  Then they pass the
-list to `neard init`:
+`config.json` has no boot nodes. Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) with `CHAIN_ID=testnet` to set `BOOT_NODES`, then return here and continue in the same shell:
 
 ```bash
-BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-echo "${BOOT_NODES:?}"
 ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config rpc --boot-nodes "${BOOT_NODES:?}"
 ```
 
@@ -94,7 +82,7 @@ Check that `network.boot_nodes` in `config.json` is not empty:
 jq -r '.network.boot_nodes' ~/.near/config.json
 ```
 
-The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync#testnet). Running `neard init` again does not add them, because it does not change an existing `config.json`.
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration). Running `neard init` again does not add them, because it does not change an existing `config.json`.
 
 Then start the node:
 
@@ -130,19 +118,9 @@ Once connected to the instance, follow [the steps listed
 above](#compiling-and-running-a-node-without-docker).
 
 ## Starting a node with epoch sync {#starting-a-node-from-backup}
-A new node syncs with [Epoch Sync](/intro/node-epoch-sync), so it does not need a data backup. It needs boot nodes to find its first peers. The following commands ask an RPC node of your network for the validators it is connected to. Then they pass the list to `neard init`. They need `jq`:
+A new node syncs with [Epoch Sync](/intro/node-epoch-sync), so it does not need a data backup. Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) with `CHAIN_ID` set to your network (`mainnet` or `testnet`). Return here and continue in the same shell, replacing `<chain-id>` with that network:
 
 ```bash
-BOOT_NODES=$(curl -s -X POST https://rpc.<chain-id>.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-echo "${BOOT_NODES:?}"
 ./neard init --chain-id <chain-id> --download-genesis --boot-nodes "${BOOT_NODES:?}"
 ```
 
@@ -152,7 +130,7 @@ Check that `network.boot_nodes` in `config.json` is not empty:
 jq -r '.network.boot_nodes' ~/.near/config.json
 ```
 
-The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync). Running `neard init` again does not add them, because it does not change an existing `config.json`.
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration). Running `neard init` again does not add them, because it does not change an existing `config.json`.
 
 Then start the node with an empty `data` folder:
 

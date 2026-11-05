@@ -126,34 +126,14 @@ For example:
 - `<full_pool_id>` – `xxx.pool.near`, where `xxx` is your pool_id like `panda.pool.near`.
 - `<accountId>` or `accountId` – `xxx.near`, where `xxx` is your account name, for example `validator_near.near`.
 
+Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) for your target network to set `BOOT_NODES`. Return here and run only the matching initialization command in the same shell:
+
 ```sh
-# You can use any RPC provider for this command.
+# MainNet (fetch with CHAIN_ID=mainnet)
+cd ~/nearcore && target/release/neard init --chain-id="mainnet" --account-id=<full_pool_id> --download-genesis --download-config validator --boot-nodes "${BOOT_NODES:?}"
 
-# MainNet
-BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-
-cd ~/nearcore && target/release/neard init --chain-id="mainnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES
-
-# TestNet
-BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-
-cd ~/nearcore && target/release/neard init --chain-id="testnet" --account-id=<full_pool_id> --download-genesis  --download-config validator --boot-nodes $BOOT_NODES
+# TestNet (fetch with CHAIN_ID=testnet)
+cd ~/nearcore && target/release/neard init --chain-id="testnet" --account-id=<full_pool_id> --download-genesis --download-config validator --boot-nodes "${BOOT_NODES:?}"
 ```
 
 ⚠️ Use `--home` argument if you want to change working directory from the default value of ~/.near. 
@@ -248,36 +228,7 @@ Syncing consists of two main steps:
 
 Epoch Sync enables a node to sync from genesis without relying on snapshots.
 Unlike Header Sync, it requires downloading only a small subset of past block headers rather than all of them.
-Epoch sync runs automatically when you start a node with an empty data folder. You can refresh the boot nodes list first, so that the node finds peers. Then start the `neard` service. Here is the command:
-
-```
-# MainNet 
-BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-
-jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
-
-# TestNet
-BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-
-jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
-```
-after that, just restart the node (sudo systemctl restart neard).
+Epoch sync runs automatically when you start a node with an empty data folder. To help it find peers, [refresh the boot nodes in your existing config](/intro/boot-nodes#update-an-existing-configuration), choosing `CHAIN_ID=mainnet` or `CHAIN_ID=testnet` to match your node. Then start or restart the `neard` service.
 
 Wait for approximately 3 hours and you are done, follow the next step to become an active validator!
 
@@ -571,19 +522,7 @@ near-validator staking view-stake <full_pool_id> network-config mainnet now
 ### Troubleshooting
 
 #### No Peers
-If you have no peers, run this script:
-```  
-BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-jq --arg newBootNodes $BOOT_NODES '.network.boot_nodes = $newBootNodes' ~/.near/config.json > ~/.near/config.tmp && mv ~/.near/config.json ~/.near/config.json.backup && mv ~/.near/config.tmp ~/.near/config.json
-````
+If you have no peers, [refresh the boot nodes in your existing config](/intro/boot-nodes#update-an-existing-configuration) for your node's network, then restart `neard`.
 
 #### Weird Error When Running a Command
 

@@ -91,20 +91,7 @@ The binary path is `target/release/neard`
 
 ### 3. Initialize working directory {#3-initialize-working-directory}
 
-The NEAR node requires a working directory with a couple of configuration files. It also needs boot nodes to find its first peers. The reference RPC `config.json` has no boot nodes, so you need to pass them to `neard init`. The following command asks a testnet RPC node for the validators it is connected to. You can use any RPC provider for this command:
-
-```bash
-$ BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-$ echo "${BOOT_NODES:?}"
-```
+The NEAR node requires a working directory with a couple of configuration files. It also needs boot nodes to find its first peers. The reference RPC `config.json` has no boot nodes, so you need to pass them to `neard init`. Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) with `CHAIN_ID=testnet` to set `BOOT_NODES`. Then return here and continue in the same shell.
 
 Then generate the working directory with the reference RPC config and the boot nodes:
 
@@ -137,7 +124,7 @@ Before you start the node, check that `network.boot_nodes` in `config.json` is n
 $ jq -r '.network.boot_nodes' ~/.near/config.json
 ```
 
-The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync#testnet).
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration).
 
 A node that is more than two epochs behind the network syncs using [Epoch Sync](../intro/epoch_sync.md). A new node with an empty `data` folder is always that far behind. Epoch sync downloads only a small set of past block headers instead of all of them. It runs automatically and needs no other config change. Then the node downloads the current state of every shard it tracks from its peers. For an RPC node that tracks all shards, this is the full state of the network.
 
@@ -195,20 +182,7 @@ The binary path is `target/release/neard`
 
 ### 3. Initialize working directory {#3-initialize-working-directory-1}
 
-The NEAR node requires a working directory with a couple of configuration files. It also needs boot nodes to find its first peers. The reference RPC `config.json` has no boot nodes, so you need to pass them to `neard init`. The following command asks a mainnet RPC node for the validators it is connected to. You can use any RPC provider for this command:
-
-```bash
-$ BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-$ echo "${BOOT_NODES:?}"
-```
+The NEAR node requires a working directory with a couple of configuration files. It also needs boot nodes to find its first peers. The reference RPC `config.json` has no boot nodes, so you need to pass them to `neard init`. Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) with `CHAIN_ID=mainnet` to set `BOOT_NODES`. Then return here and continue in the same shell.
 
 Then generate the working directory with the reference RPC config and the boot nodes:
 
@@ -235,7 +209,7 @@ Before you start the node, check that `network.boot_nodes` in `config.json` is n
 $ jq -r '.network.boot_nodes' ~/.near/config.json
 ```
 
-The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync#mainnet).
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration).
 
 A node that is more than two epochs behind the network syncs using [Epoch Sync](../intro/epoch_sync.md). A new node with an empty `data` folder is always that far behind. Epoch sync downloads only a small set of past block headers instead of all of them. It runs automatically and needs no other config change. Then the node downloads the current state of every shard it tracks from its peers. For an RPC node that tracks all shards, this is the full state of the network.
 
