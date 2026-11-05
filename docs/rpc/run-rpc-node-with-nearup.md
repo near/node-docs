@@ -6,7 +6,7 @@ sidebar_position: 3
 description: How to run an RPC Node with nearup
 ---
 
-*We encourage you to set up your node with Neard instead of Nearup as Nearup is not used on Mainnet. Please head to [Run a Node](/rpc/run-rpc-node-without-nearup) for instructions on how to setup a RPC node with Neard.*
+*We encourage you to set up your node with Neard instead of Nearup as Nearup is not used on Mainnet. Please head to [Run a Node](/validator/compile-and-run-a-node) for instructions on how to setup a RPC node with Neard.*
 
 <blockquote class="info">
 <strong>Heads up</strong><br /><br />
