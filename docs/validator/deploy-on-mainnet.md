@@ -58,24 +58,7 @@ full optimization.  The executable is at `./target/release/neard`.
 
 Once the daemon executable is built it’s time to initialize the node.
 
-First, get a list of boot nodes.  The node uses them to find its first
-peers.  The reference validator `config.json` does not include any boot
-nodes, so you need to pass them to `neard init`.  The following command
-asks a mainnet RPC node for the validators it is connected to.  It
-needs `jq`.  You can use any RPC provider for this command:
-
-```bash
-BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-echo "${BOOT_NODES:?}"
-```
+The reference validator `config.json` has no boot nodes. Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) with `CHAIN_ID=mainnet` to set `BOOT_NODES`, then return here and continue in the same shell.
 
 Then initialize the node with the reference validator config and the
 boot nodes:

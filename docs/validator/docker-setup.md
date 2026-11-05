@@ -45,23 +45,16 @@ docker pull nearprotocol/nearcore:testnet
 
 ## Initializing the Node
 
-The node needs boot nodes to find its first peers. The reference `config.json` files have no boot nodes, so you need to pass them to `neard init`. The following commands ask an RPC node of your network for the validators it is connected to. Then they create a directory to store chain data and initialize neard:
+The node needs boot nodes to find its first peers. The reference `config.json` files have no boot nodes, so you need to pass them to `neard init`. Choose your network and node type:
 
 ```bash
 CHAIN_ID=mainnet  # or testnet
 NODE_TYPE=validator  # or rpc
+```
 
-BOOT_NODES=$(curl -s -X POST https://rpc.$CHAIN_ID.near.org -H "Content-Type: application/json" -d '{
-        "jsonrpc": "2.0",
-        "method": "network_info",
-        "params": [],
-        "id": "dontcare"
-      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
-          $list1[] as $active_peer | $list2[] |
-          select(.peer_id == $active_peer.id) |
-          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
-echo "${BOOT_NODES:?}"
+Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) on the host with the same `CHAIN_ID` to set `BOOT_NODES`. Return here and continue in the same shell to create the data directory and initialize neard:
 
+```bash
 mkdir -p ~/.near
 docker run --rm -v $HOME/.near:/root/.near nearprotocol/nearcore:$CHAIN_ID neard init --chain-id $CHAIN_ID --download-genesis --download-config $NODE_TYPE --boot-nodes "${BOOT_NODES:?}"
 ```
@@ -74,7 +67,7 @@ Before you start the node, check that `network.boot_nodes` in `config.json` is n
 jq -r '.network.boot_nodes' ~/.near/config.json
 ```
 
-The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync). Running `neard init` again does not add them, because it does not change an existing `config.json`.
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Update an existing configuration](/intro/boot-nodes#update-an-existing-configuration). Running `neard init` again does not add them, because it does not change an existing `config.json`.
 
 ## Running the Node
 
