@@ -73,12 +73,7 @@ source ~/.bashrc
 
 During the building time, let's make a wallet.
 
-You can use any wallet supporting Near Protocol like Meteor, MyNearWallet or SenderWallet.
-
-
-- [MeteorWallet](https://meteorwallet.app/)
-- [Intear Wallet](https://wallet.intear.tech/)
-- [MyNearWallet](https://app.mynearwallet.com/)
+You can use any [wallet supporting Near Protocol](https://wallet.near.org) like [MeteorWallet](https://meteorwallet.app/) or [Intear Wallet](https://wallet.intear.tech/).
 
 ![wallet_creation](https://github.com/user-attachments/assets/da2685a4-11c5-455f-a5eb-9fff4d28c934)
 
