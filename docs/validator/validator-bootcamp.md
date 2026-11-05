@@ -1278,7 +1278,7 @@ In this lesson you will learn about:
 NEAR uses cryptographic keys to secure accounts and validators, each key has a public and matching private key pair.
 
 Find more detailed information about NEAR and keys:
-https://docs.near.org/concepts/basics/account#access-keys
+https://docs.near.org/protocol/accounts-contracts/access-keys
 
 #### Validator Keys:
 To manage and sign transactions a node_key and validator_key.

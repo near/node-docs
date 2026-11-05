@@ -8,7 +8,7 @@ description: NEAR RPC Node Hardware Requirements
 
 This page covers the minimum and recommended hardware requirements for engaging with the NEAR platform as an RPC node.
 
-For testing your RPC once the node is fully sync'd, see [this example RPC request.](https://docs.near.org/api/rpc/network#node-status)
+For testing your RPC once the node is fully sync'd, see [this example RPC request.](https://docs.near.org/api-reference/post-status)
 
 The `gc_num_epochs_to_keep` config parameter controls how many epochs are stored on your RPC node.
 The default is 5, with a minimum of 3. Increasing it requires more SSD storage and keeps data for a longer period.

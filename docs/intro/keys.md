@@ -66,7 +66,7 @@ Instead of steps 4 and 5, you can swap the key without a restart. Replace `valid
 <blockquote class="info">
 <strong>Did you know?</strong><br /><br />
 
-As a brief word on the NEAR runtime, the subsystem that manages state transitions on the blockchain (ie. keeping things moving from one block to the next), it's worth understanding that the movement of the system happens in stages, called epochs, during which the group of validators does not change. The [Nightshade whitepaper](https://near.org/papers/nightshade) introduces epochs this way: "the maintenance of the network is done in epochs, where an epoch is a period of time on the order of days." and there's much more detail in the paper.
+As a brief word on the NEAR runtime, the subsystem that manages state transitions on the blockchain (ie. keeping things moving from one block to the next), it's worth understanding that the movement of the system happens in stages, called epochs, during which the group of validators does not change. The [Nightshade whitepaper](https://github.com/near/docs/blob/master/papers/Nightshade.pdf) introduces epochs this way: "the maintenance of the network is done in epochs, where an epoch is a period of time on the order of days." and there's much more detail in the paper.
 
 At the beginning of each epoch, some computation produces a list of validators for the very next epoch (not the one that just started). The input to this computation includes all validators that have "raised their hand" to be a validator by staking some amount over the system's staking threshold. The output of this computation is a list of the validators for the very next epoch.
 

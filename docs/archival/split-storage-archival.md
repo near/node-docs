@@ -238,7 +238,7 @@ Public S3 RPC snapshots are no longer available. Use your own RPC node for this 
 
 Note: We prepared an optimistic migration script that we have used several times to migrate our nodes.
 It follows a second scenario of using manual migration + S3 snapshots.
-https://github.com/near/nearcore/blob/master/scripts/split_storage_migration.sh  
+https://github.com/near/nearcore/blob/87c1fc37edc6fe4d21e8a21f9c97cb382c572435/scripts/split_storage_migration.sh  
 This script relies on our internal infrastructure, you can find a list of assumptions commented at the top of the file.
 We do not recommend using this script as is, but it is a good reference point.
 
