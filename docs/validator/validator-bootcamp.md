@@ -393,46 +393,13 @@ echo 'export NEAR_ENV=testnet' >> ~/.bashrc
 ####  Check the validator_key.json
 * Run the following command:
 
-For Guildnet
-```
-cat ~/.near/guildnet/validator_key.json
-```
-
-For Testnet
 ```
 cat ~/.near/testnet/validator_key.json
 ```
 
+> Note: If the file exists, keep it. Its `account_id` must be your full staking pool account, such as `xx.pool.f863973.m0`. Use its `public_key` as the `stake_public_key` when you create the staking pool.
 
 > Note: If a validator_key.json is not present, follow these steps to create one
-
-Create a validator_key.json for Guildnet
-
-*   Generate the Key file:
-
-```
-near generate-key <pool_id>
-```
-* Copy the file generated to Guildnet folder:
-
-Make sure to replace YOUR_WALLET by your accountId
-```
-cp ~/.near-credentials/guildnet/<YOUR_WALLET>.json ~/.near/guildnet/validator_key.json
-```
-* Edit “account_id” => `xx.stake.guildnet`, where xx is your PoolName
-
-* Change `private_key` to `secret_key`
-
-> Note: The account_id must match the staking pool contract name or you will not be able to sign blocks.\
-
-File content must be in the following pattern:
-```
-{
-  "account_id": "xx.stake.guildnet",
-  "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
-  "secret_key": "ed25519:****"
-}
-```
 
 Create a `validator_key.json` for Testnet
 
@@ -441,10 +408,9 @@ Create a `validator_key.json` for Testnet
 ```
 near generate-key <pool_id>
 ```
-* Copy the file generated to Testnet folder:
-Make sure to replace YOUR_WALLET by your accountId
+* Copy the generated file to `~/.near/testnet/validator_key.json`. With `NEAR_ENV=testnet`, `near generate-key` saves the key in `~/.near-credentials/testnet/<pool_id>.json`.
 ```
-cp ~/.near-credentials/testnet/YOUR_WALLET.json ~/.near/testnet/validator_key.json
+cp ~/.near-credentials/testnet/<pool_id>.json ~/.near/testnet/validator_key.json
 ```
 * Edit “account_id” => xx.pool.f863973.m0, where xx is your PoolName
 * Change `private_key` to `secret_key`
@@ -454,11 +420,12 @@ cp ~/.near-credentials/testnet/YOUR_WALLET.json ~/.near/testnet/validator_key.js
 File content must be in the following pattern:
 ```
 {
-  "account_id": "xx.stake.guildnet",
+  "account_id": "xx.pool.f863973.m0",
   "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
   "secret_key": "ed25519:****"
 }
 ```
+* Use the `public_key` of this file as the `stake_public_key` when you create the staking pool.
 
 
 #### Step 8 – Check all files were generated
@@ -578,16 +545,26 @@ wget -c https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deplo
 
 * Initialize NEAR:
 ```
-target/release/neard init --chain-id="mainnet" --account-id=<staking pool id>
+target/release/neard init --chain-id="mainnet" --account-id=<pool_id>.poolv1.near
 ```
-##### Create `validator_key.json`
+##### Check `validator_key.json`
+`neard init --account-id=<pool_id>.poolv1.near` in the previous step created `~/.near/validator_key.json` with a new key. This is the file that neard reads. Keep this key, and show its public key:
+```
+grep public_key ~/.near/validator_key.json
+```
+> Note: The `account_id` in this file must be your full staking pool account, such as `xx.poolv1.near`. `neard init` writes the value of `--account-id` there. If you passed only the pool name, edit `account_id` before you start the node.
+
+> Note: Use this `public_key` as the `stake_public_key` when you create the staking pool. If the two keys differ, the node stops with a "validator key mismatch" error once the pool is in the validator set.
+
+##### Optional: use a different key
+Follow these steps only if you want to use a different key than the one that `neard init` created. They replace `~/.near/validator_key.json`.
 * Generate the Key file:
 ```
 near generate-key <pool_id>
 ```
-* Copy the file generated to Mainnet folder.Make sure to replace YOUR_WALLET by your accountId
+* Copy the generated file to `~/.near/validator_key.json`. With `NEAR_ENV=mainnet`, `near generate-key` saves the key in `~/.near-credentials/mainnet/<pool_id>.json`.
 ```
-cp ~/.near-credentials/YOUR_WALLET.json ~/.near/mainnet/validator_key.json
+cp ~/.near-credentials/mainnet/<pool_id>.json ~/.near/validator_key.json
 ```
 * Edit “account_id” => xx.poolv1.near, where xx is your PoolName
 * Change “private_key” to “secret_key”
@@ -598,19 +575,9 @@ cp ~/.near-credentials/YOUR_WALLET.json ~/.near/mainnet/validator_key.json
 >   "public_key": "ed25519:HeaBJ3xLgvZacQWmEctTeUqyfSU4SDEnEwckWxd92W2G",
 >   "secret_key": "ed25519:****"
 > }
-```
-near generate-key <your_accountId>
-vi ~/.near/{your_accountId}.json
-```
-Rename "private_key" to "secret_key", then move the file to ~/.near.
+* Use the `public_key` of this file as the `stake_public_key` when you create the staking pool.
 
-```
-mv the file to ~/.near
-```
-Update "account_id" to be the staking_pool_id
-
-> Note: The account_id must match the staking pool contract name or you will not be able to sign blocks.
-
+##### Start the node
 * Start the Node
 ```
 target/release/neard run
@@ -1328,7 +1295,7 @@ Used to communicate with other peers and is primarily responsible for syncing th
 ```
 Common Issue:
 
-In a failure situation, both the node_key and validator_key must be copied over
+In a failure situation, copy the validator_key to the backup node. You do not need to copy the node_key. See LESSON 7 - NODE FAILOVER.
 
 ##### Validator Key:
 
@@ -1459,24 +1426,26 @@ It is an unspoken requirement to maintain a secondary node in a different locati
 
 You will need to set up a standard node (without a validator key) and a different node_key. The node will be set up using the normal process see Setup a Validator Node.
 
-Note: The backup node must track the same shard in the config.json as the primary node, to be used as a failover node. Please confirm the backp node has the the same `config.json` as the primary node.
+The [Failover/backup node instruction](/validator/failover-node-instruction) page describes two ways to set up the backup node and fail over. The steps below follow its first option. In that option, the backup node restarts to take over. That page also gives the `store.load_mem_tries_for_tracked_shards` setting for each step.
+
+While the backup node is on standby, it tracks all shards without memtries. Set this in its `config.json`:
 
 ```
-"tracked_shards":[0],
+"tracked_shards_config": "AllShards",
 ```
+
+and in its `store` section:
+
+```
+"load_mem_tries_for_tracked_shards": false,
+```
+
+Use `tracked_shards_config`, not the deprecated `tracked_shards` key. A `config.json` written by `neard init` already has `tracked_shards_config`. The node does not start when both keys are set.
 
 ### Failing Over
-To failover you must copy the node_key.json and the validatory_key.json to the secondary node and restart.
-```
-1. Copy over node_key.json
-2. Copy over validator_key.json
-4. Stop the node primary node
-3. Stop the secondary node
-4. Restart the secondary node
-```
-When failing back over to the primary simply move the secondary node_key.json into place and restart the services in reverse order.
+1. Copy `validator_key.json` to the backup node.
+2. In the backup node's `config.json`, set `tracked_shards_config` to `"NoShards"` and `store.load_mem_tries_for_tracked_shards` to `true`. On mainnet and testnet, a node with the key of a current validator stops at startup if it tracks all shards.
+3. Stop the primary node.
+4. Restart the backup node.
 
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>
+You do not need to copy `node_key.json`. To fail back to the primary node, stop the backup node and remove `validator_key.json` from it. Then start the primary node. The failover/backup node instruction page notes that a node that has run as a validator and tracked a single shard cannot go back to tracking all shards. To make it a standby again, resync its data.
