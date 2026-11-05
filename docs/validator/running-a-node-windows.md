@@ -74,14 +74,14 @@ This documentation may require additional edits. Please keep this in mind while 
     Great! All set to get the node up and running!
 11. Clone the github nearcore
 
-    First we need to check a version which is currently working in `testnet`:
+    First we need to check the version that `testnet` currently runs:
     ```sh
-    curl -s https://rpc.testnet.near.org/status | jq .version
+    curl -s https://rpc.testnet.near.org/status | jq -r .version.version
     ```
-    You'll get something like this: "1.13.0-rc.2". "1.13.0" is a branch which we need to clone to build our node for `testnet`.
+    This prints the version that testnet runs. Testnet usually runs a release candidate, whose version ends in `-rc.` and a number. Each version is a git tag in the nearcore repository. Clone that tag, replacing `<version>` with the value you got:
 
     ```sh
-    git clone --branch 1.13.0 https://github.com/near/nearcore.git
+    git clone --branch <version> https://github.com/near/nearcore.git
     ```
 12. This created a nearcore directory, change into that one and build a node:
     ```sh
