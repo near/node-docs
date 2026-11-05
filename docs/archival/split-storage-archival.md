@@ -28,7 +28,7 @@ Split storage is disabled by default, and can be enabled with a config change an
 | Manual migration + S3 RPC snapshots                 | No need for extra node. Cold storage is initialized in a trustless way. |  Requires trust in Pagoda RPC snapshots. The node will be out of sync at the end of the migration and will need to block sync several epochs. Migration takes days and you cannot restart your node during that time. |
 | Manual migration + your own node                    | Trustless. Little to no downtime | Requires an extra RPC node with bigger storage. Migration takes days and you cannot restart your node during that time. |
 
-The first two options use public S3 snapshots, which are no longer available. Today you can [restore from an archival snapshot](#restore-from-snapshot) that FastNEAR provides on request, or do a manual migration with your own RPC node.
+The first two options use public S3 snapshots, which are no longer available. For current nodes, [restore from an archival snapshot](#restore-from-snapshot) that FastNEAR provides on request. The manual migration instructions below describe legacy nearcore behavior.
 
 ## Important config fields {#config}
 ```json
@@ -232,15 +232,11 @@ do
 done
 ```
 
-## Doing the migration manually (based on an S3 RPC snapshot or your own node) {#manual migration}
+## Historical: Doing the migration manually (based on an S3 RPC snapshot or your own node) {#manual migration}
 
-Public S3 RPC snapshots are no longer available. Use your own RPC node for this migration.
+These instructions are kept for reference. Nearcore [removed the legacy initial migration flow and script](https://github.com/near/nearcore/pull/15484), so these steps do not apply to current releases. Public S3 RPC snapshots are also no longer available. For current nodes, see [Restore from an archival snapshot](#restore-from-snapshot).
 
-Note: We prepared an optimistic migration script that we have used several times to migrate our nodes.
-It follows a second scenario of using manual migration + S3 snapshots.
-https://github.com/near/nearcore/blob/master/scripts/split_storage_migration.sh  
-This script relies on our internal infrastructure, you can find a list of assumptions commented at the top of the file.
-We do not recommend using this script as is, but it is a good reference point.
+The [historical migration script](https://github.com/near/nearcore/blob/87c1fc37edc6fe4d21e8a21f9c97cb382c572435/scripts/split_storage_migration.sh) is preserved at the revision before its removal. It used manual migration with S3 snapshots and relied on internal infrastructure; its assumptions are listed at the top of the file. It is a historical reference, not a script to run on current nodes.
 
 To perform a manual migration you first need to decide whether you can afford the node being out of sync.
 If not, you should set up a second non-archival (rpc) node and increase its `gc_num_epochs_to_keep` to 100 (this is just an example of a ridiculously large number).
