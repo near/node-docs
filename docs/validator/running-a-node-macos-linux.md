@@ -25,14 +25,14 @@ As a prerequisite, [Rust](https://www.rust-lang.org/) needs to be installed on y
 For Mac OS, make sure you have developer tools installed and then use `brew` to install extra tools:
 
 ```text
-brew install cmake protobuf clang llvm
+brew install cmake protobuf clang llvm jq
 ```
 
 For Linux, install these dependencies:
 
 ```text
 sudo apt update
-sudo apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python docker.io protobuf-compiler libssl-dev pkg-config clang llvm
+sudo apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python docker.io protobuf-compiler libssl-dev pkg-config clang llvm jq
 ```
 
 Then clone the repo:
@@ -68,16 +68,44 @@ If your machine is behind a firewall or NAT, make sure port 24567 is
 open and forwarded to the machine where the node is going to be
 running.
 
-Finally, initialize the working directory and start the node:
+Finally, initialize the working directory and start the node.  The
+node needs boot nodes to find its first peers.  The reference RPC
+`config.json` has no boot nodes.  The following commands ask a testnet
+RPC node for the validators it is connected to.  Then they pass the
+list to `neard init`:
 
 ```bash
-./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config rpc
+BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+echo "${BOOT_NODES:?}"
+./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config rpc --boot-nodes "${BOOT_NODES:?}"
+```
+
+Check that `network.boot_nodes` in `config.json` is not empty:
+
+```bash
+jq -r '.network.boot_nodes' ~/.near/config.json
+```
+
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync#testnet). Running `neard init` again does not add them, because it does not change an existing `config.json`.
+
+Then start the node:
+
+```bash
 ./target/release/neard --home ~/.near run
 ```
 
-If you want to run `localnet` instead of `testnet`, then replace
-`testnet` with `localnet` in the command above.  (If you're running
-`localnet` you don't need to open port 24567).
+If you want to run `localnet` instead of `testnet`, you do not need
+boot nodes.  Run `./target/release/neard --home ~/.near init --chain-id localnet`
+instead, then start the node.  (If you're running `localnet` you don't
+need to open port 24567).
 
 For validation, please follow the [Validator Bootcamp](/validator/validator-bootcamp).
 

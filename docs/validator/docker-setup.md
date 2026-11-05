@@ -12,6 +12,7 @@ This guide explains how to run a NEAR node using the official `nearprotocol/near
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) installed and running
+- `curl` and `jq` on the host, to get the boot nodes
 
 ## Pulling the Image
 
@@ -44,19 +45,36 @@ docker pull nearprotocol/nearcore:testnet
 
 ## Initializing the Node
 
-Create a directory to store chain data and initialize neard:
+The node needs boot nodes to find its first peers. The reference `config.json` files have no boot nodes, so you need to pass them to `neard init`. The following commands ask an RPC node of your network for the validators it is connected to. Then they create a directory to store chain data and initialize neard:
 
 ```bash
 CHAIN_ID=mainnet  # or testnet
 NODE_TYPE=validator  # or rpc
 
+BOOT_NODES=$(curl -s -X POST https://rpc.$CHAIN_ID.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+echo "${BOOT_NODES:?}"
+
 mkdir -p ~/.near
-docker run --rm -v $HOME/.near:/root/.near nearprotocol/nearcore:$CHAIN_ID neard init --chain-id $CHAIN_ID --download-genesis --download-config $NODE_TYPE
+docker run --rm -v $HOME/.near:/root/.near nearprotocol/nearcore:$CHAIN_ID neard init --chain-id $CHAIN_ID --download-genesis --download-config $NODE_TYPE --boot-nodes "${BOOT_NODES:?}"
 ```
 
 This downloads the genesis and config files and sets up the data directory.
 
-You can specify trusted boot nodes during initialization by passing the `--boot-nodes` flag. See the [Epoch Sync](/intro/node-epoch-sync) guide for instructions on fetching the latest boot nodes for your network.
+Before you start the node, check that `network.boot_nodes` in `config.json` is not empty:
+
+```bash
+jq -r '.network.boot_nodes' ~/.near/config.json
+```
+
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync). Running `neard init` again does not add them, because it does not change an existing `config.json`.
 
 ## Running the Node
 

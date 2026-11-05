@@ -184,10 +184,25 @@ The binary path is `target/release/neard`
 
 ### 3. Initialize working directory {#initialize-working-directory-1}
 
-The NEAR node requires a working directory with a couple of configuration files. Generate the initial required working directory by running:
+The NEAR node requires a working directory with a couple of configuration files. It also needs boot nodes to find its first peers. The reference validator `config.json` has no boot nodes, so you need to pass them to `neard init`. The following command asks a testnet RPC node for the validators it is connected to. It needs `jq`. You can use any RPC provider for this command:
 
 ```bash
-$ ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config validator
+$ BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+$ echo "${BOOT_NODES:?}"
+```
+
+Then generate the working directory with the reference validator config and the boot nodes:
+
+```bash
+$ ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config validator --boot-nodes "${BOOT_NODES:?}"
 ```
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
@@ -206,13 +221,21 @@ This command will create the required directory structure and will generate `con
 We have created basic configuration files for different purposes.
 The default file works well for any use case on localnet.
 
-For testnet, the default file should be replaced with one of the following, depending on your requirements:
+For testnet, step 3 already downloaded the validator config. To run another type of node, replace `config.json` with one of the following files. A new file has no boot nodes, so add them again before you start the node:
 
 1. [Regular RPC Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/rpc/config.json) stores recent info for all the shards, and can serve RPC queries for the last N epochs (N=5 by default).
 2. [Archival RPC Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/archival/config.json) stores all the info starting for genesis, can serve RPC queries for the entire history. Requires significant storage.
 3. [Validator Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/testnet/validator/config.json) is designed for the validators. Heavily optimized, does not store the full state, and cannot serve RPC queries.
 
 ### 4. Sync to the chain tip {#epoch-sync}
+
+Before you start the node, check that `network.boot_nodes` in `config.json` is not empty. If you replaced `config.json` in step 3.1, the new file has no boot nodes.
+
+```bash
+$ jq -r '.network.boot_nodes' ~/.near/config.json
+```
+
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync#testnet). Running `neard init` again does not add them, because it does not change an existing `config.json`.
 
 The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
 
@@ -416,10 +439,25 @@ The binary path is `target/release/neard`
 
 ### 3. Initialize working directory {#initialize-working-directory-2}
 
-In order to work NEAR node requires to have working directory and a couple of configuration files. Generate the initial required working directory by running:
+In order to work NEAR node requires to have working directory and a couple of configuration files. It also needs boot nodes to find its first peers. The reference validator `config.json` has no boot nodes, so you need to pass them to `neard init`. The following command asks a mainnet RPC node for the validators it is connected to. It needs `jq`. You can use any RPC provider for this command:
 
 ```bash
-$ ./target/release/neard --home ~/.near init --chain-id mainnet --download-config validator
+$ BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+$ echo "${BOOT_NODES:?}"
+```
+
+Then generate the working directory with the reference validator config and the boot nodes:
+
+```bash
+$ ./target/release/neard --home ~/.near init --chain-id mainnet --download-config validator --boot-nodes "${BOOT_NODES:?}"
 ```
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
@@ -435,13 +473,21 @@ This command will create the required directory structure by generating a `confi
 We have created basic configuration files for different purposes.
 The default file works well for any use case on localnet.
 
-For mainnet, the default file should be replaced with one of the following, depending on your requirements:
+For mainnet, step 3 already downloaded the validator config. To run another type of node, replace `config.json` with one of the following files. A new file has no boot nodes, so add them again before you start the node:
 
 1. [Regular RPC Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/rpc/config.json) stores recent info for all the shards, and can serve RPC queries for the last N epochs (N=5 by default).
 2. [Archival RPC Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/archival/config.json) stores all the info starting for genesis, can serve RPC queries for the entire history. Requires significant storage.
 3. [Validator Node](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json) is designed for the validators. Heavily optimized, does not store the full state, and cannot serve RPC queries.
 
 ### 4. Sync to the chain tip {#epoch-sync-1}
+
+Before you start the node, check that `network.boot_nodes` in `config.json` is not empty. If you replaced `config.json` in step 3.1, the new file has no boot nodes.
+
+```bash
+$ jq -r '.network.boot_nodes' ~/.near/config.json
+```
+
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync#mainnet). Running `neard init` again does not add them, because it does not change an existing `config.json`.
 
 The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
 

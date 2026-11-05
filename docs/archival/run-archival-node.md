@@ -92,18 +92,38 @@ The binary path is `target/release/neard`
 
 ### 3. Initialize working directory {#3-initialize-working-directory}
 
-The NEAR node requires a working directory with a couple of configuration files. Generate the initial required working directory by running:
+The NEAR node requires a working directory with a couple of configuration files. It also needs boot nodes to find its first peers. The reference archival `config.json` has no boot nodes, so you need to pass them to `neard init`. The following command asks a testnet RPC node for the validators it is connected to. It needs `jq`. You can use any RPC provider for this command:
 
 ```bash
-$ ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config archival
+$ BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+$ echo "${BOOT_NODES:?}"
 ```
 
-> You can specify trusted boot nodes that you'd like to use by passing the `--boot-nodes` flag during `init`.
-To find a set of active boot nodes, follow these instructions for [testnet](/intro/node-epoch-sync#testnet).
+Then generate the working directory with the reference archival config and the boot nodes:
+
+```bash
+$ ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config archival --boot-nodes "${BOOT_NODES:?}"
+```
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
-This command will create the required directory structure and will generate `config.json`, `node_key.json`, and `genesis.json` for `testnet` network.
+Check that `network.boot_nodes` in `config.json` is not empty:
+
+```bash
+$ jq -r '.network.boot_nodes' ~/.near/config.json
+```
+
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync#testnet). Running `neard init` again does not add them, because it does not change an existing `config.json`.
+
+`neard init` creates the required directory structure and generates `config.json`, `node_key.json`, and `genesis.json` for the `testnet` network.
 - `config.json` - Configuration parameters which are responsive for how the node will work. This file should contain the following fields critical for archival nodes:
   - `"archive": true` - to save the data for all blocks to storage.
   - `cold_store` - the cold database that holds the old data. See [Run a Split Storage Archival](/archival/split-storage-archival) for its settings.
@@ -179,18 +199,38 @@ The binary path is `target/release/neard`
 
 ### 3. Initialize working directory {#3-initialize-working-directory-1}
 
-The NEAR node requires a working directory with a couple of configuration files. Generate the initial required working directory by running:
+The NEAR node requires a working directory with a couple of configuration files. It also needs boot nodes to find its first peers. The reference archival `config.json` has no boot nodes, so you need to pass them to `neard init`. The following command asks a mainnet RPC node for the validators it is connected to. It needs `jq`. You can use any RPC provider for this command:
 
 ```bash
-$ ./target/release/neard --home ~/.near init --chain-id mainnet --download-genesis --download-config archival
+$ BOOT_NODES=$(curl -s -X POST https://rpc.mainnet.near.org -H "Content-Type: application/json" -d '{
+        "jsonrpc": "2.0",
+        "method": "network_info",
+        "params": [],
+        "id": "dontcare"
+      }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+          $list1[] as $active_peer | $list2[] |
+          select(.peer_id == $active_peer.id) |
+          "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+$ echo "${BOOT_NODES:?}"
 ```
 
-> You can specify trusted boot nodes that you'd like to use by passing the `--boot-nodes` flag during `init`.
-To find a set of active boot nodes, follow these instructions for [mainnet](/intro/node-epoch-sync#mainnet).
+Then generate the working directory with the reference archival config and the boot nodes:
+
+```bash
+$ ./target/release/neard --home ~/.near init --chain-id mainnet --download-genesis --download-config archival --boot-nodes "${BOOT_NODES:?}"
+```
 
 > You can skip the `--home` argument if you are fine with the default working directory in `~/.near`. If not, pass your preferred location.
 
-This command will create the required directory structure by generating a `config.json`, `node_key.json`, and downloads a `genesis.json` for `mainnet`.
+Check that `network.boot_nodes` in `config.json` is not empty:
+
+```bash
+$ jq -r '.network.boot_nodes' ~/.near/config.json
+```
+
+The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync#mainnet). Running `neard init` again does not add them, because it does not change an existing `config.json`.
+
+`neard init` creates the required directory structure. It generates `config.json` and `node_key.json`, and downloads `genesis.json` for `mainnet`.
 - `config.json` - Configuration parameters which are responsive for how the node will work. This file should contain the following fields critical for archival nodes:
   - `"archive": true` - to save the data for all blocks to storage.
   - `cold_store` - the cold database that holds the old data. See [Run a Split Storage Archival](/archival/split-storage-archival) for its settings.

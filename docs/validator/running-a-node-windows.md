@@ -88,9 +88,28 @@ This documentation may require additional edits. Please keep this in mind while 
     cd nearcore
     make neard
     ```
-13. Initialize the working directory and run the node:
+13. Initialize the working directory and run the node. The node needs boot nodes to find its first peers. The reference RPC `config.json` has no boot nodes. The following commands ask a testnet RPC node for the validators it is connected to. Then they pass the list to `neard init`:
     ```sh
-    ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config rpc
+    BOOT_NODES=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" -d '{
+            "jsonrpc": "2.0",
+            "method": "network_info",
+            "params": [],
+            "id": "dontcare"
+          }' | jq -r '.result.active_peers as $list1 | .result.known_producers as $list2 |
+              $list1[] as $active_peer | $list2[] |
+              select(.peer_id == $active_peer.id) |
+              "\(.peer_id)@\($active_peer.addr)"' | paste -sd "," -)
+    echo "${BOOT_NODES:?}"
+    ./target/release/neard --home ~/.near init --chain-id testnet --download-genesis --download-config rpc --boot-nodes "${BOOT_NODES:?}"
+    ```
+    Check that `network.boot_nodes` in `config.json` is not empty:
+    ```sh
+    jq -r '.network.boot_nodes' ~/.near/config.json
+    ```
+    The command should print a comma-separated list of boot nodes. If it prints an empty line, the node has no peers to sync from. Add boot nodes as described in [Epoch Sync](/intro/node-epoch-sync#testnet). Running `neard init` again does not add them, because it does not change an existing `config.json`.
+
+    Then run the node:
+    ```sh
     ./target/release/neard --home ~/.near run
     ```
 
