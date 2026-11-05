@@ -18,7 +18,7 @@ If you are looking to learn how to compile and run a NEAR Archival node natively
 <blockquote class="info">
 <strong>Heads up</strong><br /><br />
 
-Running an archival node is very similar to running a [validator node](/validator/compile-and-run-a-node) as both types of node use the same `nearcore` release. The main difference for running an archival node is a modification to the `config.json` by changing `archive` to `true`. See below for more details.
+Running an archival node is very similar to running a [validator node](/validator/compile-and-run-a-node) as both types of node use the same `nearcore` release. An archival node needs `archive` set to `true`, a cold database configured in `cold_store`, and `save_trie_changes` set to `true`. Set `split_storage.enable_split_storage_view_client` to `true` so that RPC queries can read old data from the cold database. Setting only `archive` to `true` is not enough. With only that setting, the node does not start. See [Run a Split Storage Archival](/archival/split-storage-archival).
 
 </blockquote>
 
@@ -30,12 +30,12 @@ Running an archival node is very similar to running a [validator node](/validato
 - Installed developer tools:
   - MacOS
     ```bash
-    $ brew install cmake protobuf clang llvm awscli
+    $ brew install cmake protobuf clang llvm awscli jq
     ```
   - Linux
     ```bash
     $ apt update
-    $ apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python docker.io protobuf-compiler libssl-dev pkg-config clang llvm cargo awscli
+    $ apt install -y git binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev cmake gcc g++ python docker.io protobuf-compiler libssl-dev pkg-config clang llvm cargo awscli jq
     ```
 ---
 
@@ -48,7 +48,7 @@ When building your NEAR node you will have two branch options to choose from dep
 - [`Latest stable release`](https://github.com/near/nearcore/tags) : _(**Stable**)_
   - Use this if you want to run a NEAR node for *mainnet*. For *mainnet*, please use the latest stable release. This version is used by mainnet validators and other nodes and is fully compatible with the current state of *mainnet*.
 - [`Latest release candidates`](https://github.com/near/nearcore/tags) : _(**Release Candidates**)_
-  - Use this if you want to run a NEAR node for *tesnet*. For *testnet*, we first release a RC version and then later make that release stable. For testnet, please run the latest RC version.
+  - Use this if you want to run a NEAR node for *testnet*. For *testnet*, we first release a RC version and then later make that release stable. For testnet, run the version that the public testnet RPC node runs. Step 1 below shows how to find it.
 
 
 ## `testnet` {#testnet}
@@ -65,16 +65,20 @@ $ git fetch origin --tags
 
 Checkout to the branch you need if not `master` (default). Latest release is recommended. Please check the [releases page on GitHub](https://github.com/near/nearcore/releases).
 
+Testnet usually runs a newer release candidate than mainnet. The following command reads the version that the public testnet RPC node runs:
+
 ```bash
-$ git checkout tags/1.28.0 -b mynode
+$ NEAR_RELEASE_VERSION=$(curl -s -X POST https://rpc.testnet.near.org -H "Content-Type: application/json" \
+    -d '{"jsonrpc":"2.0","id":"dontcare","method":"status","params":[]}' | jq -r '.result.version.version')
+$ echo "${NEAR_RELEASE_VERSION:?}"
 ```
 
 ### 2. Compile `nearcore` binary {#2-compile-nearcore-binary}
 
-In the `nearcore` folder run the following commands:
+In the `nearcore` folder, check out that version and build it:
 
 ```bash
-$ make release
+$ git checkout "tags/${NEAR_RELEASE_VERSION:?}" && make release
 ```
 
 This will start the compilation process. It will take some time
@@ -102,7 +106,9 @@ To find a set of active boot nodes, follow these instructions for [testnet](/int
 This command will create the required directory structure and will generate `config.json`, `node_key.json`, and `genesis.json` for `testnet` network.
 - `config.json` - Configuration parameters which are responsive for how the node will work. This file should contain the following fields critical for archival nodes:
   - `"archive": true` - to save the data for all blocks to storage.
-  - `"tracked_shards": [0]` - to track all shards.
+  - `cold_store` - the cold database that holds the old data. See [Run a Split Storage Archival](/archival/split-storage-archival) for its settings.
+  - `"save_trie_changes": true` - required when `cold_store` is set.
+  - `"tracked_shards_config": "AllShards"` - to track all shards. Do not add the deprecated `tracked_shards` key. The node does not start when both keys are set.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
 - `data/` -  A folder in which a NEAR node will write it's state.
@@ -112,20 +118,14 @@ This command will create the required directory structure and will generate `con
 
 Please make sure that the node is not running while changing the `config.json`.
 
-Once the config has been changed, you can restart the node and the node will start syncing new archival data. In the case where you want the full archival history, you can delete the data dir and start the node from scratch syncing full history or use one of the latest backups containing the data directory snapshot which can be copied under the near home dir (default: ~/.near/data).
+Changing `config.json` does not turn an existing RPC node into an archival node. An RPC node has already deleted old blocks. Archive mode cannot restore them. To run an archival node, start from a split storage archival snapshot, as described in the next step.
 
 
 ### 4. Get data backup {#4-get-data-backup}
 
-The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
+The node is ready to be started. However, an archival node needs the full history of the chain. Start from a split storage archival snapshot, which holds a hot database and a cold database.
 
-```bash
-$ aws s3 --no-sign-request cp s3://near-protocol-public/backups/testnet/archive/latest .
-$ LATEST=$(cat latest)
-$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/testnet/archive/$LATEST ~/.near/data
-```
-
-In the case where you want the full archival history again (for example, if the database gets into an invalid state), you can delete the data dir and start the node from scratch syncing full history or use one of the latest backups containing the data directory snapshot which can be copied under the near home dir (default: ~/.near/data).
+The public NEAR S3 archival backups that this step used to download are no longer available. FastNEAR provides archival snapshots on request. See [FastNEAR Snapshots](https://docs.fastnear.com/snapshots) for how to request access. To place the hot and cold databases and set `config.json`, follow [Restore from an archival snapshot](/archival/split-storage-archival#restore-from-snapshot).
 
 ### 5. Run the node {#5-run-the-node}
 To start your node simply run the following command:
@@ -153,16 +153,19 @@ Next, checkout the release branch you need (recommended) if you will not be usin
 
 For more information on choosing between `master` and latest release branch [ [click here](/validator/compile-and-run-a-node#choosing-your-nearcore-version) ].
 
+The following command reads the latest stable release:
+
 ```bash
-$ git checkout tags/1.26.1 -b mynode
+$ NEAR_RELEASE_VERSION=$(curl -s https://api.github.com/repos/near/nearcore/releases/latest | grep '"tag_name"' | cut -d '"' -f 4)
+$ echo "${NEAR_RELEASE_VERSION:?}"
 ```
 
 ### 2. Compile `nearcore` binary {#2-compile-nearcore-binary-1}
 
-In the `nearcore` folder run the following commands:
+In the `nearcore` folder, check out that version and build it:
 
 ```bash
-$ make release
+$ git checkout "tags/${NEAR_RELEASE_VERSION:?}" && make release
 ```
 
 This will start the compilation process. It will take some time
@@ -190,7 +193,9 @@ To find a set of active boot nodes, follow these instructions for [mainnet](/int
 This command will create the required directory structure by generating a `config.json`, `node_key.json`, and downloads a `genesis.json` for `mainnet`.
 - `config.json` - Configuration parameters which are responsive for how the node will work. This file should contain the following fields critical for archival nodes:
   - `"archive": true` - to save the data for all blocks to storage.
-  - `"tracked_shards": [0]` - to track all shards.
+  - `cold_store` - the cold database that holds the old data. See [Run a Split Storage Archival](/archival/split-storage-archival) for its settings.
+  - `"save_trie_changes": true` - required when `cold_store` is set.
+  - `"tracked_shards_config": "AllShards"` - to track all shards. Do not add the deprecated `tracked_shards` key. The node does not start when both keys are set.
 - `genesis.json` - A file with all the data the network started with at genesis. This contains initial accounts, contracts, access keys, and other records which represents the initial state of the blockchain.
 - `node_key.json` -  A file which contains a public and private key for the node. Also includes an optional `account_id` parameter which is required to run a validator node (not covered in this doc).
 - `data/` -  A folder in which a NEAR node will write it's state.
@@ -198,15 +203,9 @@ This command will create the required directory structure by generating a `confi
 
 ### 4. Get data backup {#4-get-data-backup-1}
 
-The node is ready to be started. However, you must first sync up with the network. This means your node needs to download all the headers and blocks that other nodes in the network already have.
+The node is ready to be started. However, an archival node needs the full history of the chain. Start from a split storage archival snapshot, which holds a hot database and a cold database.
 
-```bash
-$ aws s3 --no-sign-request cp s3://near-protocol-public/backups/mainnet/archive/latest .
-$ LATEST=$(cat latest)
-$ aws s3 --no-sign-request cp --no-sign-request --recursive s3://near-protocol-public/backups/mainnet/archive/$LATEST ~/.near/data
-```
-
-In the case where you want the full archival history again (for example, if the database gets into an invalid state), you can delete the data dir and start the node from scratch syncing full history or use one of the latest backups containing the data directory snapshot which can be copied under the near home dir (default: ~/.near/data).
+The public NEAR S3 archival backups that this step used to download are no longer available. FastNEAR provides archival snapshots on request. See [FastNEAR Snapshots](https://docs.fastnear.com/snapshots) for how to request access. To place the hot and cold databases and set `config.json`, follow [Restore from an archival snapshot](/archival/split-storage-archival#restore-from-snapshot).
 
 ### 5. Run the node {#5-run-the-node-1}
 To start your node simply run the following command:
@@ -216,8 +215,3 @@ $ ./target/release/neard --home ~/.near run
 ```
 
 That's all. The node is running and you can see log outputs in your console. It will download a bit of missing data since the last backup was performed but it shouldn't take much time.
-
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>

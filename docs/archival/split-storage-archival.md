@@ -7,8 +7,7 @@ description: Split Storage for NEAR Archival Nodes
 ---
 
 ## !!!Note!!!
-As the NEAR ecosystem continues to decentralize, Pagoda will cease operations within the next six months and decentralize its functions into NEAR ecosystem teams and committees.
-FastNEAR will be the sole provider of snapshots downloads **starting Jan 1, 2025**. Please visit https://docs.fastnear.com/docs/snapshots for more details. 
+The public Pagoda S3 and CloudFront snapshots that this page used to download are no longer available. FastNEAR provides archival snapshots on request. To start an archival node from one, see [Restore from an archival snapshot](#restore-from-snapshot). The sections that download from S3 or CloudFront are kept for reference only. Their commands no longer work.
 
 This page presents the Split Storage option for NEAR Archival nodes.
 
@@ -28,6 +27,8 @@ Split storage is disabled by default, and can be enabled with a config change an
 | Pagoda-provided S3 snapshots of split-storage nodes | Fastest. Little to no downtime. | Requires trust  in migration performed by Pagoda nodes |
 | Manual migration + S3 RPC snapshots                 | No need for extra node. Cold storage is initialized in a trustless way. |  Requires trust in Pagoda RPC snapshots. The node will be out of sync at the end of the migration and will need to block sync several epochs. Migration takes days and you cannot restart your node during that time. |
 | Manual migration + your own node                    | Trustless. Little to no downtime | Requires an extra RPC node with bigger storage. Migration takes days and you cannot restart your node during that time. |
+
+The first two options use public S3 snapshots, which are no longer available. Today you can [restore from an archival snapshot](#restore-from-snapshot) that FastNEAR provides on request, or do a manual migration with your own RPC node.
 
 ## Important config fields {#config}
 ```json
@@ -66,7 +67,24 @@ Example:
 }
 ```
 
-## Using Pagoda-provided S3/CloudFrontsplit-storage snapshots {#S3 migration}
+## Restore from an archival snapshot {#restore-from-snapshot}
+
+FastNEAR provides archival snapshots on request. See [FastNEAR Snapshots](https://docs.fastnear.com/snapshots) for how to request access. There is no public download link. When you request access, ask for a split storage snapshot with a hot and a cold database.
+
+A split storage snapshot holds a hot database and a cold database. To start a node from it:
+
+1. Stop the node if it is running.
+2. Place the hot database in the `hot-data` folder and the cold database in the `cold-data` folder of the node's home directory (`~/.near` by default).
+3. Set the split storage fields in `config.json`, as described in [Important config fields](#config). The command writes a new file first, so `config.json` stays as it was if `jq` fails:
+```bash
+NEAR_HOME=~/.near
+jq '.archive = true | .save_trie_changes = true | .cold_store = .store | .cold_store.path = "cold-data" | .store.path = "hot-data" | .split_storage.enable_split_storage_view_client = true' "$NEAR_HOME/config.json" > "$NEAR_HOME/config.tmp" && mv "$NEAR_HOME/config.tmp" "$NEAR_HOME/config.json"
+```
+4. Start the node. It downloads the blocks produced since the snapshot was taken.
+
+## Historical: Pagoda-provided S3/CloudFront split storage snapshots {#S3 migration}
+
+These public snapshots are no longer available, so the commands in this section no longer work. They are kept for reference. To get a snapshot today, see [Restore from an archival snapshot](#restore-from-snapshot).
 
 Prerequisite:
 
@@ -200,7 +218,7 @@ CONFIG=$NEAR_HOME/config.json
 CONFIG_BKP=$NEAR_HOME/config.json.backup
 
 cp $CONFIG $CONFIG_BKP # preserving your old config
-cat <<< $(jq '.cold_store = null | .archive = false' $CONFIG) > $CONFIG # adjust config to open hot-data as rpc db
+cat <<< $(jq '.cold_store = null | .split_storage = null | .archive = false' $CONFIG) > $CONFIG # adjust config to open hot-data as rpc db
 ./neard --home $NEAR_HOME database change-db-kind --new-kind Hot change-hot # change DbKind of hot-data to Hot
 cp $CONFIG_BKP $CONFIG # return original config
 ```
@@ -215,6 +233,9 @@ done
 ```
 
 ## Doing the migration manually (based on an S3 RPC snapshot or your own node) {#manual migration}
+
+Public S3 RPC snapshots are no longer available. Use your own RPC node for this migration.
+
 Note: We prepared an optimistic migration script that we have used several times to migrate our nodes.
 It follows a second scenario of using manual migration + S3 snapshots.
 https://github.com/near/nearcore/blob/master/scripts/split_storage_migration.sh  
