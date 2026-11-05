@@ -6,41 +6,23 @@ sidebar_position: 4
 description: State Sync Configuration
 ---
 
-⚠️ **FREE SNAPSHOT SERVICE BY FASTNEAR WILL BE DEPRECATGED STARTING JUNE 1ST, 2025. We strongly recommend all node operators to use [Epoch Sync](../intro/epoch_sync.md) when possible.**
-
 # Overview
 
-See [State Sync from External Storage](https://github.com/near/nearcore/blob/master/docs/misc/state_sync_from_external_storage.md)
-for a description of how to configure your node to sync State from an arbitrary
-external location.
+State sync lets a node download the state of a shard from other nodes instead of computing it from every block. Nodes get the state parts from other nodes in the network.
 
-Pagoda provides state dumps for every shard of every epoch since the release of
-`1.36.0-rc.1` for testnet and `1.36.0` for mainnet.
+## When state sync runs
 
-## Enable State Sync
+No option turns state sync on or off. The node decides when to run it:
 
-The main option you need is `state_sync_enabled`, and then specify how to get
-the state parts provided by Pagoda in the option `state_sync`.
+* A non-archival node that is more than two epochs behind the network runs epoch sync, then header sync, then state sync, then block sync. Two epochs is the default of `epoch_sync.epoch_sync_horizon_num_epochs`.
+* Archival nodes, and nodes that are closer to the head of the chain, catch up with header sync and block sync only. This way archival nodes keep the full history.
+* A validator whose shard assignment changes also uses state sync. It downloads the state of the shards that it will track in the next epoch.
 
-The following snippet is included in the reference `config.json` file and
-provides access to the state of every shard every epoch:
+## State parts from external storage are no longer supported
 
-```json
-"state_sync_enabled": true,
-"state_sync": {
-  "sync": {
-    "ExternalStorage": {
-      "location": {
-        "GCS": {
-          "bucket": "state-parts",
-        }
-      },
-      "num_concurrent_requests": 4,
-      "num_concurrent_requests_during_catchup": 4,
-    }
-  }
-}
-```
+Since nearcore 2.13.0, a `config.json` that sets `state_sync.sync` to `ExternalStorage` fails config validation. The node then does not start. If your `config.json` still has a `state_sync.sync` block, remove it. nearcore 2.14 removes the option.
+
+Nodes can still dump state parts to external storage with the `state_sync.dump` option.
 
 ## Reference `config.json` file
 
@@ -59,40 +41,30 @@ The file will be available at `/tmp/config.json`.
 If you notice that your node runs state sync and it hasn't completed after 3 hours, please check the following:
 
 1. Config options related to the state sync in your `config.json` file:
-* `state_sync_enabled`
 * `state_sync`
-* `consensus.state_sync_timeout`
-* `tracked_shards`
-* `tracked_accounts`
-* `tracked_shard_schedule`
+* `consensus.state_sync_p2p_timeout`
+* `consensus.state_sync_retry_backoff`
+* `tracked_shards_config`
 * `archive`
-* `block_fetch_horizon`
+* `epoch_sync.epoch_sync_horizon_num_epochs`
 
-The best way to see the exact config values used is to visit a debug page of your node: `http://127.0.0.1:3030/debug/client_config`
+To see the config values that the node uses, call the `client_config` JSON-RPC method on your node. You can also open `http://127.0.0.1:3030/debug/client_config`. This page works only after you set `rpc.enable_debug_rpc` to `true` in `config.json` and restart the node.
 
-Check whether state sync is enabled, and check whether it's configured to get state parts from the right location mentioned above.
+2. Has your node run out of available disk space?
 
-2. Has your node ran out of available disk space?
-
-If all seems to be configured fine, then disable state sync (set `"state_sync_enabled": false` in `config.json`) and try again.
-If that doesn't help, then restart from a backup data snapshot.
+If the config is correct and the disk has free space, stop the node, remove the `data` folder in the node's home directory, and start the node again. A non-archival node that starts with an empty `data` folder uses [Epoch Sync](../intro/epoch_sync.md).
 
 ## Running a validator that tracks a single shard
 
-Enable State Sync as explained above.
-
-And then configure the node to track no shards:
+Configure the node to track no shards:
 
 ```json
-"tracked_shards": [],
-"tracked_accounts": [],
-"tracked_shard_schedule": [],
+"tracked_shards_config": "NoShards",
 ```
 
-It is counter-intuitive but it works. If a node stakes and is accepted as a
-validator, then it will track the shard that it needs to track to fulfill its
-validator role. The assignment of validators to shards is done by the consensus
-of validators.
+Remove any `tracked_shards`, `tracked_accounts`, `tracked_shard_schedule` and `tracked_shadow_validator` keys from `config.json`. These keys are deprecated. The node refuses to start when one of them is set together with `tracked_shards_config`.
+
+`NoShards` is the correct config for a validator. With it, the node tracks whichever shards consensus assigns to it.
 
 Note that in different epochs a validator may be assigned to different shards. A
 node switches tracked shards by using the State Sync mechanism for a single
