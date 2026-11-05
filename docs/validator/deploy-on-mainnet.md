@@ -36,44 +36,56 @@ are ones without `-rc.<number>` suffix (‘rc’ stands for ‘release
 candidate’).  This can be done automatically as follows:
 
 ```bash
-NEAR_RELEASE_VERSION=$(curl -s https://github.com/near/nearcore/releases/latest |
-                       tr '/" ' '\n' | grep "[0-9]\.[0-9]*\.[0-9]" | head -n 1)
+NEAR_RELEASE_VERSION=$(curl -s https://api.github.com/repos/near/nearcore/releases/latest |
+                       grep '"tag_name"' | cut -d '"' -f 4)
+echo "${NEAR_RELEASE_VERSION:?}"
 ```
 
-Now, go to the cloned repository’s root directory and checkout the
-code corresponding to the latest stable release:
+Now, go to the cloned repository’s root directory, check out the code
+corresponding to the latest stable release and build the executable.
+Each nearcore release is a git tag:
 
 ```bash
 cd nearcore
-git checkout "refs/heads/${NEAR_RELEASE_VERSION:?}"
+git checkout "tags/${NEAR_RELEASE_VERSION:?}" && make neard
 ```
 
-Finally, build the executable using `make`.  Note that building with
-`cargo build --release` command *is not* sufficient to create fully
-optimized executable:
-
-```bash
-make neard
-```
+`make neard` builds with the release profile, which already enables
+full optimization.  The executable is at `./target/release/neard`.
 
 
 ### 3. Initialize the node {#init-node}
 
 Once the daemon executable is built it’s time to initialize the node.
 
+The reference validator `config.json` has no boot nodes. Follow [Fetch boot nodes](/intro/boot-nodes#fetch-boot-nodes) with `CHAIN_ID=mainnet` to set `BOOT_NODES`, then return here and continue in the same shell.
+
+Then initialize the node with the reference validator config and the
+boot nodes:
+
 ```bash
 ./target/release/neard init --chain-id=mainnet \
-                            --account-id="<POOL_ID>.poolv1.near"
+                            --account-id="<POOL_ID>.poolv1.near" \
+                            --download-config validator \
+                            --boot-nodes "${BOOT_NODES:?}"
 ```
+
+`--download-config validator` downloads the reference validator
+`config.json`.  Without it, `neard init` writes a default config that
+tracks all shards.  On mainnet, a node that tracks all shards stops at
+startup while its account is a validator in the current epoch.
 
 `<POOL_ID>` is the name you want to use for your staking pool.  Note
 that at this point the `<POOL_ID>.poolv1.near` account doesn’t yet
 exist.  We’re going to create it in the next step.
 
 This command will create a `~/.near/validator_key.json` file which
-will contain validator’s private key.  It’s a good idea to back this
-file up in a secure location.  For now, read the validator’s public
-key from this file:
+will contain validator’s private key.  `neard init` creates this file
+only when `--account-id` is given.  It also creates
+`~/.near/node_key.json`, which holds the node’s network key.  Do not
+use the key from `node_key.json` for staking.  It’s a good idea to back
+up `validator_key.json` in a secure location.  For now, read the
+validator’s public key from this file:
 
 ```bash
 grep public_key ~/.near/validator_key.json
@@ -123,14 +135,18 @@ This corresponds to the account identifier used in the previous step.
 
 Once the daemon is built, node is initialized and staking pool
 created, the validator can be started.  To make sure the node has been
-set up correctly, check that the configuration file located at
-`~/.near/config.json` is the same as [this mainnet
-config.json](https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json):
+set up correctly, check that `~/.near/config.json` lists boot nodes and
+tracks no shards:
 
 ```bash
-sha1sum <~/.near/config.json
-curl -s https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/mainnet/validator/config.json | sha1sum
+jq '.network.boot_nodes, .tracked_shards_config' ~/.near/config.json
 ```
+
+The first value must not be empty, and the second must be `"NoShards"`.
+A validator still tracks the shards it is assigned to.  Your
+`config.json` does not match the reference file byte for byte.  This is
+expected, because `neard init` adds the boot nodes and writes the file
+again.
 
 If everything is in order, start your node with the following command:
 
@@ -138,11 +154,12 @@ If everything is in order, start your node with the following command:
 ./target/release/neard run
 ```
 
+After the node starts, check its log.  The node logs `Waiting for peers`
+until it is connected to at least `consensus.min_num_peers` peers (3 by
+default).  If the message does not go away, the node cannot connect to
+enough peers.  Check that `network.boot_nodes` in `config.json` is not
+empty, and that the machine can reach those addresses.
+
 You can start your node without the JSON RPC endpoint by running the
 above command with an additional `--disable-rpc` flag.  This reduces
 resource use and attack vector by closing a listening port.
-
-
->Got a question?
-<a href="https://stackoverflow.com/questions/tagged/nearprotocol">
-  <h8>Ask it on StackOverflow!</h8></a>

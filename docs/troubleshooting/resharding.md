@@ -5,66 +5,56 @@ sidebar_label: Resharding
 description: Advice to ensure that the node goes through resharding successfully
 ---
 
-## Resharding Timeline {#timeline}
+## How resharding works {#how-resharding-works}
 
-The [1.37.0 release](https://github.com/near/nearcore/releases/tag/1.37.0) contains a protocol upgrade that splits shard 3 into two shards.
-When network upgrades to the protocol version 64, it will have 5 shards defined by these border accounts `vec!["aurora", "aurora-0", "kkuuue2akv_1630967379.near", "tge-lockup.sweat"]`.
+Since protocol version 85 (nearcore 2.13.0), NEAR splits shards automatically. A split does not need a new release or a protocol upgrade vote.
 
-Any code that has a hardcoded number of shards or mapping of an account to shard id may break.
-If you are not sure if your tool will work after mainnet updates to protocol version 64, test it on testnet, as it is already running on 5 shards.
+- At the end of each epoch, the protocol checks the memory usage of each shard against limits in the epoch config. At most one shard is split at an epoch boundary.
+- If a split is chosen at the end of epoch N, the new shard layout takes effect at the start of epoch N+2. Your node prepares in the background during epoch N+1. It splits the shard at the end of epoch N+1. It then finishes splitting the shard state on disk in the background.
+- The epoch config also limits the number of shards, and requires at least two epochs between splits.
 
-Resharding will happen in the epoch preceding protocol upgrade.
-So, if the voting happens in epoch X, resharding will happen in epoch X+1, and protocol upgrade will happen in epoch X + 2.
-Voting for upgrading to protocol version 64 will start on **Monday 2024-03-11 18:00:00 UTC** .
-By our estimations, resharding will start on **Tuesday 2024-03-12  07:00:00 UTC**, and first epoch with 5 shards will start on **Tuesday 2024-03-12  23:00:00 UTC**.
+Mainnet and testnet already have 10 shards, which is the current limit. A further split needs a new protocol version that raises the limit.
 
-Resharding is done as a background process of a regular node run. It takes hours to finish, and it shouldn’t be interrupted.
-Failure to reshard will result in the node not being able to sync with the network.
+For details, see [Dynamic Resharding](https://github.com/near/nearcore/blob/master/docs/architecture/how/dynamic_resharding.md) in the nearcore repository.
 
-## 1.37.0 release resharding {#1.37.0}
+## What to do as a node operator {#operators}
 
-### General recommendations {#general 1.37}
-- **Do not restart your node during the resharding epoch.**
-It may result in your node not being able to finish resharding.
-- **Disable state sync** until your node successfully transitions to the epoch with protocol version 64.
-You should disable it before the voting date (**Monday 2024-03-11 18:00:00 UTC**).
-It should be safe to enable it on **Thursday 2024-03-14**.
-To disable state sync, assign `false` to the `state_sync_enabled` field in config.
-- **Make sure that state snapshot compaction is disabled.**
-Your node will create a state snapshot for resharding.
-State snapshot compaction may lead to stack overflow.
-Make sure that fields `store.state_snapshot_config.compaction_enabled` and `store.state_snapshot_compaction_enabled` are set to `false`.
-- Ensure that you have additional 200Gb of free space on your `.near/data` disk.
+Do not hardcode the number of shards or the mapping from account to shard. Shard IDs do not run from 0 to the number of shards. Read the current shard layout from the `shard_layout` field of the `EXPERIMENTAL_protocol_config` RPC method. Expect it to change at epoch boundaries. The same response also has a `dynamic_resharding` field, which is `false` on mainnet and testnet. It is a legacy genesis field and does not show whether shards are split automatically.
 
-### Before resharding {#prepare for 1.37}
+### Monitoring {#monitoring}
 
-#### If your node is out of sync {#out of sync 1.37}
-If your node is far behind the network, consider downloading the latest DB snapshot provided by Pagoda from s3
-[Node Data Snapshots](/intro/node-data-snapshots).
-Your node will likely fail resharding if it is not in sync with the network for the majority of the resharding epoch.
+Watch the `near_resharding_status` metric. It has one series per parent shard:
 
-#### If you run legacy archival node {#legacy 1.37}
-We don’t expect legacy archival nodes to be able to finish resharding and stay in sync on mainnet.
-We highly recommend migrating to split storage archival nodes as soon as possible.
-The easiest way is to download DB snapshots provided by Pagoda from s3.
-Be aware that the cold db of a mainnet split storage is about 22Tb, and it may take a long time to download it.
-You can find instructions on how to migrate to split storage on [Split Storage page](/archival/split-storage-archival).
+| Value | Meaning |
+|-------|---------|
+| `1` | Scheduled |
+| `2` | Splitting flat storage |
+| `3` | Flat storage catch-up |
+| `4` | Resharding trie state |
+| `5` | Done |
+| `-1` | Failed |
+| `-2` | Canceled |
 
-### During resharding {#run 1.37}
+The metrics `near_resharding_start_timestamp_seconds` and `near_resharding_total_duration_seconds` show when a split started and how long it took.
 
-#### Monitoring {#monitoring 1.37}
-To monitor resharding you can use metrics `near_resharding_status`, `near_resharding_batch_size`, and `near_resharding_batch_prepare_time_bucket`.
-You can read more [on github](https://github.com/near/nearcore/blob/master/docs/architecture/how/resharding_v2.md#monitoring).
+Avoid restarting the node while a split is in progress, which is when `near_resharding_status` is from `2` to `4`.
 
-If you observe problems with block production or resharding performance, you can adjust resharding throttling configuration.
-This does not require a node restart, you can send a signal to the neard process to load the new config.
-Read more [on github](https://github.com/near/nearcore/blob/master/docs/architecture/how/resharding_v2.md#monitoring).
+### If the node does not start after a split was interrupted {#resume-resharding}
 
-### After resharding {#after 1.37}
-If your node failed to reshard or is not able to sync with the network after the protocol upgrade, you will need to download the latest DB snapshot provided by Pagoda from s3
-[Node Data Snapshots](/intro/node-data-snapshots).
-We will try to ensure that these snapshots are uploaded as soon as possible, but you may need to wait several hours for them to be available.
+If the node stops during a split, it can refuse to start with an error that says `must run resume_resharding`. The error names the parent shard, for example `s8.v3`. The number after `s` is the shard ID, `8` in this example. Run this command with that shard ID, and then start the node:
 
-Pagoda s3 DB snapshots have a timestamp of their creation in the file path.
-Check that you are downloading a snapshot that was taken after the switch to protocol version 64.
+```bash
+neard flat-storage resume-resharding --shard-id 8
+```
 
+### If a split fails {#failed-split}
+
+If `near_resharding_status` is `-1` on a non-archival node:
+
+1. Stop the node.
+2. Remove the `data` folder in the node's home directory.
+3. Start the node again. The node then catches up with [epoch sync](/intro/node-epoch-sync).
+
+## Earlier reshardings {#history}
+
+Before protocol version 85, each change to the shard layout came with a release and a protocol upgrade. For example, nearcore 1.37.0 split mainnet from 4 to 5 shards in March 2024. That resharding is complete, and its instructions no longer apply.

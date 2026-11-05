@@ -52,6 +52,20 @@ Cause: Potentially use a wrong nearcore release.
 
 Solution: Fix the nearcore release: https://github.com/near/nearcore/releases, and please also check the details on the node setup.
 
+***My node is stuck downloading state and all state sync requests time out.***
+
+Cause 1: Inbound port 24567 is blocked by a firewall.
+
+State sync uses direct TCP connections where peers connect back to your node on port 24567 to deliver data. If inbound connections on this port are blocked, all requests will time out.
+
+Solution: Open inbound TCP port 24567 in your firewall and cloud security group settings.
+
+Cause 2: Your node uses different IP addresses for inbound and outbound traffic.
+
+Your node auto-discovers its public address from outbound connections and announces it to peers. If your network uses a different IP for inbound traffic (e.g. due to NAT or multiple interfaces), peers will fail to connect back.
+
+Solution: Make sure your node uses the same IP for inbound and outbound traffic. Restart the node after fixing your network configuration.
+
 ***My node is stuck on a block.***
 
 Cause: This usually occurs in the beginning of an epoch, where the block processing time may increase.
@@ -67,8 +81,6 @@ Solution: There is an issue with the DB. Download the latest snapshot and resync
 Cause 2: Block Height Mismatch
 
 Solution: There is an issue with peers. The node has banned all the peers for a period of time, and is related to the peers not being properly terminated: https://github.com/near/nearcore/issues/5340. For the node operator, search in the log to see there is a thread panic.  If there’s panic, then store your DB from a snapshot. If there is no panic, restart your node.
-
-Please report all mailbox related issues using Zendesk and add your log: https://near-node.zendesk.com/hc/en-us/requests/new.
 
 
 ***My node shows "Mailbox closed" when the node is running.***
@@ -102,7 +114,7 @@ Solution: Be fully synced, Wait 2 epochs and then ping again.
 
 Cause: This issue happens frequently due to the config.json in the backup node isn’t set up properly.
 
-Solution: The backup node should track all shards. The default config.json during initialization has `"tracked_shards": []`. Please update the `config.json` to include `"tracked_shards": [0]` in both the primary and backup node. You must make this update to both the primary node and backup node.
+Solution: Set up the backup as described in [Failover node instruction](/validator/failover-node-instruction). The primary validator must use `"tracked_shards_config": "NoShards"`. On mainnet and testnet, a validator that tracks all shards stops at startup. A standby backup can use `"AllShards"`. Before you start it with the validator key, switch it to `"NoShards"` and set `store.load_mem_tries_for_tracked_shards` to `true`. Another option is to run the backup with `{ "ShadowValidator": "<validator_id>" }` and move the key with a SIGHUP, as the failover page describes. Do not add the old `"tracked_shards"` field. A `config.json` that has both fields fails validation, and the node does not start.
 
 
 ***My node sends many request and has memory usage spike.***

@@ -2,13 +2,9 @@
 id: split-storage-archival
 title: Split Storage for NEAR Archival Nodes
 sidebar_label: Split Storage
-sidebar_position: 2
+sidebar_position: 4
 description: Split Storage for NEAR Archival Nodes
 ---
-
-## !!!Note!!!
-As the NEAR ecosystem continues to decentralize, Pagoda will cease operations within the next six months and decentralize its functions into NEAR ecosystem teams and committees.
-FastNEAR will be the sole provider of snapshots downloads **starting Jan 1, 2025**. Please visit https://docs.fastnear.com/docs/snapshots for more details. 
 
 This page presents the Split Storage option for NEAR Archival nodes.
 
@@ -55,9 +51,20 @@ Example:
 }
 ```
 
-## Using Snapshots {#S3 migration}
+## Restore from an archival snapshot {#restore-from-snapshot}
 
-FASTNEAR is now provider of Archival node snapshot. Please refer to their documentation [HERE](https://docs.fastnear.com/docs/snapshots/mainnet#archival-mainnet-snapshot)
+FastNEAR provides archival snapshots on request. See [FastNEAR Snapshots](https://docs.fastnear.com/snapshots) for how to request access. There is no public download link. When you request access, ask for a split storage snapshot with a hot and a cold database.
+
+A split storage snapshot holds a hot database and a cold database. To start a node from it:
+
+1. Stop the node if it is running.
+2. Place the hot database in the `hot-data` folder and the cold database in the `cold-data` folder of the node's home directory (`~/.near` by default).
+3. Set the split storage fields in `config.json`, as described in [Important config fields](#config). The command writes a new file first, so `config.json` stays as it was if `jq` fails:
+```bash
+NEAR_HOME=~/.near
+jq '.archive = true | .save_trie_changes = true | .cold_store = .store | .cold_store.path = "cold-data" | .store.path = "hot-data" | .split_storage.enable_split_storage_view_client = true' "$NEAR_HOME/config.json" > "$NEAR_HOME/config.tmp" && mv "$NEAR_HOME/config.tmp" "$NEAR_HOME/config.json"
+```
+4. Start the node. It downloads the blocks produced since the snapshot was taken.
 
 ## Important metrics {#metrics}
 The metrics below can be used to monitor the way split storage works
